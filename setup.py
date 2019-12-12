@@ -18,6 +18,7 @@ setuptools.setup(name="pymex-lukasz99",
                  long_description_content_type="text/markdown",
                  url="https://github.com/IMExConsortium/pymex",
                  package_dir={'': 'pylib'},
+                 include_package_data=True,
                  packages=setuptools.find_packages(where="pylib"),
                  classifiers=[
                          "Programming Language :: Python :: 3",
