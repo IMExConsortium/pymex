@@ -10,13 +10,19 @@ class Feature(psimi.Base):
     def __init__( self, ftr = None, root = None):    
         super(Feature, self ).__init__( raw = ftr, root = root)
         
-    def __repr__(self):        
+    def __repr__(self):
         rep=[]
         rep.append(" Feature:")
-        rep.append( "  Label:" + str(self.label) )
-        rep.append( "  Name:" + str(self.name) )
-        rep.append( "  PXref:" + str(self.pxref) )
-        rep.append( "  SXref:" + str(self.sxref) )
+        rep.append( "       Label:" + str(self.label) )
+        rep.append( "       Name:" + str(self.name) )
+        rep.append( "       Type:" + str(self.type) )
+        rep.append( "       DetMth:" + str(self.detmth) )
+        rep.append( "       PXref:" + str(self.pxref) )
+        rep.append( "       SXref:" + str(self.sxref) )
+        if self.rnglst and len(self.rnglst) > 0:
+            rep.append( "       RangeList:")
+            for r in self.rnglst:                
+                rep.append( "         Range: " + str(psimi.Range( r ) ))
         return '\n'.join( rep )
 
     @property    
@@ -53,3 +59,4 @@ class Feature(psimi.Base):
         if 'attlst' in self._raw.keys():
             return self._raw['attlst']
         return None
+

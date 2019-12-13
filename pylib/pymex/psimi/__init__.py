@@ -13,6 +13,7 @@ from .evidence import Evidence
 
 from .participant import Participant
 from .feature import Feature
+from .range import Range
 
 from .mif254parser import Mif254Parser
 from .mif254builder import Mif254Builder

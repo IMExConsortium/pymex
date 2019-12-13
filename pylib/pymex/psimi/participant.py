@@ -12,22 +12,35 @@ class Participant(psimi.Base):
         
     def __repr__(self):
         rep=[]
-        rep.append("  Participant:")
-        rep.append("   Label:\t" + str(self.ilabel))
-        rep.append("   Name:\t" + str(self.iname))
-        rep.append("   Species:\t" + str(self.ispecies))
-        rep.append("   IPXref:\t" + str(self.ipxref))
-        rep.append("   ISXref:\t" + str(self.isxref))
-        rep.append("   PXref:\t" + str(self.pxref))
-        rep.append("   SXref:\t" + str(self.sxref))
+        rep.append("   Participant:")
+        rep.append("    Label:\t" + str(self.ilabel))
+        rep.append("    Name:\t" + str(self.iname))
+        rep.append("    Species:\t" + str(self.ispecies))
+        rep.append("    IPXref:\t" + str(self.ipxref))
+        if self.isxref and len(self.isxref) > 0:
+            rep.append("    ISXref:" )
+            for sx in self.isxref:
+                rep.append("\t\t" + str(sx))
+
+        rep.append("    PXref:\t" + str(self.pxref))
+        if self.sxref and len(self.sxref) > 0:
+            rep.append("    SXref:" )
+            for sx in self.sxref:
+                rep.append("\t\t" + str(xs))
         if self.ehost:
-            rep.append("   Exp Host:\t" + str(self.ehost))
+            rep.append("    Exp Host:\t" + str(self.ehost))
         else:
-            rep.append("   Exp Host:\t" + str(self.ispecies))
-        rep.append("   Exp Prep:\t" + str(self.eprep))
-        rep.append("   Exp Role:\t" + str(self.erole))
-        rep.append("   Bio Role:\t" + str(self.brole))
-        rep.append("   Features:\t" + str(self.feature))            
+            rep.append("    Exp Host:\t" + str(self.ispecies))
+        
+        rep.append("    Exp Prep:\t" + str(self.eprep))
+        rep.append("    Exp Role:\t" + str(self.erole))
+        rep.append("    Bio Role:\t" + str(self.brole))
+        rep.append("    Id Method:\t" + str(self.pidmth))
+        
+        if self.frolst and len( self.frolst ) > 0:
+            rep.append("    Features:")
+            for f in self.frolst:
+                rep.append( "     " + str(f) ) 
         rep.append("")
         return '\n'.join(rep)
 

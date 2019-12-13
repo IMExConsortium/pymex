@@ -47,27 +47,32 @@ for cs in source:
     rec = mifParser.parse( cs )
 
     for int in rec.inlist:
-        print( int )
-
+        
         print( " =======" )        
         
         itype  = int.type
         
         method = "N/S"
         if int.evlist is not None and len(int.evlist) > 0:
-           method = int.evlist[0]['intMth']
+           intmethod = int.evlist[0]['intMth']
+                      
+           print( "\n Interaction:  label:\t",int.label,"\timexId:\t", int.imex  )
+           print( "  Interaction Type: ",itype["ac"],"\t",itype["label"])
+           print( "  Method(interaction): ",intmethod["ac"],"\t",intmethod["label"])
+           if 'prtMth' in int.evlist[0]:
+               prtmethod = int.evlist[0]['prtMth']
+               if prtmethod is not None:
+                   print( "  Id Mth(participant): ",prtmethod["ac"],"\t",prtmethod["label"])
 
-           print( "\n interaction:  label:\t",int.label,"\timexId:\t", int.imex  )
-           print( "  method  : ",method["ac"],"\t",method["label"])
-           print( "  int type: ",itype["ac"],"\t",itype["name"])
-        
-           for pto in int.ptolist:
-               print( pto )
-               print( "  ------" )
-               print( "  ",pto.interactor.pxref["ac"],"\t", pto.interactor.label,pto.interactor.name )
-               print( "     type: ", pto.interactor.type["label"] )
-               print( "     role: ", pto.erole[0]["label"] )
-               print( "  ------" ) 
+           if int.ptolist is not None and len(int.ptolist) > 0:
+               print( " Participants:" )
+               for pto in int.ptolist:
+                   print( pto )
+                   #print( "  ------" )
+                   #print( "  ",pto.interactor.pxref["ac"],"\t", pto.interactor.label,pto.interactor.name )
+                   #print( "     type: ", pto.interactor.type["label"] )
+                   #print( "     role: ", pto.erole[0]["label"] )
+                   #print( "  ------" ) 
 
     print( " =======" )
 
