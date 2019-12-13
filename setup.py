@@ -10,6 +10,7 @@ version_file = open(os.path.join(pkg_dir, 'VERSION'))
 version = version_file.read().strip()
 
 setuptools.setup(name="pymex-lukasz99",
+                 packages = ['pymex'],
                  version=version,
                  author="Lukasz Salwinski",
                  author_email="lukasz@mbi.ucla.edu",
@@ -17,6 +18,7 @@ setuptools.setup(name="pymex-lukasz99",
                  long_description=long_description,
                  long_description_content_type="text/markdown",
                  url="https://github.com/IMExConsortium/pymex",
+                 download_url = 'https://github.com/IMExConsortium/pymex/archive/0.0.11.tar.gz',
                  package_dir={'': 'pylib'},
                  include_package_data=True,
                  packages=setuptools.find_packages(where="pylib"),
