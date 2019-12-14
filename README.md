@@ -6,7 +6,6 @@ native to this package.
 
 ## Modules
 
-
 * ``pymex.psimi`` - PSI-MI XML 2.5.4 format support 
 * ``pymex.pypsiq`` - PSICQUC server access
 * ``pymex.dxf`` - DXF 1.5 format support 
