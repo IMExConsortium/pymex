@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<!DOCTYPE LinkSet PUBLIC "-//NLM//DTD LinkOut 1.0//EN"
+"https://www.ncbi.nlm.nih.gov/projects/linkout/doc/LinkOut.dtd"
+[<!ENTITY base.url "https://imexcentral.org/icentral/imex/rec/">]>
+<LinkSet>
+  <Link>
+    <LinkId>%%LINKID%%</LinkId>
+    <ProviderId>10198</ProviderId>
+    <IconUrl>https://imexcentral.org/icentral/img/IMEx120x30a.png</IconUrl>
+    <ObjectSelector>
+      <Database>PubMed</Database>
+      <ObjectList>
+	<ObjId>%%PMID%%</ObjId>
+      </ObjectList>
+    </ObjectSelector>
+    <ObjectUrl>
+      <Base>&base.url;</Base>
+      <Rule>%%IMEXID%%</Rule>
+      <UrlName>%%LINKID%% IMEx interaction dataset%%CURATION%%</UrlName>
+      <SubjectType>protein interactions/pathways</SubjectType>
+    </ObjectUrl>
+  </Link>
+</LinkSet>
+

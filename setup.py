@@ -4,7 +4,7 @@ from distutils.util import convert_path
 
 ldesc =[]
 
-with open( "PROJECT.md", "r") as fh:
+with open( "README.md", "r") as fh:
         long_description = fh.read()
                 
 pkg_dir = convert_path('pylib/pymex')
@@ -15,7 +15,7 @@ setuptools.setup( name="pymex-lukasz99",
                   version=version,
                   author="Lukasz Salwinski",
                   author_email="lukasz@mbi.ucla.edu",
-                  description="PSI-MI/IMEx Data Access",
+                  description="PYMEX: PSI-MI/IMEx Data Access",
                   long_description=long_description,
                   long_description_content_type='text/markdown',
                   url="https://github.com/IMExConsortium/pymex",

@@ -6,9 +6,13 @@ version_file = open(os.path.join( pkg_dir, 'VERSION') )
 version = version_file.read().strip()
 
 import psimi
-import psicpy
 
 import dipropy
 
 import dippy
 import legpy
+
+import pypsic
+import pycent
+
+import pylout

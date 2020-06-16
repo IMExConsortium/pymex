@@ -1,0 +1,112 @@
+
+Prefixes:
+     ns0: http://imex.mbi.ucla.edu/icentral/ws
+     xsd: http://www.w3.org/2001/XMLSchema
+
+Global elements:
+     ns0:ImexCentralFault(faultCode: xsd:int, message: xsd:string)
+     ns0:addAttachment(parent: ns0:identifier, attachment: ns0:attachment)
+     ns0:attachmentListResponse(attachmentList: ns0:attachmentList, lastRec: xsd:long)
+     ns0:attachmentResponse(attachment: ns0:attachment)
+     ns0:createPublication(publication: ns0:publication)
+     ns0:createPublicationById(identifier: ns0:identifier)
+     ns0:dropAttachment(identifier: ns0:identifier)
+     ns0:getAttachmentById(identifier: ns0:identifier)
+     ns0:getAttachmentByParent(parent: ns0:identifier, type: xsd:string, firstRec: xsd:int, maxRec: xsd:int)
+     ns0:getPublicationById(identifier: ns0:identifier)
+     ns0:getPublicationByOwner(owner: xsd:string, firstRec: xsd:int, maxRec: xsd:int)
+     ns0:getPublicationByStatus(status: xsd:string, firstRec: xsd:int, maxRec: xsd:int)
+     ns0:getPublicationImexAccession(identifier: ns0:identifier, create: xsd:boolean)
+     ns0:getServerStatus(depth: xsd:string)
+     ns0:getServerStatusResponse(version: xsd:string, status: xsd:string)
+     ns0:publicationListResponse(publicationList: ns0:publicationList, lastRec: xsd:long)
+     ns0:publicationResponse(publication: ns0:publication)
+     ns0:queryAttachment(query: xsd:string, firstRec: xsd:int, maxRec: xsd:int)
+     ns0:queryPublication(query: xsd:string, firstRec: xsd:int, maxRec: xsd:int)
+     ns0:updatePublication(identifier: ns0:identifier, publication: ns0:publication)
+     ns0:updatePublicationAdminGroup(identifier: ns0:identifier, operation: xsd:string, group: xsd:string)
+     ns0:updatePublicationAdminUser(identifier: ns0:identifier, operation: xsd:string, user: xsd:string)
+     ns0:updatePublicationIdentifier(identifier: ns0:identifier, newIdentifier: ns0:identifier)
+     ns0:updatePublicationStatus(identifier: ns0:identifier, status: xsd:string, message: xsd:string)
+     
+
+Global types:
+     xsd:anyType
+     ns0:attachment(identifier: ns0:identifier, parent: ns0:identifier, owner: xsd:string, creationDate: xsd:dateTime, subject: xsd:string, body: xsd:string, type: xsd:string)
+     ns0:attachmentList(attachment: ns0:attachment[])
+     ns0:icentral(wsversion: xsd:string)
+     ns0:identifier(ns: xsd:string, ac: xsd:string)
+     ns0:identifierList(identifier: ns0:identifier[])
+     ns0:publication(identifier: ns0:identifier[], author: xsd:string, title: xsd:string, paperAbstract: xsd:string, expectedPublicationDate: xsd:dateTime, publicationDate: xsd:dateTime, releaseDate: xsd:dateTime, creationDate: xsd:dateTime, status: xsd:string, imexAccession: xsd:string, owner: xsd:string, adminUserList: {user: xsd:string[]}, adminGroupList: {group: xsd:string[]})
+     ns0:publicationList(publication: ns0:publication[])
+     xsd:ENTITIES
+     xsd:ENTITY
+     xsd:ID
+     xsd:IDREF
+     xsd:IDREFS
+     xsd:NCName
+     xsd:NMTOKEN
+     xsd:NMTOKENS
+     xsd:NOTATION
+     xsd:Name
+     xsd:QName
+     xsd:anySimpleType
+     xsd:anyURI
+     xsd:base64Binary
+     xsd:boolean
+     xsd:byte
+     xsd:date
+     xsd:dateTime
+     xsd:decimal
+     xsd:double
+     xsd:duration
+     xsd:float
+     xsd:gDay
+     xsd:gMonth
+     xsd:gMonthDay
+     xsd:gYear
+     xsd:gYearMonth
+     xsd:hexBinary
+     xsd:int
+     xsd:integer
+     xsd:language
+     xsd:long
+     xsd:negativeInteger
+     xsd:nonNegativeInteger
+     xsd:nonPositiveInteger
+     xsd:normalizedString
+     xsd:positiveInteger
+     xsd:short
+     xsd:string
+     xsd:time
+     xsd:token
+     xsd:unsignedByte
+     xsd:unsignedInt
+     xsd:unsignedLong
+     xsd:unsignedShort
+
+Bindings:
+     Soap11Binding: {http://imex.mbi.ucla.edu/icentral/ws}ImexCentralPortBinding
+
+Service: ics20
+     Port: icp20 (Soap11Binding: {http://imex.mbi.ucla.edu/icentral/ws}ImexCentralPortBinding)
+         Operations:
+            addAttachment(parent: ns0:identifier, attachment: ns0:attachment) -> attachment: ns0:attachment
+            createPublication(publication: ns0:publication) -> publication: ns0:publication
+            createPublicationById(identifier: ns0:identifier) -> publication: ns0:publication
+            dropAttachment(identifier: ns0:identifier) -> attachment: ns0:attachment
+            getAttachmentById(identifier: ns0:identifier) -> attachment: ns0:attachment
+            getAttachmentByParent(parent: ns0:identifier, type: xsd:string, firstRec: xsd:int, maxRec: xsd:int) -> attachmentList: ns0:attachmentList, lastRec: xsd:long
+            getPublicationById(identifier: ns0:identifier) -> publication: ns0:publication
+            getPublicationByOwner(owner: xsd:string, firstRec: xsd:int, maxRec: xsd:int) -> publicationList: ns0:publicationList, lastRec: xsd:long
+            getPublicationByStatus(status: xsd:string, firstRec: xsd:int, maxRec: xsd:int) -> publicationList: ns0:publicationList, lastRec: xsd:long
+            getPublicationImexAccession(identifier: ns0:identifier, create: xsd:boolean) -> publication: ns0:publication
+            getServerStatus(depth: xsd:string) -> version: xsd:string, status: xsd:string
+            queryAttachment(query: xsd:string, firstRec: xsd:int, maxRec: xsd:int) -> attachmentList: ns0:attachmentList, lastRec: xsd:long
+            queryPublication(query: xsd:string, firstRec: xsd:int, maxRec: xsd:int) -> publicationList: ns0:publicationList, lastRec: xsd:long
+            updatePublication(identifier: ns0:identifier, publication: ns0:publication) -> publication: ns0:publication
+            updatePublicationAdminGroup(identifier: ns0:identifier, operation: xsd:string, group: xsd:string) -> publication: ns0:publication
+            updatePublicationAdminUser(identifier: ns0:identifier, operation: xsd:string, user: xsd:string) -> publication: ns0:publication
+            updatePublicationIdentifier(identifier: ns0:identifier, newIdentifier: ns0:identifier) -> publication: ns0:publication
+            updatePublicationStatus(identifier: ns0:identifier, status: xsd:string, message: xsd:string) -> publication: ns0:publication
+

@@ -8,6 +8,7 @@ native to this package.
 
 * ``pymex.psimi`` - PSI-MI XML 2.5.4 format support 
 * ``pymex.pypsiq`` - PSICQUC server access
+* ``pymex.pycent`` - IMEx Central server access
 * ``pymex.dxf`` - DXF 1.5 format support 
 * ``pymex.dippy`` - DIP database access (NOTE: not public yet) 
 * ``pymex.dipropy`` - DIP proxy access (NOTE: not public yet) 
