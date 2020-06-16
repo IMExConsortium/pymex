@@ -70,6 +70,7 @@ class Client():
         
         try:
             srv = self.zclient.service
+            print(query)
             record_found = srv.queryPublication( query=query,
                                                  firstRec=firstRec,
                                                  maxRec=max)

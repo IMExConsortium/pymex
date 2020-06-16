@@ -61,7 +61,7 @@ class Client():
             print( e )
             return None
         
-        return psicpy.Registry( self.services )
+        return pypsic.Registry( self.services )
         
     def getinteractor( self, query, server="DEFAULT",
                        first = 0, max = 10, format="xml25" ):

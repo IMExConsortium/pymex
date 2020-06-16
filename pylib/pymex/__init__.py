@@ -5,14 +5,9 @@ pkg_dir = os.path.dirname( os.path.realpath(__file__) )
 version_file = open(os.path.join( pkg_dir, 'VERSION') )
 version = version_file.read().strip()
 
-import psimi
-
-import dipropy
-
-import dippy
-import legpy
+import mif254
+import mif300
 
 import pypsic
 import pycent
-
 import pylout
