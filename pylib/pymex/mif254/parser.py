@@ -87,8 +87,10 @@ class Mif254Record: #Stores mif files as python dictionary of dictionaries.
             for entry in entries:
                 entryElem = Entry()
                 entryElem.build(entry)
-                self.data.append(entryElem)
-            
+                self.data.append(entryElem.data)
+
+    def toJson(self):
+        return json.dumps(self.data, indent=2)
 
 class Mif254Parser: #Parses a mif file associated with a filename. Saves to Mif254Record object.
     def __init__(self,debug=False):

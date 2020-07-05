@@ -58,6 +58,6 @@ s = {}
 
 for cs in source:    
     rec = mifParser.parse( cs )
-
-    print(rec)
+    print(type(rec))
+    print(rec.toJson())
 
