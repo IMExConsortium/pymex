@@ -9,7 +9,6 @@ Created on Mon Jun 29 13:56:57 2020
 # -*- coding: utf-8 -*-
 from lxml import etree
 import json
-from collections import defaultdict
 
 NAMESPACES = {"x":"http://psi.hupo.org/mi/mif"}
 LEN_NAMESPACE = len(NAMESPACES["x"])+2 #because of the two brackets around the text
@@ -28,7 +27,6 @@ def genericSearch(root): #Recursive search through element tree
         tag = item.tag[LEN_NAMESPACE:]
         if item.text and len(item)==0:
             if tag=="alias" or tag=="attribute":
-                print('hi')
                 modifiedAttrib = attribToDict(item.attrib)
                 modifiedAttrib["text"] = item.text
                 if tag in data.keys():
@@ -82,13 +80,12 @@ class Mif254Record: #Stores mif files as python dictionary of dictionaries.
     def build(self,filename):
         
         record = etree.parse(filename)
-        entries = record.xpath("/x:entrySet",namespaces=NAMESPACES)
-        if entries:
-            for entry in entries:
-                entryElem = Entry()
-                entryElem.build(entry)
-                self.data.append(entryElem.data)
-
+        entries = record.xpath("/x:entrySet/x:entry",namespaces=NAMESPACES)
+        for entry in entries:
+            entryElem = Entry()
+            entryElem.build(entry)
+            self.data.append(entryElem)
+    
     def toJson(self):
         return json.dumps(self.data, indent=2)
 
@@ -108,47 +105,70 @@ class Entry():
         self.data = {}
         
     def build(self,root):
-        root = root.xpath("x:entry",namespaces=NAMESPACES)[0]
-        source = Source()
-        experiments = Experiments()
-        interactors = Interactors()
-        interactions = Interactions() 
-        self.data["source"] = source.build(root)
-        self.data["experiments"] = experiments.build(root)
-        self.data["interactors"] = interactors.build(root)
-        self.data["interactions"] = interactions.build(root)
+
+        self.data["source"] = Source().build(root)
+        self.data["experiments"] = Experiments().build(root)
+        self.data["interactors"] = Interactors().build(root)
+        self.data["interactions"] = Interactions().build(root)
+        
+        return self.data
 
 class Source():
     def __init__(self):
         self.data={}
     
     def build(self,root):
-        root = root.xpath("x:source",namespaces=NAMESPACES)[0]
-        return genericSearch(root)
+        if(isinstance(root, str)):
+            record = etree.parse(root)
+            root = record.xpath("/x:entrySet/x:entry/x:source",namespaces=NAMESPACES)[0]
+        
+        else:
+            root = root.xpath("x:source",namespaces=NAMESPACES)[0]
+            
+        self.data = genericSearch(root)
+        return self.data
 
 class Experiments():
     def __init__(self):
         self.data={}
     
     def build(self,root):
-        root = root.xpath("x:experimentList",namespaces=NAMESPACES)[0]
-        return genericSearch(root)
+        if(isinstance(root, str)):
+            record = etree.parse(root)
+            root = record.xpath("/x:entrySet/x:entry/x:experimentList",namespaces=NAMESPACES)[0]
+        else:
+            root = root.xpath("x:experimentList",namespaces=NAMESPACES)[0]
+            
+        self.data = genericSearch(root)
+        return self.data
 
 class Interactors():
     def __init__(self):
         self.data={}
     
     def build(self,root):
-        root = root.xpath("x:interactorList",namespaces=NAMESPACES)[0]
-        return genericSearch(root)
+        if(isinstance(root, str)):
+            record = etree.parse(root)
+            root = record.xpath("/x:entrySet/x:entry/x:interactorList",namespaces=NAMESPACES)[0]
+        else:
+            root = root.xpath("x:interactorList",namespaces=NAMESPACES)[0]
+            
+        self.data = genericSearch(root)
+        return self.data
 
 class Interactions():
     def __init__(self):
         self.data={}
     
     def build(self,root):
-        root = root.xpath("x:interactionList",namespaces=NAMESPACES)[0]
-        return genericSearch(root)
+        if(isinstance(root, str)):
+            record = etree.parse(root)
+            root = record.xpath("/x:entrySet/x:entry/x:interactionList",namespaces=NAMESPACES)[0]
+        else:    
+            root = root.xpath("x:interactionList",namespaces=NAMESPACES)[0]
+            
+        self.data = genericSearch(root)
+        return self.data
     
 class Names():
     def __init__(self):
@@ -156,18 +176,22 @@ class Names():
         
     def build(self,root):
         root = root.xpath("x:names",namespaces=NAMESPACES)[0]
-        return genericSearch(root)     
+        self.data = genericSearch(root)
+        return self.data    
     
 class XRef():
     def __init__(self):
         self.data={}
     def build(self,root):
         root = root.xpath("x:xref",namespaces=NAMESPACES)[0]
-        return genericSearch(root)
+        self.data = genericSearch(root)
+        return self.data
                 
 class AttributeList():
     def __init__(self):
         self.data={}
     def build(self,root):
         root = root.xpath("x:attributeList",namespaces=NAMESPACES)[0]
-        return genericSearch(root)
+        self.data = genericSearch(root)
+        return self.data
+        
