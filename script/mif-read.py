@@ -30,7 +30,7 @@ parser.add_argument( '--format',  dest="format", type=str, required=False,
                      default='mif254', choices=['mif254', 'mif300'],
                      help='Input file format.')
 
-parser.add_argument( '-i',  dest="i", type=str, required=False, default=None)
+parser.add_argument( '-i',  dest="i", type=str, required=False, default=None) 
 
 args = parser.parse_args()
 

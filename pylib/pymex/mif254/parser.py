@@ -13,14 +13,17 @@ NAMESPACES = {"x":"http://psi.hupo.org/mi/mif"}
 LEN_NAMESPACE = len(NAMESPACES["x"])+2 #because of the two brackets around the text
 IDENTIFIED_LISTED_ELEMENTS = ["interactor","experimentDescription","participant","interaction","hostOrganism"] #these need to be hashed by ID in the recursive case
 
+def attribToDict( attrib ):
+    """Converts an ElementTree attrib object to a python dictionary."""
 
-def attribToDict(attrib): #Converts an ElementTree attrib object to a python dictionary.
     pyDict = {}
     for item in attrib:
         pyDict[item] = attrib.get(item)
     return pyDict
 
-def genericSearch( entry, dom  ): #Recursive search through element tree
+def genericSearch( entry, dom  ):
+    """Recursive search through element tree."""
+    
     data = {}
     for item in dom:        
         tag = item.tag[LEN_NAMESPACE:]
@@ -75,17 +78,21 @@ def genericSearch( entry, dom  ): #Recursive search through element tree
     
     return data
 
-class Mif254Parser: #Parses a mif file associated with a filename. Saves to Mif254Record object.
+class Mif254Parser():
+    """Parses a mif file associated with a filename. Saves to Mif254Record object."""
+
     def __init__(self,debug=False):
         self.debug = debug
         
     def parse( self, filename ):
+        "foo"
         mif = Mif254Record()
         mif.build( filename )
         return mif
 
-class Mif254Record: #Stores mif files as python dictionary of dictionaries.
-    # something else
+class Mif254Record():
+    """Mif record representation."""
+
     def __init__(self):
         self.root = []
     
@@ -99,8 +106,9 @@ class Mif254Record: #Stores mif files as python dictionary of dictionaries.
     
     def toJson(self):
         return json.dumps(self.root, indent=2)
-        
+    
 class Entry():
+    
     def __init__( self, root ):
         self.data = {}
         self.root = root
@@ -144,6 +152,7 @@ class Entry():
         return self.data
 
 class Source():
+    
     def __init__( self, entry ):
         self.data={}
         self.entry = entry
@@ -155,6 +164,8 @@ class Source():
                                 namespaces=NAMESPACES )[0]        
        
         self.data = genericSearch( self.entry, dom )
+
+        #element without id attribute: return data
         return self.data
 
 class Experiment():
@@ -162,28 +173,49 @@ class Experiment():
         self.data = {}
         self.entry = entry
         
-    def build( self, dom ):    
+    def build( self, dom ):
+
+        if(isinstance(dom, str)):
+            record = etree.parse( dom )
+            dom = record.xpath( "/x:entrySet/x:entry/x:experimentList/x:experiment",
+                                namespaces=NAMESPACES)[0]
+        
         id = dom.xpath("./@id", namespaces=NAMESPACES )    
         data =  genericSearch( self.entry, dom )
+
+        #element with id attribute: return (id,data) tuple   
         return ( id[0], data )
         
 class Interactor():
-    def __init__(self, entry):
+    def __init__( self, entry ):
         self.data={}
         self.entry = entry
 
     def build( self, dom ):
+
+        if(isinstance(dom, str)):
+            record = etree.parse(dom)
+            dom = record.xpath( "/x:entrySet/x:entry/x:interactorList",
+                                namespaces=NAMESPACES)[0]
+            
         id = dom.xpath("./@id", namespaces=NAMESPACES )
         data = genericSearch( self.entry, dom )
-            
+
+        #element with id attribute: return (id,data) tuple   
         return ( id[0], data )
 
 class Interaction():
-    def __init__(self,entry):
+    def __init__( self, entry ):
         self.data={}
         self.entry = entry
     
     def build( self, dom ):
+        
+        if(isinstance(dom, str)):
+            record = etree.parse(dom)
+            dom = record.xpath( "/x:entrySet/x:entry/x:interactionList",
+                                namespaces=NAMESPACES)[0]       
+        
         idata = {}
         id = dom.xpath("./@id", namespaces=NAMESPACES )
         for item in dom:
@@ -231,24 +263,88 @@ class Interaction():
                 idata[tag] = "bool"
                 
             elif tag =="confidenceList":
-                idata["confidence"] = "conf"
+                idata["confidence"] = "conf"  #skip fo rnow
                 
             elif tag =="parameterList":
-                idata["parameter"] = "param"
+                idata["parameter"] = "param"  #skip for now
+
+            elif tag =="avialabilityList":
+                idata["availability"] = []
+                # need parse what's inside
                 
             elif tag =="attributeList":
                 idata["attribute"] = Attribute(self.entry).build( item )
-                    
+
+        # idata should look like
+        #{
+        # "xref": {whatever Xref.build() returns}
+        # "names":{whatever Names.build() returns}
+        # "availability": {whatever Availability.build() returns
+        #                  or the value corresponding to availabilityRef
+        #                  taken from entry["availability"] 
+        #                 },
+        # "experiment": [{..},{..},{..}], the values correspond to the data        
+        #                                 field returned by 
+        #                                 Experiment().build() or to 
+        #                                 entry["experiment"] value 
+        #                                 corresponding to experimentRef
+        # "participant":[{..},{..},{..}], the values correspond to the data
+        # ...                             field returned by 
+        #}                                Participant().build() 
+                
+        #element with id attribute: return (id,data) tuple                    
         return ( id[0], idata )
+
+    
+class Participant():
+    def __init__(self, entry):
+        self.data = {}
+        self.entry = entry
+        
+    def build( self, dom ):
+        # build participant here 
+        pdata = {}
+        id = dom.xpath("./@id", namespaces=NAMESPACES )
+
+        # data should look like
+        #{
+        # "names":{whatever Names.build() returns}
+        # "xref": {whatever Xref.build() returns}
+        # "interactor":{..}, the value corresponds        
+        #                    to the data field returned by 
+        #                    Interactor().build() or to 
+        #                    entry["interactor"] value 
+        #                    corresponding
+        #  "interactionRef":{ interactionRef text },
+        #  "participantIdentMethod": [{..}],
+        #  "biologicalRole": {},
+        #  "experimentalRole":[{..}],    cvTerm (ignore expRefList for now)
+        #  "experimentalPreparation":[{..}], cvTerm (ignore expRefList for now)
+        #  "experimentalInteractor":[{..}], interactor (ignore expRefList for now)
+        #  "feature" : [{..}],     ignore for now
+        #  "hostOrganism": [{..}], ignore for now 
+        #  "confidence": [{..}],   ignore for now 
+        #  "parameter": [{..}],    ignore for now
+        #  "attribute": [{..},{..}], the values correspond
+        #                            to the values returned
+        #                            by Attribute().build()
+        #element with id attribute: return (id,data) tuple    
+        return (id[0], pdata )
     
 class Names():
     def __init__(self, entry ):
         self.data={}
         self.entry = entry
         
-    def build( self, dom ):
-        dom = dom.xpath("*",namespaces=NAMESPACES)[0]
+    def build( self, dom ):        
         self.data = genericSearch( self.entry, dom)
+
+        # should return, eg 
+        #{
+        #  "shortLabel": "DIP",
+        #  "fullName": "Database of Interacting Proteins",
+        #  "alias: ["alias1","alias2","alias3"]
+        #}        
         return self.data    
     
 class Xref():
@@ -257,8 +353,38 @@ class Xref():
         self.entry =entry
         
     def build( self, dom ):
-        dom = dom.xpath(".",namespaces=NAMESPACES)[0]
+        #dom = dom.xpath(".",namespaces=NAMESPACES)[0]
         self.data = genericSearch( self.entry, dom)
+
+        # should return (id, data) tuple, where id is
+        # set to  "db-id" + ":" + "MI:0465" (concatenation
+        # db and id fields of primaryRef and
+        # data is:
+        #{
+        # "primaryRef": {        
+        #    "db": "psi-mi",
+        #    "dbAc": "MI:0488",
+        #    "id": "MI:0465",
+        #    "refType": "identity",
+        #    "refTypeAc": "MI:0356"
+        #  },
+        #  "secondaryRef:[
+        #    {
+        #     "db": "intact",
+        #     "dbAc": "MI:0469",
+        #     "id": "EBI-1579232",
+        #     "refType": "identity",
+        #     "refTypeAc": "MI:0356"
+        #    },
+        #    {
+        #     "db": "pubmed",
+        #     "dbAc": "MI:0446",
+        #     "id": "14681454",
+        #     "refType": "primary-reference",
+        #     "refTypeAc": "MI:0358"
+        #    } ]
+        #}
+ 
         return self.data
 
 class Attribute():
@@ -271,6 +397,13 @@ class Attribute():
         attrDom = dom.xpath("x:attribute",namespaces=NAMESPACES)
         for attr in attrDom: 
             self.data.append("attr")
+
+        # should return 
+        #{"value":"dip@mbi.ucla.edu",    
+        # "name":"contact-email"
+        # "nameAc":"MI:0634"
+        #}
+            
         return self.data
         
 class Availability():
@@ -282,6 +415,13 @@ class Availability():
         dom = dom.xpath("x:availabilityList/x:availability",namespaces=NAMESPACES)
         if dom:        
             self.data = genericSearch( self.entry, dom )
+
+        #element with id attribute: return (id,data) tuple
+        # where data is:
+        #{
+        #  "value":"availability text here"
+        #}
+        
         return self.data
         
 class CvTerm():
@@ -290,20 +430,14 @@ class CvTerm():
         self.entry = entry
         
     def build( self, dom ):
-        # build cvterm here 
         
+        # should return 
+        #{
+        #  "names": { whatever Names.build() returns } 
+        #  "xref": { whatever Xref.build() returns}
+        #}
+                
         return self.data
         
-class Participant():
-    def __init__(self, entry):
-        self.data = {}
-        self.entry = entry
-        
-    def build( self, dom ):
-        # build participant here 
-        pdata = {}
-        id = dom.xpath("./@id", namespaces=NAMESPACES )
-        
-        return (id[0], pdata )
         
     
