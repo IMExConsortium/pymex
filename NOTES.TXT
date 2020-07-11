@@ -1,0 +1,13 @@
+PYMEX NOTES
+-----------
+
+2020/07/10
+  - added Avialability class
+  - modified Experiment.build() to return (id, data) tuple  
+  - modified Interactor.build() to return (id, data) tuple
+  - modified Interaction.build() to substitute experimentRef
+    with corresponding experimentDescription. This (as well as
+    substitutuions of interactorRef and availabilityRef) required     
+    some of the constructors to take root dictionary as
+    argument.
+  - added two test files (compact & expanded) to data directory     

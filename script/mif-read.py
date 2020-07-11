@@ -19,6 +19,8 @@ import pymex
 #test_mif25='/cluster1/mirrors/imex/intact/psi25/2018/9171338.zip'
 test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2019/15138291.zip'
 
+print(sys.argv)
+
 parser = argparse.ArgumentParser( description='MIF Reader' )
 parser.add_argument( '--source',  dest="source", type=str, required=False,
                      default = test_mif25, 
@@ -27,6 +29,8 @@ parser.add_argument( '--source',  dest="source", type=str, required=False,
 parser.add_argument( '--format',  dest="format", type=str, required=False,
                      default='mif254', choices=['mif254', 'mif300'],
                      help='Input file format.')
+
+parser.add_argument( '-i',  dest="i", type=str, required=False, default=None)
 
 args = parser.parse_args()
 
@@ -50,8 +54,10 @@ if args.source.endswith( ".zip" ):
         
         if  sl.find("negative") < 0 :            
             source.append( myzip.open( sl, 'r' ) )
-else:
+elif args.source.startswith( "http://" ) or args.source.startswith( "https://" ) or args.source.startswith( "ftp://" ) :
     source.append( urlopen( args.source ) )
+else:
+    source.append( open( args.source,'r' ) )
 
 aclist = {}
 s = {} 
