@@ -1,0 +1,10 @@
+PYMEX NOTES
+-----------
+
+2020/07/10
+  - added Avialability class
+  - modified Experiment.build() to return dictionary  
+  - modified Interaction.build() so that it substitutes
+    experimentRef with corresponding experimentDescription.
+      
+     
