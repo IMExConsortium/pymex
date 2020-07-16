@@ -1,17 +1,26 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Jun 29 13:56:57 2020
-
 @author: andrei
 """
+#-------------------- IMPORTS -----------------------------------------------------------------------
 
 # -*- coding: utf-8 -*-
 from lxml import etree
 import json
 
+#-------------------------------- GLOBALS -------------------------------------------------------------
 NAMESPACES = {"x":"http://psi.hupo.org/mi/mif"}
 LEN_NAMESPACE = len(NAMESPACES["x"])+2 #because of the two brackets around the text
 IDENTIFIED_LISTED_ELEMENTS = ["interactor","experimentDescription","participant","interaction","hostOrganism"] #these need to be hashed by ID in the recursive case
+
+#-------------------------------- UTILITIES --------------------------------------------------
+
+def isCvTerm(dom):
+    """ Determines whether or not a given ElementTree element is a CvTerm."""
+
+    elemList = list(dom)
+    return (len(elemList) == 2 and elemList[0].tag[LEN_NAMESPACE:] == "names" and elemList[1].tag[LEN_NAMESPACE:] == "xref")
 
 def attribToDict( attrib ):
     """Converts an ElementTree attrib object to a python dictionary."""
@@ -27,31 +36,18 @@ def genericSearch( entry, dom  ):
     data = {}
     for item in dom:        
         tag = item.tag[LEN_NAMESPACE:]
-        #print(tag)
-        if item.text and len(item)==0:
-            if tag=="alias" or tag=="attribute":
-                modifiedAttrib = attribToDict(item.attrib)
-                modifiedAttrib["text"] = item.text
-                if tag in data.keys():
-
-                    data[tag].append(modifiedAttrib)
+        if tag in IDENTIFIED_LISTED_ELEMENTS:
+                if tag=="hostOrganism": 
+                    tag+= " ncbiTaxId:" + item.attrib.get("ncbiTaxId")
                 else:
-                    data[tag] = [modifiedAttrib]
+                    tag+= " id:" + item.attrib.get("id")
 
-            elif tag == "experimentRef":
-                data["experiment"] = entry["experiment"][item.text.strip()]                
-                
+        if item.text and len(item)==0: # We have reached a leaf node: does it have attributes or not?      
+            if not item.attrib:
+                data[tag] = item.text  
             else:
-                data[tag] = {}
-                data[tag]["text"] = item.text
-                data[tag]["elementAttrib"]=attribToDict(item.attrib)
-        
-        elif item.attrib and len(item)==0: #pretty much all items have 
-            if tag=="secondaryRef": #secondaryRef IDs are unique,so we hash by that.
-                tag += " id=" + item.attrib.get("id")                
-            data[tag] = {}
-            data[tag]["elementAttrib"]=attribToDict(item.attrib)
-            #print(tag,'b')
+                data[tag] = {"text": item.text,"elementAttrib": item.attrib}
+    
         elif tag == "names":
             names = Names( entry )
             data["names"] = names.build( item )
@@ -63,20 +59,19 @@ def genericSearch( entry, dom  ):
         elif tag == "attributeList":
             #attributeList = AttributeList( entry )
             data["attribute"] = Attribute(entry).build( item )
-            print(tag,'e')
-        else:
-            if tag in IDENTIFIED_LISTED_ELEMENTS:
-                if tag=="hostOrganism":
-                    tag+= " ncbiTaxId=" + item.attrib.get("ncbiTaxId")
-                else:
-                    tag+= " id=" + item.attrib.get("id")
-            if tag == 'experimentDescription':                
-                data[tag] = genericSearch( entry, item)
-                if item.attrib:
-                    data[tag]["elementAttrib"]=attribToDict(item.attrib)
+        elif isCvTerm(item):
+            cvterm = CvTerm(entry)
+            data[tag] = cvterm.build( item )
+        else:            
+            data[tag] = genericSearch( entry, item)
+            if item.attrib:
+                data[tag]["elementAttrib"]=attribToDict(item.attrib)
             #print(tag,'f')
     
     return data
+
+#------------------------------ CLASSES ------------------------------------------------------
+    
 
 class Mif254Parser():
     """Parses a mif file associated with a filename. Saves to Mif254Record object."""
@@ -132,7 +127,6 @@ class Entry():
                 intrElem = item.xpath( "x:interactor", namespaces=NAMESPACES )
                 for intr in intrElem:
                     (cId, cInt) =  Interactor( self.data ).build( intr )
-                    print(cId)
                     self.data["interactor"][cId] = cInt 
 
             elif tag == 'interactionList':
@@ -141,7 +135,6 @@ class Entry():
                for intn in intnElem:
                    (cId, cIntn) =  Interaction( self.data ).build( intn )
                    self.data["interaction"].append( cIntn )
-                    
             elif tag == 'availabilityList':
                 self.data["availability"] = {}
                 avlbElem = item.xpath( "x:availability", namespaces=NAMESPACES )
@@ -180,7 +173,7 @@ class Experiment():
             dom = record.xpath( "/x:entrySet/x:entry/x:experimentList/x:experiment",
                                 namespaces=NAMESPACES)[0]
         
-        id = dom.xpath("./@id", namespaces=NAMESPACES )    
+        id = dom.xpath("./@id", namespaces=NAMESPACES )
         data =  genericSearch( self.entry, dom )
 
         #element with id attribute: return (id,data) tuple   
@@ -208,7 +201,6 @@ class Interaction():
     def __init__( self, entry ):
         self.data={}
         self.entry = entry
-    
     def build( self, dom ):
         
         if(isinstance(dom, str)):
@@ -219,16 +211,9 @@ class Interaction():
         idata = {}
         id = dom.xpath("./@id", namespaces=NAMESPACES )
         for item in dom:
-            print(item)
             tag = item.tag[LEN_NAMESPACE:]
-            print(tag)
-            if tag == "names":                          
-                idata["names"] = Names(self.entry).build( item )    
 
-            elif tag == "xref":                           
-                idata["xref"] = Xref(self.entry).build( item )
-
-            elif tag == "experimentList":
+            if tag == "experimentList":
 
                 idata["experiment"] = []
 
@@ -237,27 +222,23 @@ class Interaction():
                 expElem = item.xpath( "x:experimentDescription", namespaces=NAMESPACES )
                 for exp in expElem:
                     
-                    (cId, cExp) =  Experiment( self.data ).build( exp )
+                    (cId, cExp) =  Experiment( self.entry ).build( exp )
                     idata["experiment"].append( cExp )
 
                 #  compact form: <experimentRef>...</experimentRef>
                     
                 refElem = item.xpath( "x:experimentRef/text()", namespaces=NAMESPACES )
 
-                for ref in refElem:                
+                for ref in refElem:       
+
                     idata["experiment"].append( self.entry["experiment"][ref] ) 
 
             elif tag == "participantList":
                 idata["participant"] = []
                 prtElem = item.xpath( "x:participant", namespaces=NAMESPACES )
-                for prt in prtElem:                
-                    (cId, cPrt) =  Participant( self.data ).build( prt )
+                for prt in prtElem: 
+                    (cId, cPrt) =  Participant( self.entry ).build( prt )
                     idata["participant"].append( cPrt )
-
-            elif tag == "interactionType":
-                if "interactionType" not in  idata:
-                    idata["interactionType"] = []
-                idata["interactionType"].append( CvTerm(self.entry).build( item ) )
                 
             elif tag in ["modelled","intraMolecular","negative"]:
                 idata[tag] = "bool"
@@ -267,14 +248,9 @@ class Interaction():
                 
             elif tag =="parameterList":
                 idata["parameter"] = "param"  #skip for now
-
-            elif tag =="avialabilityList":
-                idata["availability"] = []
-                # need parse what's inside
-                
-            elif tag =="attributeList":
-                idata["attribute"] = Attribute(self.entry).build( item )
-
+            
+            else:
+                idata[tag] = genericSearch(self.entry, item)
         # idata should look like
         #{
         # "xref": {whatever Xref.build() returns}
@@ -305,7 +281,17 @@ class Participant():
         # build participant here 
         pdata = {}
         id = dom.xpath("./@id", namespaces=NAMESPACES )
+        for item in dom:
+            tag = item.tag[LEN_NAMESPACE:]
+            
+            if tag == "interactorRef":
+                pdata["interactor"] = []
+                refElem= item.xpath("text()")
+                for ref in refElem:
 
+                    pdata["interactor"].append(self.entry["interactor"][ref])
+            else:
+                pdata[tag] = genericSearch(self.entry,item)
         # data should look like
         #{
         # "names":{whatever Names.build() returns}
@@ -333,29 +319,56 @@ class Participant():
     
 class Names():
     def __init__(self, entry ):
-        self.data={}
         self.entry = entry
         
     def build( self, dom ):        
-        self.data = genericSearch( self.entry, dom)
-
+        ndata = {}
+        for item in dom:
+            tag = item.tag[LEN_NAMESPACE:]
+            if tag == "shortLabel" or tag == "fullName":
+                ndata[tag] = item.text
+            else:
+                if not "alias" in ndata.keys():
+                    ndata["alias"] = []
+                modifiedAttrib = attribToDict(item.attrib)
+                modifiedAttrib["value"] = item.text
+                ndata["alias"].append(modifiedAttrib)
         # should return, eg 
         #{
         #  "shortLabel": "DIP",
         #  "fullName": "Database of Interacting Proteins",
         #  "alias: ["alias1","alias2","alias3"]
         #}        
-        return self.data    
+        return ndata   
     
 class Xref():
     def __init__( self, entry ):
-        self.data={}
+        #self.data={}
         self.entry =entry
         
     def build( self, dom ):
         #dom = dom.xpath(".",namespaces=NAMESPACES)[0]
-        self.data = genericSearch( self.entry, dom)
-
+        #self.data = genericSearch( self.entry, dom)
+        xdata = {}
+        id = ""
+        for item in dom:
+            tag = item.tag[LEN_NAMESPACE:]
+            if tag == "primaryRef":
+                id = item.attrib.get("db")+":"+item.attrib.get("id")
+                xdata["primaryRef"] = attribToDict(item.attrib) 
+                
+            elif tag == "secondaryRef":
+                db_id = item.attrib.get("db")+":"+item.attrib.get("id")
+                attribDict = attribToDict(item.attrib)
+                if not "secondaryRef" in xdata.keys():
+                    xdata["secondaryRef"] = []
+                    xdata["secRefInd"] = {}
+                    
+                xdata["secondaryRef"].append(attribDict)
+                xdata["secRefInd"][db_id] = attribDict
+                
+        return (id, xdata)
+                    
         # should return (id, data) tuple, where id is
         # set to  "db-id" + ":" + "MI:0465" (concatenation
         # db and id fields of primaryRef and
@@ -385,18 +398,20 @@ class Xref():
         #    } ]
         #}
  
-        return self.data
+
 
 class Attribute():
     def __init__( self, entry ):
-        self.data = []
+        #self.data = []
         self.entry =entry
         
     def build( self, dom ):
-        
+        attribdata = []
         attrDom = dom.xpath("x:attribute",namespaces=NAMESPACES)
         for attr in attrDom: 
-            self.data.append("attr")
+            modifiedAttrib = attribToDict(attr.attrib)
+            modifiedAttrib["value"] = attr.text
+            attribdata.append(modifiedAttrib)    
 
         # should return 
         #{"value":"dip@mbi.ucla.edu",    
@@ -404,40 +419,43 @@ class Attribute():
         # "nameAc":"MI:0634"
         #}
             
-        return self.data
+        return attribdata
         
 class Availability():
     def __init__( self, entry ):
-        self.data = []
         self.entry = entry
         
     def build( self, dom ):
-        dom = dom.xpath("x:availabilityList/x:availability",namespaces=NAMESPACES)
-        if dom:        
-            self.data = genericSearch( self.entry, dom )
-
+        
+        id = dom.attrib.get("id")
+        availdata = {"value":dom.text}
+        
         #element with id attribute: return (id,data) tuple
         # where data is:
         #{
         #  "value":"availability text here"
         #}
         
-        return self.data
+        return (id, availdata)
         
 class CvTerm():
     def __init__(self, entry):
-        self.data = {}
         self.entry = entry
         
     def build( self, dom ):
-        
+        cvdata = {}
+        for item in dom:
+            tag = item.tag[LEN_NAMESPACE:]
+            if tag == "names":                          
+                cvdata["names"] = Names(self.entry).build( item )    
+
+            elif tag == "xref":                           
+                cvdata["xref"] = Xref(self.entry).build( item )
+                
         # should return 
         #{
         #  "names": { whatever Names.build() returns } 
         #  "xref": { whatever Xref.build() returns}
         #}
                 
-        return self.data
-        
-        
-    
+        return cvdata
