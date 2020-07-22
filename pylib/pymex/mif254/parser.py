@@ -4,7 +4,7 @@ Created on Mon Jun 29 13:56:57 2020
 @author: andrei
 """
 #-------------------- IMPORTS -----------------------------------------------------------------------
-
+ 
 # -*- coding: utf-8 -*-
 from lxml import etree
 import json
@@ -46,7 +46,7 @@ def genericSearch( entry, dom  ):
             if not item.attrib:
                 data[tag] = item.text  
             else:
-                data[tag] = {"text": item.text,"elementAttrib": item.attrib}
+                data[tag] = {"text": item.text,"elementAttrib": attribToDict( item.attrib )  }
     
         elif tag == "names":
             names = Names( entry )
@@ -59,6 +59,7 @@ def genericSearch( entry, dom  ):
         elif tag == "attributeList":
             #attributeList = AttributeList( entry )
             data["attribute"] = Attribute(entry).build( item )
+            
         elif isCvTerm(item):
             cvterm = CvTerm(entry)
             data[tag] = cvterm.build( item )
@@ -98,9 +99,17 @@ class Mif254Record():
         for entry in entries:
             entryElem = Entry( self.root )
             self.root.append( entryElem.build( entry ) )
-    
+
+    def fromJson(self, file ):
+        self.root = json.load( file )
+        return self
+
     def toJson(self):
         return json.dumps(self.root, indent=2)
+
+    def toMif254( self ):
+        return "<entrySet>..</entrySet>"
+    
     
 class Entry():
     
@@ -139,7 +148,7 @@ class Entry():
                 self.data["availability"] = {}
                 avlbElem = item.xpath( "x:availability", namespaces=NAMESPACES )
                 for avlb in avlbElem:
-                    (cId, cAvlb) =  Availability( self.data ).build( intn )
+                    (cId, cAvlb) =  Availability( self.data ).build(  avlb  )
                     self.data["availability"][cId] = cAvlb
         
         return self.data
@@ -403,7 +412,7 @@ class Xref():
 class Attribute():
     def __init__( self, entry ):
         #self.data = []
-        self.entry =entry
+        self.entry = entry
         
     def build( self, dom ):
         attribdata = []
