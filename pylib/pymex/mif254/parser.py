@@ -12,10 +12,23 @@ import json
 #-------------------------------- GLOBALS -------------------------------------------------------------
 NAMESPACES = {"x":"http://psi.hupo.org/mi/mif"}
 LEN_NAMESPACE = len(NAMESPACES["x"])+2 #because of the two brackets around the text
-IDENTIFIED_LISTED_ELEMENTS = ["interactor","experimentDescription","participant","interaction","hostOrganism"] #these need to be hashed by ID in the recursive case
-
+IDENTIFIED_LISTED_ELEMENTS = ["interactor","experimentDescription","participant","interaction"] #these need to be hashed by ID in the recursive case
+LISTED_ELEMENTS = ["hostOrganismList","experimentalRoleList","experimentalPreparationList","featureList","featureRangeList"]
 #-------------------------------- UTILITIES --------------------------------------------------
-
+def modifyTag(item): 
+    """ Modifies tag of an item if necessary."""
+    tag = item.tag[LEN_NAMESPACE:]
+    if not tag in IDENTIFIED_LISTED_ELEMENTS:
+        return tag
+    elif tag in LISTED_ELEMENTS: #Get rid of "list", as per Salwinski's preferences
+        tag = tag[:-4]
+    else:
+        if tag=="hostOrganism": 
+            tag+= " ncbiTaxId:" + item.attrib.get("ncbiTaxId")
+        else:
+            tag+= " id:" + item.attrib.get("id")
+    return tag
+    
 def isCvTerm(dom):
     """ Determines whether or not a given ElementTree element is a CvTerm."""
 
@@ -30,46 +43,48 @@ def attribToDict( attrib ):
         pyDict[item] = attrib.get(item)
     return pyDict
 
-def genericSearch( entry, dom  ):
+def genericSearch( entry, item ):
     """Recursive search through element tree."""
     
-    data = {}
-    for item in dom:        
-        tag = item.tag[LEN_NAMESPACE:]
-        if tag in IDENTIFIED_LISTED_ELEMENTS:
-                if tag=="hostOrganism": 
-                    tag+= " ncbiTaxId:" + item.attrib.get("ncbiTaxId")
-                else:
-                    tag+= " id:" + item.attrib.get("id")
+    tag = modifyTag(item)
+    
+    if item.text and len(item)==0: # We have reached a leaf node: does it have attributes or not?      
+        if not item.attrib:
+            return item.text  
+        else:
+            return {"text": item.text,"elementAttrib": attribToDict( item.attrib )  }
+     
+    elif tag == "names":
+        names = Names( entry )
+        return names.build( item )
+        #print(tag,'c')
+    elif tag == "xref":
+        xref = Xref( entry )
+        return xref.build( item )
+        #print(tag,'d')
+    elif tag == "attributeList":
+        #attributeList = AttributeList( entry )
+        return Attribute(entry).build( item )
+    
+    elif tag in LISTED_ELEMENTS:
+        return ListedElement(entry).build(item)
+    
+    elif isCvTerm(item):
+        cvterm = CvTerm(entry)
+        return cvterm.build( item )
+    
+    else:
+        data={}
+        if item.attrib:
+            data["elementAttrib"]=attribToDict(item.attrib)
 
-        if item.text and len(item)==0: # We have reached a leaf node: does it have attributes or not?      
-            if not item.attrib:
-                data[tag] = item.text  
-            else:
-                data[tag] = {"text": item.text,"elementAttrib": attribToDict( item.attrib )  }
+        for child in item: 
+            tag = modifyTag(child)
+            data[tag] = genericSearch( entry, child )
+
+        #print(tag,'f')
     
-        elif tag == "names":
-            names = Names( entry )
-            data["names"] = names.build( item )
-            #print(tag,'c')
-        elif tag == "xref":
-            xref = Xref( entry )
-            data["xref"] = xref.build( item )
-            #print(tag,'d')
-        elif tag == "attributeList":
-            #attributeList = AttributeList( entry )
-            data["attribute"] = Attribute(entry).build( item )
-            
-        elif isCvTerm(item):
-            cvterm = CvTerm(entry)
-            data[tag] = cvterm.build( item )
-        else:            
-            data[tag] = genericSearch( entry, item)
-            if item.attrib:
-                data[tag]["elementAttrib"]=attribToDict(item.attrib)
-            #print(tag,'f')
-    
-    return data
+        return data
 
 #------------------------------ CLASSES ------------------------------------------------------
     
@@ -165,8 +180,10 @@ class Source():
             dom = record.xpath( "/x:entrySet/x:entry/x:source",
                                 namespaces=NAMESPACES )[0]        
        
-        self.data = genericSearch( self.entry, dom )
-
+        for item in dom:
+            tag = modifyTag(item)
+            self.data[tag] = genericSearch( self.entry, item )
+            
         #element without id attribute: return data
         return self.data
 
@@ -183,10 +200,13 @@ class Experiment():
                                 namespaces=NAMESPACES)[0]
         
         id = dom.xpath("./@id", namespaces=NAMESPACES )
-        data =  genericSearch( self.entry, dom )
+        
+        for item in dom:
+            tag = modifyTag(item)
+            self.data[tag] = genericSearch( self.entry, item )
 
         #element with id attribute: return (id,data) tuple   
-        return ( id[0], data )
+        return ( id[0], self.data )
         
 class Interactor():
     def __init__( self, entry ):
@@ -201,10 +221,13 @@ class Interactor():
                                 namespaces=NAMESPACES)[0]
             
         id = dom.xpath("./@id", namespaces=NAMESPACES )
-        data = genericSearch( self.entry, dom )
+
+        for item in dom:
+            tag = modifyTag(item)
+            self.data[tag] = genericSearch( self.entry, item )
 
         #element with id attribute: return (id,data) tuple   
-        return ( id[0], data )
+        return ( id[0], self.data )
 
 class Interaction():
     def __init__( self, entry ):
@@ -259,6 +282,7 @@ class Interaction():
                 idata["parameter"] = "param"  #skip for now
             
             else:
+                tag = modifyTag(item)
                 idata[tag] = genericSearch(self.entry, item)
         # idata should look like
         #{
@@ -300,6 +324,7 @@ class Participant():
 
                     pdata["interactor"].append(self.entry["interactor"][ref])
             else:
+                tag = modifyTag(item)
                 pdata[tag] = genericSearch(self.entry,item)
         # data should look like
         #{
@@ -468,3 +493,14 @@ class CvTerm():
         #}
                 
         return cvdata
+
+class ListedElement():
+    def __init__(self,entry):
+        self.entry = entry
+    
+    def build( self, dom ):
+        eldata = []
+        for item in dom:
+            eldata.append(genericSearch(self.entry,item))
+            
+        return eldata
