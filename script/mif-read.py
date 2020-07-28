@@ -4,7 +4,7 @@ import os
 
 pkg_dir = os.path.dirname( os.path.realpath(__file__) )
 pylib_dir = os.path.join( pkg_dir, '..','pylib' )
-
+print( sys.path)
 if os.path.isdir( pylib_dir ):
     print("mif-digest: using source library version")
     sys.path.insert(0,pylib_dir)
@@ -88,7 +88,7 @@ for cs in source:
             
     if args.ofile == 'STDOUT':
          if args.oformat == 'mif254':
-             print( rec.toMif254() )
+             print( rec.toMif254().decode("utf-8") )
          else:
              print( rec.toJson() )
     else:
