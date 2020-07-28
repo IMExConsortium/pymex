@@ -11,22 +11,16 @@ import json
 
 #-------------------------------- GLOBALS -------------------------------------------------------------
 NAMESPACES = {"x":"http://psi.hupo.org/mi/mif"}
-LEN_NAMESPACE = len(NAMESPACES["x"])+2 #because of the two brackets around the text
-IDENTIFIED_LISTED_ELEMENTS = ["interactor","experimentDescription","participant","interaction"] #these need to be hashed by ID in the recursive case
-LISTED_ELEMENTS = ["hostOrganismList","experimentalRoleList","experimentalPreparationList","featureList","featureRangeList"]
+LEN_NAMESPACE = len(NAMESPACES["x"])+2 #because of the two brackets around the text 
+LISTED_ELEMENTS = ["hostOrganismList","experimentalRoleList","experimentalPreparationList","featureList","featureRangeList","attributeList"] #we no longer have a need for identified listed elements.
 #-------------------------------- UTILITIES --------------------------------------------------
 def modifyTag(item): 
     """ Modifies tag of an item if necessary."""
     tag = item.tag[LEN_NAMESPACE:]
-    if not tag in IDENTIFIED_LISTED_ELEMENTS:
+    if not tag in LISTED_ELEMENTS:
         return tag
-    elif tag in LISTED_ELEMENTS: #Get rid of "list", as per Salwinski's preferences
+    else: #Get rid of "list", as per Salwinski's preferences
         tag = tag[:-4]
-    else:
-        if tag=="hostOrganism": 
-            tag+= " ncbiTaxId:" + item.attrib.get("ncbiTaxId")
-        else:
-            tag+= " id:" + item.attrib.get("id")
     return tag
     
 def isCvTerm(dom):
@@ -504,3 +498,5 @@ class ListedElement():
             eldata.append(genericSearch(self.entry,item))
             
         return eldata
+
+    
