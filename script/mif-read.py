@@ -88,7 +88,7 @@ for cs in source:
             
     if args.ofile == 'STDOUT':
          if args.oformat == 'mif254':
-             print( rec.toMif254() )
+             print( rec.toMif254().decode("utf-8") )
          else:
              print( rec.toJson() )
     else:

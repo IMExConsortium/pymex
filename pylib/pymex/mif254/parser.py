@@ -9,33 +9,7 @@ Created on Mon Jun 29 13:56:57 2020
 from lxml import etree
 import json
 
-#-------------------------------- GLOBALS -------------------------------------------------------------
-NAMESPACES = {"x":"http://psi.hupo.org/mi/mif"}
-LEN_NAMESPACE = len(NAMESPACES["x"])+2 #because of the two brackets around the text 
-LISTED_ELEMENTS = ["hostOrganismList","experimentalRoleList","experimentalPreparationList","featureList","featureRangeList","attributeList"] #we no longer have a need for identified listed elements.
-#-------------------------------- UTILITIES --------------------------------------------------
-def modifyTag(item): 
-    """ Modifies tag of an item if necessary."""
-    tag = item.tag[LEN_NAMESPACE:]
-    if not tag in LISTED_ELEMENTS:
-        return tag
-    else: #Get rid of "list", as per Salwinski's preferences
-        tag = tag[:-4]
-    return tag
-    
-def isCvTerm(dom):
-    """ Determines whether or not a given ElementTree element is a CvTerm."""
-
-    elemList = list(dom)
-    return (len(elemList) == 2 and elemList[0].tag[LEN_NAMESPACE:] == "names" and elemList[1].tag[LEN_NAMESPACE:] == "xref")
-
-def attribToDict( attrib ):
-    """Converts an ElementTree attrib object to a python dictionary."""
-
-    pyDict = {}
-    for item in attrib:
-        pyDict[item] = attrib.get(item)
-    return pyDict
+from mif254.utils import *
 
 def genericSearch( entry, item ):
     """Recursive search through element tree."""
@@ -50,22 +24,22 @@ def genericSearch( entry, item ):
      
     elif tag == "names":
         names = Names( entry )
-        return names.build( item )
+        return names.parseDom( item )
         #print(tag,'c')
     elif tag == "xref":
         xref = Xref( entry )
-        return xref.build( item )
+        return xref.parseDom( item )
         #print(tag,'d')
     elif tag == "attributeList":
         #attributeList = AttributeList( entry )
-        return Attribute(entry).build( item )
+        return Attribute(entry).parseDom( item )
     
     elif tag in LISTED_ELEMENTS:
-        return ListedElement(entry).build(item)
+        return ListedElement(entry).parseDom(item)
     
     elif isCvTerm(item):
         cvterm = CvTerm(entry)
-        return cvterm.build( item )
+        return cvterm.parseDom( item )
     
     else:
         data={}
@@ -92,7 +66,7 @@ class Mif254Parser():
     def parse( self, filename ):
         "foo"
         mif = Mif254Record()
-        mif.build( filename )
+        mif.parseDom( filename )
         return mif
 
 class Mif254Record():
@@ -100,16 +74,40 @@ class Mif254Record():
 
     def __init__(self):
         self.root = []
+
+    @property
+    def entry(self):
+        return self.getEntry()
     
-    def build( self, filename ):
+    def getEntry(self, id = 0):
+        if len(self.root) > id:
+            return Entry(self.root, id)
+        else:
+            return None
+    
+    @property          
+    def interaction(self):
+        
+        ret = []
+        
+        for i in Entry( self.root ).interaction:
+            ret.append( self.getEntry().getInteraction(id) )
+        
+        #return Entry(self.root).interaction
+        return ret
+        
+    def __getitem__(self, id):
+        return self.getEntry().getInteraction(id)    
+        
+    def parseDom( self, filename ):
         
         record = etree.parse( filename )
         entries = record.xpath( "/x:entrySet/x:entry", namespaces=NAMESPACES )
         for entry in entries:
             entryElem = Entry( self.root )
-            self.root.append( entryElem.build( entry ) )
+            self.root.append( entryElem.parseDom( entry ) )
 
-    def fromJson(self, file ):
+    def parseJson(self, file ):
         self.root = json.load( file )
         return self
 
@@ -117,47 +115,90 @@ class Mif254Record():
         return json.dumps(self.root, indent=2)
 
     def toMif254( self ):
-        return "<entrySet>..</entrySet>"
+
+        rootDom = etree.Element(MIF + "entrySet", nsmap=NSMAP)
+        # required attributes:
+        # level="2" version="5" minorVersion="4"
+ 
+        rootDom.set( "level","2")
+        rootDom.set( "version","5")
+        rootDom.set( "minorVersion","4")
     
+        for entry in self.root:
+            entryDom = etree.SubElement( rootDom, MIF + "entry" )            
+            Entry( self.root ).toMif254( entryDom, entry, 1 ) 
+            
+        return etree.tostring( rootDom, pretty_print=True )
+        
     
 class Entry():
     
-    def __init__( self, root ):
+    def __init__( self, root, id = 0 ):
         self.data = {}
         self.root = root
+        self.id = 0
+
+    def __getitem__( self, id ):
+        return self.getInteraction( id )
+
+    @property
+    def interaction(self):        
+        return self.root[self.id]["interaction"] 
+
+    def getInteraction( self, id, eid=None ):
+        if eid is not None:
+            return Interaction(self.root[eid],id)
+        else:       
+            return Interaction(self.root[self.id],id)
         
-    def build( self, dom ):
+    def toMif254( self, parent, entry, curid ):
+        if "source" in entry:
+            sourceDom = etree.SubElement( parent, MIF + "source" )
+            curid = Source( self.root ).toMif254( sourceDom, entry["source"], curid )
+            
+        # interaction list only (this enforces expanded version) 
+        if "interaction" in entry and len(entry["interaction"]) > 0:
+            intnListDom = etree.SubElement( parent, MIF + "interactionList" )
+
+            for intn in entry["interaction"]:
+                intnDom = etree.SubElement( intnListDom, MIF + "interaction" )
+                
+                intnDom.set("id", str(curid))
+                curid += 1
+                curid = Interaction( self.root ).toMif254( sourceDom, intn,curid )
+        
+    def parseDom( self, dom ):
 
         for item in dom:
             tag = item.tag[LEN_NAMESPACE:]            
             if tag == 'source':
-                self.data["source"] = Source( self.data ).build( item )
+                self.data["source"] = Source( self.data ).parseDom( item )
                 
             elif tag == 'experimentList':
                 self.data["experiment"] = {}
                 expElem = item.xpath( "x:experimentDescription", namespaces=NAMESPACES )            
                 for exp in expElem:                    
-                    (cId, cExp) =  Experiment( self.data ).build( exp )                    
+                    (cId, cExp) =  Experiment( self.data ).parseDom( exp )                    
                     self.data["experiment"][cId] = cExp
                 
             elif tag == 'interactorList':
                 self.data["interactor"] = {}
                 intrElem = item.xpath( "x:interactor", namespaces=NAMESPACES )
                 for intr in intrElem:
-                    (cId, cInt) =  Interactor( self.data ).build( intr )
+                    (cId, cInt) =  Interactor( self.data ).parseDom( intr )
                     self.data["interactor"][cId] = cInt 
 
             elif tag == 'interactionList':
                self.data["interaction"] = []
                intnElem = item.xpath( "x:interaction", namespaces=NAMESPACES )
                for intn in intnElem:
-                   (cId, cIntn) =  Interaction( self.data ).build( intn )
+                   (cId, cIntn) =  Interaction( self.data ).parseDom( intn )
                    self.data["interaction"].append( cIntn )
             elif tag == 'availabilityList':
                 self.data["availability"] = {}
                 avlbElem = item.xpath( "x:availability", namespaces=NAMESPACES )
                 for avlb in avlbElem:
-                    (cId, cAvlb) =  Availability( self.data ).build(  avlb  )
+                    (cId, cAvlb) =  Availability( self.data ).parseDom(  avlb  )
                     self.data["availability"][cId] = cAvlb
         
         return self.data
@@ -168,7 +209,7 @@ class Source():
         self.data={}
         self.entry = entry
 
-    def build( self, dom ):
+    def parseDom( self, dom ):
         if(isinstance( dom, str)):
             record = etree.parse( dom )
             dom = record.xpath( "/x:entrySet/x:entry/x:source",
@@ -181,12 +222,16 @@ class Source():
         #element without id attribute: return data
         return self.data
 
+    def toMif254( self, parent, source, curid ):
+        # build source content here
+        return curid
+    
 class Experiment():
     def __init__( self, entry ):
         self.data = {}
         self.entry = entry
         
-    def build( self, dom ):
+    def parseDom( self, dom ):
 
         if(isinstance(dom, str)):
             record = etree.parse( dom )
@@ -207,7 +252,7 @@ class Interactor():
         self.data={}
         self.entry = entry
 
-    def build( self, dom ):
+    def parseDom( self, dom ):
 
         if(isinstance(dom, str)):
             record = etree.parse(dom)
@@ -224,10 +269,30 @@ class Interactor():
         return ( id[0], self.data )
 
 class Interaction():
-    def __init__( self, entry ):
+    def __init__( self, entry, id=0 ):
         self.data={}
         self.entry = entry
-    def build( self, dom ):
+        self.id = id
+
+    @property
+    def participant(self):
+        return self.entry["interaction"][self.id]["participant"]
+
+    @property
+    def itype(self):
+        return self.entry["interaction"][self.id]["interactionType"]
+
+    @property
+    def source(self):
+        return self.entry["source"]
+
+
+    def toMif254( self, parent, source, curid ):
+        # build interaction content here
+        return curid
+
+        
+    def parseDom( self, dom ):
         
         if(isinstance(dom, str)):
             record = etree.parse(dom)
@@ -248,7 +313,7 @@ class Interaction():
                 expElem = item.xpath( "x:experimentDescription", namespaces=NAMESPACES )
                 for exp in expElem:
                     
-                    (cId, cExp) =  Experiment( self.entry ).build( exp )
+                    (cId, cExp) =  Experiment( self.entry ).parseDom( exp )
                     idata["experiment"].append( cExp )
 
                 #  compact form: <experimentRef>...</experimentRef>
@@ -263,7 +328,7 @@ class Interaction():
                 idata["participant"] = []
                 prtElem = item.xpath( "x:participant", namespaces=NAMESPACES )
                 for prt in prtElem: 
-                    (cId, cPrt) =  Participant( self.entry ).build( prt )
+                    (cId, cPrt) =  Participant( self.entry ).parseDom( prt )
                     idata["participant"].append( cPrt )
                 
             elif tag in ["modelled","intraMolecular","negative"]:
@@ -280,20 +345,20 @@ class Interaction():
                 idata[tag] = genericSearch(self.entry, item)
         # idata should look like
         #{
-        # "xref": {whatever Xref.build() returns}
-        # "names":{whatever Names.build() returns}
-        # "availability": {whatever Availability.build() returns
+        # "xref": {whatever Xref.parseDom() returns}
+        # "names":{whatever Names.parseDom() returns}
+        # "availability": {whatever Availability.parseDom() returns
         #                  or the value corresponding to availabilityRef
         #                  taken from entry["availability"] 
         #                 },
         # "experiment": [{..},{..},{..}], the values correspond to the data        
         #                                 field returned by 
-        #                                 Experiment().build() or to 
+        #                                 Experiment().parseDom() or to 
         #                                 entry["experiment"] value 
         #                                 corresponding to experimentRef
         # "participant":[{..},{..},{..}], the values correspond to the data
         # ...                             field returned by 
-        #}                                Participant().build() 
+        #}                                Participant().parseDom() 
                 
         #element with id attribute: return (id,data) tuple                    
         return ( id[0], idata )
@@ -304,8 +369,8 @@ class Participant():
         self.data = {}
         self.entry = entry
         
-    def build( self, dom ):
-        # build participant here 
+    def parseDom( self, dom ):
+        # parseDom participant here 
         pdata = {}
         id = dom.xpath("./@id", namespaces=NAMESPACES )
         for item in dom:
@@ -322,11 +387,11 @@ class Participant():
                 pdata[tag] = genericSearch(self.entry,item)
         # data should look like
         #{
-        # "names":{whatever Names.build() returns}
-        # "xref": {whatever Xref.build() returns}
+        # "names":{whatever Names.parseDom() returns}
+        # "xref": {whatever Xref.parseDom() returns}
         # "interactor":{..}, the value corresponds        
         #                    to the data field returned by 
-        #                    Interactor().build() or to 
+        #                    Interactor().parseDom() or to 
         #                    entry["interactor"] value 
         #                    corresponding
         #  "interactionRef":{ interactionRef text },
@@ -341,7 +406,7 @@ class Participant():
         #  "parameter": [{..}],    ignore for now
         #  "attribute": [{..},{..}], the values correspond
         #                            to the values returned
-        #                            by Attribute().build()
+        #                            by Attribute().parseDom()
         #element with id attribute: return (id,data) tuple    
         return (id[0], pdata )
     
@@ -349,7 +414,7 @@ class Names():
     def __init__(self, entry ):
         self.entry = entry
         
-    def build( self, dom ):        
+    def parseDom( self, dom ):        
         ndata = {}
         for item in dom:
             tag = item.tag[LEN_NAMESPACE:]
@@ -374,7 +439,7 @@ class Xref():
         #self.data={}
         self.entry =entry
         
-    def build( self, dom ):
+    def parseDom( self, dom ):
         #dom = dom.xpath(".",namespaces=NAMESPACES)[0]
         #self.data = genericSearch( self.entry, dom)
         xdata = {}
@@ -433,7 +498,7 @@ class Attribute():
         #self.data = []
         self.entry = entry
         
-    def build( self, dom ):
+    def parseDom( self, dom ):
         attribdata = []
         attrDom = dom.xpath("x:attribute",namespaces=NAMESPACES)
         for attr in attrDom: 
@@ -453,7 +518,7 @@ class Availability():
     def __init__( self, entry ):
         self.entry = entry
         
-    def build( self, dom ):
+    def parseDom( self, dom ):
         
         id = dom.attrib.get("id")
         availdata = {"value":dom.text}
@@ -470,20 +535,20 @@ class CvTerm():
     def __init__(self, entry):
         self.entry = entry
         
-    def build( self, dom ):
+    def parseDom( self, dom ):
         cvdata = {}
         for item in dom:
             tag = item.tag[LEN_NAMESPACE:]
             if tag == "names":                          
-                cvdata["names"] = Names(self.entry).build( item )    
+                cvdata["names"] = Names(self.entry).parseDom( item )    
 
             elif tag == "xref":                           
-                cvdata["xref"] = Xref(self.entry).build( item )
+                cvdata["xref"] = Xref(self.entry).parseDom( item )
                 
         # should return 
         #{
-        #  "names": { whatever Names.build() returns } 
-        #  "xref": { whatever Xref.build() returns}
+        #  "names": { whatever Names.parseDom() returns } 
+        #  "xref": { whatever Xref.parseDom() returns}
         #}
                 
         return cvdata
@@ -492,7 +557,7 @@ class ListedElement():
     def __init__(self,entry):
         self.entry = entry
     
-    def build( self, dom ):
+    def parseDom( self, dom ):
         eldata = []
         for item in dom:
             eldata.append(genericSearch(self.entry,item))
