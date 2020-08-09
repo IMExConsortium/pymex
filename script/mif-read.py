@@ -19,7 +19,8 @@ import pymex
 #test_mif25='/cluster1/mirrors/imex/intact/psi25/2018/9171338.zip'
 test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2019/15138291.zip'
 
-test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2020/7984244.zip'
+#test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2020/7984244.zip'
+test_mif25='data/mif254/7984244.xml'
 
 print(sys.argv)
 

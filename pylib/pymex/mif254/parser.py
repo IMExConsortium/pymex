@@ -17,38 +17,56 @@ def genericSearch( entry, item ):
     """Recursive search through element tree."""
     
     tag = modifyTag(item)
-    
-    if item.text and len(item)==0: # We have reached a leaf node: does it have attributes or not?      
-        if not item.attrib:
-            return item.text  
-        else:
-            return {"text": item.text,"elementAttrib": attribToDict( item.attrib )  }
+    print("TAG:", tag)
+    #if item.text and len(item)==0: # We have reached a leaf node: does it have attributes or not?      
+    #    if not item.attrib:
+    #        return item.text  
+    #    else:
+    #        return {"text": item.text,"elementAttrib": attribToDict( item.attrib )  }
      
-    elif tag == "names":
+    if tag == "names":
         names = Names( entry )
         return names.parseDom( item )
         #print(tag,'c')
+
     elif tag == "xref":
-        xref = Xref( entry )
-        return xref.parseDom( item )
+        ( id, xref ) = Xref( entry ).parseDom( item )
+        return xref
+        #print(tag,'d')
+
+    elif tag in ["organism", "hostOrganism" ]:
+        ( taxid, org ) = Organism( entry ).parseDom( item )
+        return org
         #print(tag,'d')
     
+    elif tag=="attribute":    
+        return Attribute(entry).parseDom( item ) 
+        
     elif tag.endswith( 'List' ):
         tag = tag[:-4]  #strip trailing 'List'
-        
-        if tag=="attributeList":
-            return Attribute(entry).parseDom( item )
-        else:
-            return ListedElement(entry).parseDom(item)
+        print(tag)
+        #if tag=="attribute":
+        #    print("$")
+        #    return Attribute(entry).parseDom( item )
+
+        #else:
+        return ListedElement( entry ).parseDom(item)
     
     elif isCvTerm(item):
         cvterm = CvTerm(entry)
         return cvterm.parseDom( item )
     
+    elif item.text and len(item)==0: # We have reached a leaf node: does it have attributes or not?      
+        if not item.attrib:
+            return item.text  
+        else:
+            return {"text": item.text,"elementAttrib": attribToDict( item.attrib )  }
+
+
     else:
         data={}
         if item.attrib:
-            data["elementAttrib"]=attribToDict(item.attrib)
+            data["elementAttrib"] = attribToDict(item.attrib)
 
         for child in item: 
             tag = modifyTag(child)
@@ -228,7 +246,7 @@ class Entry():
 
     def getInteraction( self, id, eid=None ):
         if eid is not None:
-            return Interaction(self.root[eid],id)
+            return Interaction( self.root[eid], id)
         else:       
             return Interaction(self.root[self.id],id)
         
@@ -334,18 +352,23 @@ class Experiment():
                                 namespaces=NAMESPACES)[0]
         
         id = dom.xpath("./@id", namespaces=NAMESPACES )
-        
+        self.data['_id'] = str( id[0] )
         for item in dom:
             tag = item.tag[LEN_NAMESPACE:]
             if tag =="attributeList":
-                self.data.setdefault( tag[:-4], [] ) #skip for now
+                self.data.setdefault( tag[:-4], [] ) 
                 self.data[tag[:-4]] = Attribute(self.entry).parseDom( item )
+            
+            if tag =="hostOrganismList":
+                self.data.setdefault( tag[:-4], [] ) 
+                self.data[tag[:-4]] = ListedElement( self.entry ).parseDom( item )  
+            
             else:                
                 tag = modifyTag(item)
                 self.data[tag] = genericSearch( self.entry, item )
 
         #element with id attribute: return (id,data) tuple   
-        return ( id[0], self.data )
+        return ( str(id[0]), self.data )
         
 class Interactor():
     def __init__( self, entry ):
@@ -360,13 +383,13 @@ class Interactor():
                                 namespaces=NAMESPACES)[0]
             
         id = dom.xpath("./@id", namespaces=NAMESPACES )
-
+        self.data["_id"] = str(id[0])
         for item in dom:
             tag = modifyTag(item)
             self.data[tag] = genericSearch( self.entry, item )
 
         #element with id attribute: return (id,data) tuple   
-        return ( id[0], self.data )
+        return ( str(id[0]), self.data )
 
 class Interaction():
     def __init__( self, entry, id=0 ):
@@ -400,6 +423,7 @@ class Interaction():
         
         idata = {}
         id = dom.xpath("./@id", namespaces=NAMESPACES )
+        idata["_id"] = str(id[0])
         for item in dom:
             tag = item.tag[LEN_NAMESPACE:]
 
@@ -444,6 +468,7 @@ class Interaction():
             else:
                 tag = modifyTag(item)
                 idata[tag] = genericSearch(self.entry, item)
+                
         # idata should look like
         #{
         # "xref": {whatever Xref.parseDom() returns}
@@ -474,6 +499,7 @@ class Participant():
         # build participant here 
         pdata = {}
         id = dom.xpath("./@id", namespaces=NAMESPACES )
+        pdata["_id"] = str(id[0])
         for item in dom:
             tag = item.tag[LEN_NAMESPACE:]
             
@@ -487,6 +513,10 @@ class Participant():
                 self.entry['_index'][tag][str(cId)] = cInt
                 pdata["interactor"].append( cInt )                
                 
+            elif tag.endswith('List'):
+                pdata.setdefault( tag[:-4], [] )
+                pdata[tag[:-4]] = ListedElement( self.data ).parseDom( item )
+
             else:
                 tag = modifyTag(item)
                 pdata[tag] = genericSearch(self.entry,item)
@@ -514,7 +544,7 @@ class Participant():
         #                            to the values returned
         #                            by Attribute().parseDom()
         #element with id attribute: return (id,data) tuple    
-        return (id[0], pdata )
+        return ( str(id[0]), pdata )
     
 class Names():
     def __init__(self, entry ):
@@ -543,61 +573,30 @@ class Names():
 class Xref():
     def __init__( self, entry ):
         #self.data={}
-        self.entry =entry
+        self.entry = entry
         
     def parseDom( self, dom ):
         #dom = dom.xpath(".",namespaces=NAMESPACES)[0]
         #self.data = genericSearch( self.entry, dom)
-        xdata = {}
+        xdata = { '_index': {} }
         id = ""
         for item in dom:
             tag = item.tag[LEN_NAMESPACE:]
             if tag == "primaryRef":
                 id = item.attrib.get("db")+":"+item.attrib.get("id")
-                xdata["primaryRef"] = attribToDict(item.attrib) 
-                
-            elif tag == "secondaryRef":
-                db_id = item.attrib.get("db")+":"+item.attrib.get("id")
                 attribDict = attribToDict(item.attrib)
-                if not "secondaryRef" in xdata.keys():
-                    xdata["secondaryRef"] = []
-                    xdata["secRefInd"] = {}
-                    
-                xdata["secondaryRef"].append(attribDict)
-                xdata["secRefInd"][db_id] = attribDict
-                
-        return (id, xdata)
-                    
-        # should return (id, data) tuple, where id is
-        # set to  "db-id" + ":" + "MI:0465" (concatenation
-        # db and id fields of primaryRef and
-        # data is:
-        #{
-        # "primaryRef": {        
-        #    "db": "psi-mi",
-        #    "dbAc": "MI:0488",
-        #    "id": "MI:0465",
-        #    "refType": "identity",
-        #    "refTypeAc": "MI:0356"
-        #  },
-        #  "secondaryRef:[
-        #    {
-        #     "db": "intact",
-        #     "dbAc": "MI:0469",
-        #     "id": "EBI-1579232",
-        #     "refType": "identity",
-        #     "refTypeAc": "MI:0356"
-        #    },
-        #    {
-        #     "db": "pubmed",
-        #     "dbAc": "MI:0446",
-        #     "id": "14681454",
-        #     "refType": "primary-reference",
-        #     "refTypeAc": "MI:0358"
-        #    } ]
-        #}
- 
+                xdata["primaryRef"] = attribDict
+                xdata["_index"][id] = attribDict
 
+            elif tag == "secondaryRef":
+                xdata.setdefault( 'secondaryRef', [] )
+                
+                db_id = item.attrib.get("db")+":"+item.attrib.get("id")
+                attribDict = attribToDict( item.attrib )                                
+                xdata["secondaryRef"].append(attribDict)
+                xdata["_index"][db_id] = attribDict
+                
+        return (id, xdata)        
 
 class Attribute():
     def __init__( self, entry ):
@@ -617,7 +616,7 @@ class Attribute():
         # "name":"contact-email"
         # "nameAc":"MI:0634"
         #}
-            
+        print(attribdata)
         return attribdata
         
 class Availability():
@@ -659,6 +658,27 @@ class CvTerm():
                 
         return cvdata
 
+class Organism():
+    def __init__(self, entry):
+        self.entry = entry
+        
+    def parseDom( self, dom ):
+        orgdata = {}
+
+        taxid = dom.xpath("./@ncbiTaxId",namespaces=NAMESPACES)
+        
+        for t in taxid:
+            orgdata['ncbiTaxId'] = str(t)
+
+        for item in dom:
+            tag = item.tag[LEN_NAMESPACE:]
+            if tag == "names":                          
+                orgdata["names"] = Names(self.entry).parseDom( item )            
+            else:
+                orgdata[tag] = CvTerm(self.entry).parseDom( item )
+                    
+        return ( str(taxid), orgdata )
+
 class ListedElement():
     def __init__(self,entry):
         self.entry = entry
@@ -666,6 +686,6 @@ class ListedElement():
     def parseDom( self, dom ):
         eldata = []
         for item in dom:
-            eldata.append(genericSearch(self.entry,item))
-            
+            eldata.append( genericSearch(self.entry,item) )
+        
         return eldata
