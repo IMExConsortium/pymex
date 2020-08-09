@@ -38,19 +38,23 @@ def genericSearch( entry, item ):
         ( taxid, org ) = Organism( entry ).parseDom( item )
         return org
         #print(tag,'d')
+
+    elif tag == "feature":
+        ( taxid, feature ) = Feature( entry ).parseDom( item )
+        return feature    
     
     elif tag=="attribute":    
         return Attribute(entry).parseDom( item ) 
         
     elif tag.endswith( 'List' ):
         tag = tag[:-4]  #strip trailing 'List'
-        print(tag)
+        print("LISTED", tag)
         #if tag=="attribute":
         #    print("$")
         #    return Attribute(entry).parseDom( item )
 
         #else:
-        return ListedElement( entry ).parseDom(item)
+        return ListedElement( entry ).parseDom( item )
     
     elif isCvTerm(item):
         cvterm = CvTerm(entry)
@@ -60,14 +64,16 @@ def genericSearch( entry, item ):
         if not item.attrib:
             return item.text  
         else:
-            return {"text": item.text,"elementAttrib": attribToDict( item.attrib )  }
-
+            return {"value": item.text,"elementAttrib": attribToDict( item.attrib )  }
 
     else:
         data={}
         if item.attrib:
+            attribDict =  attribToDict(item.attrib)
             data["elementAttrib"] = attribToDict(item.attrib)
-
+            for a in attribDict:
+                data[a] = attribDict[a]
+            
         for child in item: 
             tag = modifyTag(child)
             data[tag] = genericSearch( entry, child )
@@ -156,7 +162,6 @@ def genericMifGenerator(rawkey,value): #root is a value in key value pair
     return root      
 
 #------------------------------ CLASSES ------------------------------------------------------
-    
 
 class Mif254Parser():
     """Parses a mif file associated with a filename. Saves to Mif254Record object."""
@@ -267,7 +272,6 @@ class Entry():
                 curid = Interaction( self.root ).toMif254( sourceDom, intn,curid )
                 
     def parseDom( self, dom ):
-
         for item in dom:
             tag = item.tag[LEN_NAMESPACE:]            
             if tag == 'source':
@@ -326,12 +330,21 @@ class Source():
             record = etree.parse( dom )
             dom = record.xpath( "/x:entrySet/x:entry/x:source",
                                 namespaces=NAMESPACES )[0]        
-       
+
+        reldate = dom.xpath( "./@releaseDate", namespaces=NAMESPACES )
+        for rd in reldate:
+            self.data['releaseDate'] = str(rd)
+            
         for item in dom:
             tag = modifyTag(item)
-            self.data[tag] = genericSearch( self.entry, item )
             
-        self.data["elementAttrib"]=attribToDict(dom.attrib) #sources have attributes
+            if tag =="attributeList":
+                self.data.setdefault( tag[:-4], [] ) 
+                self.data[tag[:-4]] = Attribute(self.entry).parseDom( item )
+            else:
+                self.data[tag] = genericSearch( self.entry, item )
+            
+        #self.data["elementAttrib"]=attribToDict(dom.attrib) #sources have attributes
         
         return self.data
     
@@ -359,7 +372,7 @@ class Experiment():
                 self.data.setdefault( tag[:-4], [] ) 
                 self.data[tag[:-4]] = Attribute(self.entry).parseDom( item )
             
-            if tag =="hostOrganismList":
+            elif tag =="hostOrganismList":
                 self.data.setdefault( tag[:-4], [] ) 
                 self.data[tag[:-4]] = ListedElement( self.entry ).parseDom( item )  
             
@@ -386,7 +399,13 @@ class Interactor():
         self.data["_id"] = str(id[0])
         for item in dom:
             tag = modifyTag(item)
-            self.data[tag] = genericSearch( self.entry, item )
+
+            if tag =="attributeList":
+                self.data.setdefault( tag[:-4], [] ) 
+                self.data[tag[:-4]] = Attribute(self.entry).parseDom( item )
+
+            else:   
+                self.data[tag] = genericSearch( self.entry, item )
 
         #element with id attribute: return (id,data) tuple   
         return ( str(id[0]), self.data )
@@ -649,13 +668,7 @@ class CvTerm():
 
             elif tag == "xref":                           
                 cvdata["xref"] = Xref(self.entry).parseDom( item )
-                
-        # should return 
-        #{
-        #  "names": { whatever Names.parseDom() returns } 
-        #  "xref": { whatever Xref.parseDom() returns}
-        #}
-                
+                      
         return cvdata
 
 class Organism():
@@ -678,6 +691,25 @@ class Organism():
                 orgdata[tag] = CvTerm(self.entry).parseDom( item )
                     
         return ( str(taxid), orgdata )
+
+class Feature():
+    def __init__(self, entry):
+        self.entry = entry
+        
+    def parseDom( self, dom ):
+        ftrdata = {}
+
+        id = dom.xpath("./@id", namespaces=NAMESPACES )
+        ftrdata["_id"] = str(id[0])
+        
+        for item in dom:
+            tag = item.tag[LEN_NAMESPACE:]
+            if tag.endswith('List'):                       
+                ftrdata[tag[:-4]] = ListedElement( self.entry ).parseDom( item )            
+            else:
+                ftrdata[tag] = genericSearch( self.entry, item)
+                    
+        return ( str(id[0]) , ftrdata )
 
 class ListedElement():
     def __init__(self,entry):
