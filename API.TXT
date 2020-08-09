@@ -1,0 +1,23 @@
+
+
+
+record = Mif254Parser().parse( file )  # returns Mif254Record
+
+record.entry               # returns 0-th Entry
+record.getEntry(id =<n>)   # returns n-th Entry
+
+record.interaction         # returns a list of Interaction(s) (from the 0-th Entry)
+record.getInteraction( <n>, eid=0) # returns n-th interaction (from eid entry; default 0-th)
+record.entry.interaction   # returns a list of Interaction(s) 
+
+intn = record.getInteraction( 0 )
+
+intn.evidence              # returns a list of Evidence(s)  
+
+
+
+
+
+
+
+

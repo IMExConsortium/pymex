@@ -5,6 +5,8 @@ import re
 from lxml import etree
 from urllib.request import urlopen
 
+import pymex
+
 class RecordBuilder():
 
     def __init__(self,debug=False):
@@ -154,7 +156,8 @@ class RecordBuilder():
         participant = None
         feature = None
         frange = None
-        
+        print(filename)
+        print(os.getcwd())
         with open( filename, 'r' ) as sf:
             for ln in sf:
                 ln = ln.strip()
@@ -170,8 +173,8 @@ class RecordBuilder():
                 elif ln.startswith("interaction"):
                     self.feature = False
                     interaction =  {"names":{"shortLabel": "N/A"},
-                                    "experiment":[{"names":{"shortLabel": "N/A"}}]}
-                    record.setdefault("interaction",[]).append(interaction)
+                                    "experimentList":[{"names":{"shortLabel": "N/A"}}]}
+                    record.setdefault("interactionList",[]).append(interaction)
                     
                     cols = ln.split("\t")
 
@@ -179,14 +182,14 @@ class RecordBuilder():
                     interaction["interactionType"] = self.buildCvTerm(cols[1])
                     
                     # interaction detection                 
-                    interaction["experiment"][0]["interactionDetectionMethod"] = self.buildCvTerm(cols[2])
+                    interaction["experimentList"][0]["interactionDetectionMethod"] = self.buildCvTerm(cols[2])
                                         
                     # interaction host 
                     
                     for taxid in cols[3:]:                                                
                         ctax = self.taxon( taxid )
                         
-                        interaction["experiment"][0].setdefault("hostOrganism",[]).append( {                    
+                        interaction["experimentList"][0].setdefault("hostOrganism",[]).append( {                    
                             "names": {
                                 "shortLabel": ctax["sname"],
                                 "fullName": ctax["lname"] },
@@ -195,7 +198,7 @@ class RecordBuilder():
                 elif ln.startswith("molecule"):
                     self.feature = False
                     participant = {}
-                    interaction.setdefault( "participant",[] ).append( participant )
+                    interaction.setdefault( "participantList",[] ).append( participant )
 
                     # interactor 
                     interactor = {}
@@ -256,31 +259,31 @@ class RecordBuilder():
                     catt = { "value":"Stoichiometry: " + cols[3],
                              "name":"comment",
                              "nameAc":"MI:0612" }
-                    participant.setdefault( "attribute", [] ).append(catt)                                                
+                    participant.setdefault( "attributeList", [] ).append(catt)                                                
                             
                 elif ln.startswith("exprole"):
                     self.feature = False            
-                    participant.setdefault("exprole",[])
+                    participant.setdefault("exproleList",[])
                     
                     cols = ln.strip().split("\t")                    
                     for role in cols[1:]:                        
                         roleCv = self.cvterm( role )
-                        participant["exprole"].append( self.buildCvTerm( role ) )
+                        participant["exproleList"].append( self.buildCvTerm( role ) )
 
                 elif ln.startswith("biorole"):
                     self.feature = False            
-                    participant.setdefault("biorole",[])
+                    participant.setdefault("bioroleList",[])
                     
                     cols = ln.split("\t")
                     for role in cols[1:]:                    
-                        participant["biorole"].append( self.buildCvTerm( role ) )
+                        participant["bioroleList"].append( self.buildCvTerm( role ) )
                         
                 elif ln.startswith("idmethod"):
                     
                     if self.feature:
                         idmethod = feature.setdefault( "idmethod",[] )
                     else:                        
-                        idmethod = participant.setdefault( "idmethod",[] )
+                        idmethod = participant.setdefault( "idmethodList",[] )
 
                     cols = ln.split("\t")
                     for mth in cols[1:]:                        
@@ -289,7 +292,7 @@ class RecordBuilder():
                 elif ln.startswith("feature"):
                     self.feature = True
                     feature = {}
-                    participant.setdefault("feature",[]).append( feature )
+                    participant.setdefault("featureList",[]).append( feature )
 
                     cols = ln.strip().split("\t")                
                     feature["featureType"] = self.buildCvTerm( cols[1] )
@@ -353,4 +356,4 @@ class RecordBuilder():
                     participant = None
                     feature = None
                     frange = None
-        return record
+        return pymex.mif254.Mif254Record( [record] )

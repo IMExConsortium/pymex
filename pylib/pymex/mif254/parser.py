@@ -33,7 +33,9 @@ def genericSearch( entry, item ):
         return xref.parseDom( item )
         #print(tag,'d')
     
-    elif tag in LISTED_ELEMENTS:
+    elif tag.endswith( 'List' ):
+        tag = tag[:-4]  #strip trailing 'List'
+        
         if tag=="attributeList":
             return Attribute(entry).parseDom( item )
         else:
@@ -199,9 +201,9 @@ class Mif254Record():
 
     def toMif254( self ):
         root = etree.Element("entrySet",nsmap=NAMESPACES_TOMIF)
-        for attribkey,attribval in record.root["elementAttrib"].items():
+        for attribkey,attribval in self.root["elementAttrib"].items():
             root.attrib[attribkey] = attribval
-        for entry in record.root["entries"]:
+        for entry in self.root["entries"]:
             entryElem = etree.Element("entry")
             for key, val in entry.items():
                 entryElem.append(genericMifGenerator(key,val))
@@ -213,7 +215,7 @@ class Mif254Record():
 class Entry():
     
     def __init__( self, root , id = 0):
-        self.data = {}
+        self.data = { "_index":{} }
         self.root = root
         self.id = id
     
@@ -253,32 +255,45 @@ class Entry():
             if tag == 'source':
                 self.data["source"] = Source( self.data ).parseDom( item )
                 
-            elif tag == 'experimentList':
-                self.data[tag] = {}
+            elif tag == 'experimentList':                
+                self.data.setdefault( tag[:-4], [] )
+                self.data['_index'].setdefault( tag[:-4], {} )
+                
                 expElem = item.xpath( "x:experimentDescription", namespaces=NAMESPACES )            
                 for exp in expElem:                    
                     (cId, cExp) =  Experiment( self.data ).parseDom( exp )                    
-                    self.data["experimentList"][cId] = cExp
-                
+                    self.data["experiment"].append (cExp )
+                    self.data['_index'][tag[:-4]][str(cId)] = cExp
+                    
             elif tag == 'interactorList':
-                self.data[tag] = {}
+                self.data.setdefault(tag[:-4], [] )
+                self.data['_index'].setdefault( tag[:-4], {} )
+                
                 intrElem = item.xpath( "x:interactor", namespaces=NAMESPACES )
                 for intr in intrElem:
                     (cId, cInt) =  Interactor( self.data ).parseDom( intr )
-                    self.data["interactorList"][cId] = cInt 
-
+                    self.data["interactor"].append( cInt ) 
+                    self.data['_index'][tag[:-4]][str(cId)] = cExp
+                    
             elif tag == 'interactionList':
-               self.data[tag] = []
+               self.data.setdefault(tag[:-4], [] )
+               self.data['_index'].setdefault( tag[:-4], {} )
+                            
                intnElem = item.xpath( "x:interaction", namespaces=NAMESPACES )
                for intn in intnElem:
                    (cId, cIntn) =  Interaction( self.data ).parseDom( intn )
-                   self.data["interactionList"].append( cIntn )
+                   self.data["interaction"].append( cIntn )
+                   self.data['_index'][tag[:-4]][str(cId)] = cExp
+                   
             elif tag == 'availabilityList':
-                self.data[tag] = {}
+                self.data.setdefault(tag[:-4], [] )
+                self.data['_index'].setdefault( tag[:-4], {} )
+                               
                 avlbElem = item.xpath( "x:availability", namespaces=NAMESPACES )
                 for avlb in avlbElem:
                     (cId, cAvlb) =  Availability( self.data ).parseDom(  avlb  )
-                    self.data["availabilityList"][cId] = cAvlb
+                    self.data["availability"].append( cAvlb )
+                    self.data['_index'][tag[:-4]][str(cId)] = cExp
         
         return self.data
 
@@ -321,8 +336,13 @@ class Experiment():
         id = dom.xpath("./@id", namespaces=NAMESPACES )
         
         for item in dom:
-            tag = modifyTag(item)
-            self.data[tag] = genericSearch( self.entry, item )
+            tag = item.tag[LEN_NAMESPACE:]
+            if tag =="attributeList":
+                self.data.setdefault( tag[:-4], [] ) #skip for now
+                self.data[tag[:-4]] = Attribute(self.entry).parseDom( item )
+            else:                
+                tag = modifyTag(item)
+                self.data[tag] = genericSearch( self.entry, item )
 
         #element with id attribute: return (id,data) tuple   
         return ( id[0], self.data )
@@ -385,7 +405,7 @@ class Interaction():
 
             if tag == "experimentList":
 
-                idata[tag] = []
+                idata[tag[:-4]] = []
 
                 # expanded form: <experimentDescription>...</experimentDescription>
                 
@@ -394,31 +414,33 @@ class Interaction():
                     
                     (cId, cExp) =  Experiment( self.entry ).parseDom( exp )
                     idata[tag].append( cExp )
-
+                    self.root
                 #  compact form: <experimentRef>...</experimentRef>
                     
                 refElem = item.xpath( "x:experimentRef/text()", namespaces=NAMESPACES )
-
-                for ref in refElem:       
-
-                    idata[tag].append( self.entry["experimentList"][ref] ) 
+                print(self.entry["_index"]["experiment"].keys())
+                for ref in refElem:
+                    idata[tag[:-4]].append( self.entry["_index"]["experiment"][ref] ) 
 
             elif tag == "participantList":
-                idata[tag] = []
+                idata[tag[:-4]] = []
                 prtElem = item.xpath( "x:participant", namespaces=NAMESPACES )
                 for prt in prtElem: 
                     (cId, cPrt) =  Participant( self.entry ).parseDom( prt )
-                    idata[tag].append( cPrt )
+                    idata[tag[:-4]].append( cPrt )
                 
             elif tag in ["modelled","intraMolecular","negative"]:
                 idata[tag] = "bool"
                 
             elif tag =="confidenceList":
-                idata[tag] = "conf"  #skip fo rnow
+                idata[tag[:-4]] = "conf"  #skip fo rnow
                 
             elif tag =="parameterList":
-                idata[tag] = "param"  #skip for now
-            
+                idata[tag[:-4]] = "param"  #skip for now
+
+            elif tag =="attributeList":
+                idata.setdefault( tag[:-4], [] ) #skip for now
+                idata[tag[:-4]] = Attribute(self.entry).parseDom( item )
             else:
                 tag = modifyTag(item)
                 idata[tag] = genericSearch(self.entry, item)
@@ -455,14 +477,20 @@ class Participant():
         for item in dom:
             tag = item.tag[LEN_NAMESPACE:]
             
-            if tag == "interactorRef":
-                pdata["participantInteractorList"] = {}
-                refElem= item.xpath("text()")
+            if tag == "interactorRef":        
+                refElem = item.xpath("text()")
                 for ref in refElem:
-                    pdata["participantInteractorList"][ref] = self.entry["interactorList"][ref]
+                    pdata["interactor"] = self.entry["_index"]["interactor"][str(ref)]
+
+            elif tag == "interactor":
+                (cId, cInt) =  Interactor( self.data ).parseDom( item )
+                self.entry['_index'][tag][str(cId)] = cInt
+                pdata["interactor"].append( cInt )                
+                
             else:
                 tag = modifyTag(item)
                 pdata[tag] = genericSearch(self.entry,item)
+                
         # data should look like
         #{
         # "names":{whatever Names.parseDom() returns}

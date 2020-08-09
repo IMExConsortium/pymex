@@ -14,7 +14,7 @@ import pymex
 import json
 parser = argparse.ArgumentParser( description='MIF Reader' )
 parser.add_argument( '--source', '-s',  dest="source", type=str, required=False,
-                     default = "data/builder-test-1.txt", 
+                     default = "data/builder-test-1.txt",
                      help='File location (path or URL). Compressed file OK.')
 
 #spyder hack: add '-i' option only if present (as added by spyder)
@@ -28,6 +28,6 @@ rb = pymex.mif254.RecordBuilder()
 
 record = rb.build( args.source)
 
-print( json.dumps(record,indent=2) )
+print( record.toJson() )
 
 

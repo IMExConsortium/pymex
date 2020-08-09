@@ -3,6 +3,7 @@
 MIF_NS = "http://psi.hupo.org/mi/mif"
 MIF = "{%s}" % MIF_NS
 NSMAP = {None : MIF_NS}
+NAMESPACES_TOMIF = {None : MIF_NS}
 
 NAMESPACES = {"x":MIF_NS}
 LEN_NAMESPACE = len(NAMESPACES["x"])+2 #because of the two brackets around the text

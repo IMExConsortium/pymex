@@ -11,3 +11,9 @@ PYMEX NOTES
     some of the constructors to take root dictionary as
     argument.
   - added two test files (compact & expanded) to data directory     
+
+
+
+
+
+
