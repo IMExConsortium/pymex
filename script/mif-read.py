@@ -89,12 +89,12 @@ for cs in source:
             
     if args.ofile == 'STDOUT':
          if args.oformat == 'mif254':
-             print( rec.toMif254().decode("utf-8") )
+             print( rec.toMif(ver='mif254').decode("utf-8") )
          else:
              print( rec.toJson() )
     else:
         with open(args.ofile,"w") as of:
             if args.oformat == 'mif254':
-                of.write( rec.toMif254() )
+                of.write( rec.toMif(ver='mif254') )
             else:
                 of.write( rec.toJson() )
