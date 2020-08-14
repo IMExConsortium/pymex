@@ -22,8 +22,6 @@ test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2019/151
 #test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2020/7984244.zip'
 test_mif25='data/mif254/7984244.xml'
 
-print(sys.argv)
-
 parser = argparse.ArgumentParser( description='MIF Reader' )
 parser.add_argument( '--source', '-s',  dest="source", type=str, required=False,
                      default = test_mif25, 
