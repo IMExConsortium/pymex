@@ -1,0 +1,147 @@
+{ "ExpandedEntrySet": [{"value":"entry", "type":"expandedEntry","name":"entry"}],	      
+  "CompactEntrySet": [{"value":"entry", "type":"compactEntry","name":"entry"}],	      
+  
+  "expandedEntry":[ {"value":"source", "type":"source"},
+		    {"value":"availability", "type":"availability", "wrap":"availabilityList"},
+		    {"value":"interaction", "type":"interaction","name":"interaction","wrap":"interactionList"},
+		    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   
+		  ],
+  
+  "compactEntry":[ {"value":"source", "type":"source"},
+		   {"value":"availability", "type":"availability", "wrap":"availabilityList"},
+		   {"value":"experiment", "type":"experiment", "name":"experimentDescription", "wrap":"experimentList"},
+		   {"value":"interactor", "type":"interactor","name":"interactor","wrap":"interactorList"},
+		   {"value":"interaction", "type":"interaction","name":"interaction","wrap":"interactionList"},
+		   {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   
+		 ],
+	       
+  "source":[ {"value":"names", "type":"names"},
+	     {"value":"bibref", "type":"bibref"},
+	     {"value":"xref", "type":"xref"},
+	     {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}
+	   ],
+  
+  "names":[ {"value":"shortLabel", "type":"$TEXT"},
+	    {"value":"fullName", "type":"$TEXT"},
+	    {"value":"alias", "type":"$TEXT","name":"aliasList"}
+	  ],
+  
+  "bibref":[ {"value":"xref", "type":"xref"},
+	     {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}
+	   ],
+  
+  "xref":[ {"value":"primaryRef", "type":"ref"},
+	   {"value":"secondaryRef", "type":"ref"}
+	 ],
+  
+  "ref": [ {"value":"id","name":"@id","type":"$TEXT"},
+	   {"value":"db","name":"@db","type":"$TEXT"},
+	   {"value":"dbAc","name":"@dbAc","type":"$TEXT"},
+	   {"value":"version","name":"@version","type":"$TEXT"},
+	   {"value":"refType","name":"@refType","type":"$TEXT"},
+	   {"value":"refTypeAc","name":"@refTypeAc","type":"$TEXT"}
+	 ],
+  
+  "experimentDescription":[ {"value":"names", "type":"names"},
+			    {"value":"bibref", "type":"bibref"},
+			    {"value":"xref", "type":"xref"},
+			    {"value":"hostOrganism", "type":"organism","name":"hostOrganism", "wrap":"hostOrganismList"},
+			    {"value":"interactionDetectionMethod", "type":"cvterm"},
+			    {"value":"participantIdentificationMethod", "type":"cvterm"},
+			    {"value":"featureDetectionMethod", "type":"cvterm"},
+			    {"value":"confidence", "type":"$TEXT","wrap":"confidenceList"},
+			    {"value":"attribute", "type":"attribute","name":"attribute", "wrap":"attributeList"},
+                            {"value":"$UID", "type":"$TEXT", "name":"@id"}
+			  ],
+  
+  "interactor":[ {"value":"names", "type":"names"},
+		 {"value":"xref", "type":"xref"},
+		 {"value":"interactorType", "type":"cvterm"},
+		 {"value":"organism", "type":"organism"},
+		 {"value":"sequence", "type":"$TEXT"},
+		 {"value":"attribute", "type":"attribute","name":"attribute", "wrap":"attributeList"},
+		 {"value":"$UID", "type":"$TEXT", "name":"@id"}
+	       ],
+  
+  "organism":[ {"value":"names", "type":"cvterm"},
+	       {"value":"cellType", "type":"cvterm"},
+	       {"value":"compartment", "type":"cvterm"},
+	       {"value":"tissue", "type":"cvterm"},
+	       {"value":"ncbiTaxId", "type":"$TEXT", "name":"@ncbiTaxId"}
+	     ],
+  
+  "interaction":[ {"value":"names", "type":"names"},
+		  {"value":"xref", "type":"xref"},
+		  {"value":"availability", "type":"availability","wrap": "availabilityList"},
+		  {"value":"experiment", "type":"experiment","wrap":"experimentList"},
+		  {"value":"participant", "type":"participant","wrap":"participantList"},
+		  {"value":"inferredInteraction", "type":"interaction","wrap":"inferredInteractionList"},
+		  {"value":"interactionType", "type":"cvterm"},
+		  {"value":"modelled", "type":"$TEXT"},
+		  {"value":"intraMolecular", "type":"$TEXT"},
+		  {"value":"negative", "type":"$TEXT"},
+		  {"value":"confidence", "type":"$TEXT","wrap":"confidenceList"},
+		  {"value":"parameter", "type":"parameter","wrap":"parameterList"},
+		  {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"},
+		  {"value":"imexId", "type":"$TEXT", "name":"@imexId"},
+		  {"value":"$UID", "type":"$TEXT", "name":"@id"}
+		  		  
+		],
+  
+  "participant":[ {"value":"names", "type":"names"},
+		  {"value":"xref", "type":"xref"},
+		  {"value":"interactor", "type":"interactor"},
+		  {"value":"participantIdentificationMethod", "type":"cvterm","wrap":"participantIdentificationMethodList"},
+		  {"value":"biologicalRole", "type":"cvterm"},
+		  {"value":"experimentalRole", "type":"cvterm","wrap":"experimentalRoleList"},
+		  {"value":"experimetalPreparation", "type":"cvterm","wrap":"experimetalPreparationList"},
+		  {"value":"experimentalInteractor", "type":"interactor","wrap":"experimentalInteractorList"},
+		  {"value":"feature", "type":"feature","wrap":"featureList"},
+		  {"value":"hostOrganism", "type":"organism","wrap":"hostOrganismList"},
+		  {"value":"confidence", "type":"$TEXT","wrap":"confidenceList"},		 
+		  {"value":"parameter", "type":"parameter","wrap":"parameterList"},
+		  {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"},
+		  {"value":"$UID", "type":"$TEXT", "name":"@id"}
+		],
+
+      
+  "parameter": [ {"value":"experimentRef", "type":"$TEXT"},
+		 {"value":"term", "type":"$TEXT","name":"@term"},
+		 {"value":"termAc", "type":"$TEXT","name":"@termAc"},
+		 {"value":"unit", "type":"$TEXT","name":"@unit"},
+		 {"value":"unitAc", "type":"$TEXT","name":"@unitAc"},
+		 {"value":"base", "type":"$TEXT","name":"@base"},
+		 {"value":"exponent", "type":"$TEXT","name":"@exponent"},
+		 {"value":"factor", "type":"$TEXT","name":"@factor"},
+		 {"value":"uncertainty", "type":"$TEXT","name":"@uncertainty"}
+	       ],
+
+  "feature": [ {"value":"names", "type":"names"},
+	       {"value":"xref", "type":"xref"},
+	       {"value":"featureType", "type":"cvterm"},
+	       {"value":"featureDetectionMethod", "type":"cvterm"},
+	       {"value":"experimentRef", "type":"$TEXT"},		
+	       {"value":"featureRange", "type":"frange","wrap":"featureRangeList"},
+	       {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"},
+	       {"value":"$UID", "type":"$TEXT", "name":"@id"}
+
+	     ],
+  
+  "frange": [ {"value":"startStatus", "type":"cvterm"},
+	      {"value":"begin", "type":"position"},
+	      {"value":"beginInterval", "type":"position"},
+	      {"value":"endStatus", "type":"cvterm"},
+	      {"value":"end", "type":"position"},
+	      {"value":"endInterval", "type":"position"},
+	      {"value":"isLink","type":"$TEXT"}
+	    ],
+  
+  "position": [ {"value":"position", "type":"$TEXT","name":"@position"},
+		{"value":"begin", "type":"$TEXT","name":"@begin"},
+		{"value":"end", "type":"$TEXT","name":"@end"}
+	      ],
+
+  "cvterm": [ {"value":"names", "type":"names"},
+	      {"value":"xref", "type":"xref"}
+	    ]
+}
