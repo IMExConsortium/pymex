@@ -7,6 +7,7 @@ version = version_file.read().strip()
 
 import mif254
 import mif300
+import mif
 
 import pypsic
 import pycent
