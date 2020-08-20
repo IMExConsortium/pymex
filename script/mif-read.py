@@ -20,7 +20,7 @@ import pymex
 test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2019/15138291.zip'
 
 #test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2020/7984244.zip'
-test_mif25='data/mif254/7984244.xml'
+#test_mif25='data/mif254/7984244.xml'
 
 parser = argparse.ArgumentParser( description='MIF Reader' )
 parser.add_argument( '--source', '-s',  dest="source", type=str, required=False,
@@ -46,11 +46,9 @@ if '-i' in sys.argv:
 
 args = parser.parse_args()
 
-if args.format in['mif254']:
-    mifParser = pymex.mif254.Mif254Parser()
 
-if args.format in['mif300']:
-    mifParser = pymex.mif300.Mif300Parser()
+
+mifParser = pymex.mif.MifParser()
     
 source = []
 
@@ -81,18 +79,22 @@ s = {}
 for cs in source:
 
     if args.format == 'jmif':        
-        rec = pymex.mif254.Mif254Record().fromJson(cs) 
+        rec = pymex.mif.MifRecord().fromJson(cs) 
     else:    
-        rec = mifParser.parse( cs )
+        rec = mifParser.parse( cs, args.format )
             
     if args.ofile == 'STDOUT':
          if args.oformat == 'mif254':
-             print( rec.toMif254().decode("utf-8") )
+             print( rec.toMif('mif254').decode("utf-8") )
+         elif args.oformat == 'mif300':
+             print( rec.toMif('mif300').decode("utf-8") )
          else:
              print( rec.toJson() )
     else:
         with open(args.ofile,"w") as of:
             if args.oformat == 'mif254':
-                of.write( rec.toMif254() )
+                of.write( rec.toMif('mif254') )
+            elif args.oformat == 'mif300':
+                of.write( rec.toMif('mif300') )
             else:
                 of.write( rec.toJson() )
