@@ -8,10 +8,15 @@ Created on Mon Jun 29 13:56:57 2020
 # -*- coding: utf-8 -*-
 from lxml import etree
 import json
+import os
 
 from mif254.utils import *
 
 #-------------------------------- Recursive Parsers --------------------------------------------------
+
+
+pkg_dir = os.path.dirname( os.path.realpath(__file__) )
+json.load(os.path.join( pkg_dir, '..','files','mif254','mif254.json))
 
 def genericSearch( entry, item ):
     """Recursive search through element tree."""
