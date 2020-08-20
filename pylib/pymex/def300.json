@@ -13,7 +13,7 @@
 		  {"value":"experiment", "type":"experiment", "name":"experimentDescription","wrap":"experimentList"},
 		  {"value":"interactor", "type":"interactor","name":"interactor","wrap":"interactorList"},
 		  {"type":"interactionList","wrap":"interactionList"},
-		  {"value":"abstractInteraction", "type":"abstractInteraction","name":"abstractInteraction","wrap":"interactionList"},
+		  {"value":"abstractInteraction", "type":"abstractInteraction","name":"abstractInteraction","wrap":"abstractInteractionList"},
 		  {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   
 		],
 
@@ -41,8 +41,8 @@
 	 ],
     
   "ref": [ {"value":"id","name":"@id","type":"$TEXT"},
-	   {"value":"db","name"="@db","type":"$TEXT"},
-	   {"value":"dbAc","name"="@dbAc","type":"$TEXT"},
+	   {"value":"db","name":"@db","type":"$TEXT"},
+	   {"value":"dbAc","name":"@dbAc","type":"$TEXT"},
 	   {"value":"version","name":"@version","type":"$TEXT"},
 	   {"value":"refType","name":"@refType","type":"$TEXT"},
 	   {"value":"refTypeAc","name":"@refTypeAc","type":"$TEXT"}
@@ -61,13 +61,13 @@
                           {"value":"$UID", "type":"$TEXT", "name":"@id"}
 			  ],
   
-  "interactor":[ {"names""names"},
-		 {"xref":"xref"},
-		 {"interactorType"},
-		 {"organism":"organism"},
-		 {"sequence":"TEXT"},
-		 {"attributeList":"attribute"},
-		 {"@id":"UID"}
+  "interactor":[ {"value":"names", "type":"names"},
+		 {"value":"xref", "type":"xref"},
+		 {"value":"interactorType", "type":"cvterm"},
+		 {"value":"organism", "type":"organism"},
+		 {"value":"sequence", "type":"$TEXT"},
+		 {"value":"attribute", "type":"attribute","name":"attribute", "wrap":"attributeList"},
+		 {"value":"$UID", "type":"$TEXT", "name":"@id"}
 	       ],
 
  "organism":[ {"value":"names", "type":"cvterm"},
@@ -81,7 +81,7 @@
 		 {"value":"xref", "type":"xref"},
 		 {"value":"availability", "type":"availability"},
 		 {"value":"experiment", "type":"experiment","wrap":"experimentList"},
-		 {"value":"participant", "type":"""wrap":"participantList"},
+		 {"value":"participant", "type":"participant","wrap":"participantList"},
 		 {"value":"inferredInteraction", "type":"interaction","wrap":"inferredInteractionList"},
 		 {"value":"interactionType", "type":"cvterm"},
 		 {"value":"modelled", "type":"$TEXT"},
@@ -96,14 +96,14 @@
 
  "abstractInteraction":[ {"value":"names","type":"names"},
 			 {"value":"xref","type":"xref"},
-			 {"value":"participant","type":"wrap":"participantList"},
+			 {"value":"participant","type":"participant","wrap":"participantList"},
 			 {"value":"bindingFeatures","type":"bindingFeatures","wrap":"bindingFeatureList"},
 			 {"value":"interactionType","type":"cvterm"},			 
 			 {"value":"intraMolecular","type":"$TEXT"},
 			 {"value":"confidence","type":"$TEXT","wrap":"confidenceList"},
 			 {"value":"parameterList","type":"parameter","wrap":"parameterList"},
 			 {"value":"organism","type":"organism"},
-			 {"value":"interactorType""type":"cvterm"},
+			 {"value":"interactorType","type":"cvterm"},
 			 {"value":"evidenceType","type":"cvterm"},
 			 {"type":"cooperativeEffectList","wrap":"cooperativeEffectList"},
 			 {"value":"causalRelationship","type":"causalRel","wrap":"causalRelationshipList"},			  
@@ -112,7 +112,6 @@
 		       ],
  
  "bindingFeature":[ {"value":"bindingFeatureRef", "type":"$TEXT"} ],
- "causalEff":[ ],
 
  "cooperativeEffectList":[ {"value":"allostery", "type":"$TEXT","name":"allostery" },
 			   {"value":"preassembly", "type":"$TEXT","name":"preassembly"}
@@ -120,8 +119,7 @@
  
  "participant":[ {"value":"names", "type":"names"},
 		 {"value":"xref", "type":"xref"},
-		 {"value":"interactor", "type":"interactor"},
-		 
+		 {"value":"interactor", "type":"interactor","wrap":"participantInteractorList"},
 		 {"value":"participantIdentificationMethod", "type":"cvterm","wrap":"participantIdentificationMethodList"},
 		 {"value":"biologicalRole", "type":"cvterm"},
 		 {"value":"experimentalRole", "type":"cvterm","wrap":"experimentalRoleList"},
@@ -133,14 +131,14 @@
 		 {"value":"parameter", "type":"parameter","wrap":"parameterList"},
 		 {"value":"stoichiometry", "type":"stiochiometry"},
 		 {"value":"stoichiometryRange", "type":"stoichiometryRange"},
-		 {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}
+		 {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"},
 		 {"value":"$UID", "type":"$TEXT", "name":"@id"}
 	       ],
 
  "stoichiometry": [ {"value":"value", "type":"$TEXT","name":"@value"}],
 
  "stoichiometryRange": [ {"value":"minValue", "type":"$TEXT","name":"@minValue"},
-			 {"value":"maxValue", "type":"$TEXT","name":"@maxValue"},
+			 {"value":"maxValue", "type":"$TEXT","name":"@maxValue"}
 		       ],
  
  "parameter": [ {"value":"experimentRef", "type":"$TEXT"},
@@ -151,7 +149,7 @@
 		{"value":"base", "type":"$TEXT","name":"@base"},
 		{"value":"exponent", "type":"$TEXT","name":"@exponent"},
 		{"value":"factor", "type":"$TEXT","name":"@factor"},
-		{"value":"uncertainty", "type":"$TEXT","name":"@uncertainty"},		
+		{"value":"uncertainty", "type":"$TEXT","name":"@uncertainty"}		
 	      ],
  
  "feature": [ {"value":"names", "type":"names"},

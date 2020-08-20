@@ -2,18 +2,18 @@
   "CompactEntrySet": [{"value":"entry", "type":"compactEntry","name":"entry"}],	      
   
   "expandedEntry":[ {"value":"source", "type":"source"},
-		    {"value":"availability", "type":"availability", "wrap":"availabilityList"},
-		    {"value":"interaction", "type":"interaction","name":"interaction","wrap":"interactionList"},
-		    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   
-		  ],
-  
+	    {"value":"availability", "type":"availability", "wrap":"availabilityList"},
+	    {"value":"interaction", "type":"interaction","name":"interaction","wrap":"interactionList"},
+	    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   
+	  ],
+
   "compactEntry":[ {"value":"source", "type":"source"},
-		   {"value":"availability", "type":"availability", "wrap":"availabilityList"},
-		   {"value":"experiment", "type":"experiment", "name":"experimentDescription", "wrap":"experimentList"},
-		   {"value":"interactor", "type":"interactor","name":"interactor","wrap":"interactorList"},
-		   {"value":"interaction", "type":"interaction","name":"interaction","wrap":"interactionList"},
-		   {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   
-		 ],
+	    {"value":"availability", "type":"availability", "wrap":"availabilityList"},
+	    {"value":"experiment", "type":"experiment", "name":"experimentDescription", "wrap":"experimentList"},
+	    {"value":"interactor", "type":"interactor","name":"interactor","wrap":"interactorList"},
+	    {"value":"interaction", "type":"interaction","name":"interaction","wrap":"interactionList"},
+	    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   
+	  ],
 	       
   "source":[ {"value":"names", "type":"names"},
 	     {"value":"bibref", "type":"bibref"},
@@ -33,7 +33,7 @@
   "xref":[ {"value":"primaryRef", "type":"ref"},
 	   {"value":"secondaryRef", "type":"ref"}
 	 ],
-  
+    
   "ref": [ {"value":"id","name":"@id","type":"$TEXT"},
 	   {"value":"db","name":"@db","type":"$TEXT"},
 	   {"value":"dbAc","name":"@dbAc","type":"$TEXT"},
@@ -90,7 +90,7 @@
   
   "participant":[ {"value":"names", "type":"names"},
 		  {"value":"xref", "type":"xref"},
-		  {"value":"interactor", "type":"interactor"},
+		  {"value":"interactor", "type":"interactor","wrap":"participantInteractorList"},
 		  {"value":"participantIdentificationMethod", "type":"cvterm","wrap":"participantIdentificationMethodList"},
 		  {"value":"biologicalRole", "type":"cvterm"},
 		  {"value":"experimentalRole", "type":"cvterm","wrap":"experimentalRoleList"},
