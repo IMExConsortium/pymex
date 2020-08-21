@@ -110,7 +110,7 @@ class MifRecord():
         return self.getEntry().getInteraction(id)
     
     def parseDom( self, filename , ver):
-        
+        """Builds a MifRecord object from an MIF XML file."""
         if(ver=="mif300"):
             globalVars.NAMESPACES = {"x":"http://psi.hupo.org/mi/mif300"}
             
@@ -136,6 +136,7 @@ class MifRecord():
         return json.dumps(self.root, indent=2)
 
     def toMif( self , ver):
+        """Builds a MIF elementTree from a MifRecord object."""
         
         json_dir = os.path.dirname(os.path.realpath(__file__))
         
@@ -184,7 +185,7 @@ class MifRecord():
     
     
 class Entry():
-    
+    """Entry representation."""
     def __init__( self, root , id = 0):
         self.data = {}
         self.root = root
@@ -266,7 +267,7 @@ class Entry():
         return self.data
 
 class Source():
-    
+    """Source representation."""
     def __init__( self, entry ):
         self.data={}
         self.entry = entry
@@ -290,6 +291,7 @@ class Source():
         return curid
     
 class Experiment():
+    """Experiment representation."""
     def __init__( self, entry ):
         self.data = {}
         self.entry = entry
@@ -311,6 +313,7 @@ class Experiment():
         return ( id[0], self.data )
         
 class Interactor():
+    """Interaction representation."""
     def __init__( self, entry ):
         self.data={}
         self.entry = entry
@@ -332,6 +335,7 @@ class Interactor():
         return ( id[0], self.data )
 
 class Feature():
+    """Feature representation."""
     def __init__( self, entry ):
         self.data={}
         self.entry = entry
@@ -348,6 +352,7 @@ class Feature():
         return ( id[0], self.data )
     
 class Interaction():
+    """Interaction representation."""
     def __init__( self, entry, id=0 ):
         self.data={}
         self.entry = entry
@@ -450,6 +455,7 @@ class Interaction():
 
     
 class Participant():
+    """Participant representation."""
     def __init__(self, entry):
         self.data = {}
         self.entry = entry
@@ -501,6 +507,7 @@ class Participant():
         return (id[0], pdata )
     
 class Names():
+    """Names representation."""
     def __init__(self, entry ):
         self.entry = entry
         
@@ -525,6 +532,7 @@ class Names():
         return ndata   
     
 class Xref():
+    """Xref representation."""
     def __init__( self, entry ):
         #self.data={}
         self.entry =entry
@@ -585,6 +593,7 @@ class Xref():
 
 
 class Attribute():
+    """Attribute representation."""
     def __init__( self, entry ):
         #self.data = []
         self.entry = entry
@@ -606,6 +615,7 @@ class Attribute():
         return attribdata
         
 class Availability():
+    """Availability representation."""
     def __init__( self, entry ):
         self.entry = entry
         
@@ -623,6 +633,7 @@ class Availability():
         return (id, availdata)
         
 class CvTerm():
+    """CvTerm representation - CvTerms contain names and xref elements only."""
     def __init__(self, entry):
         self.entry = entry
         
@@ -645,6 +656,7 @@ class CvTerm():
         return cvdata
 
 class ListedElement():
+    """ListedElement representation - ListedElements contain children as items in a list rather than key-value pairs in a dictionary."""
     def __init__(self,entry):
         self.entry = entry
     
