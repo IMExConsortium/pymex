@@ -39,12 +39,14 @@ def attribToDict( attrib ):
     
 #----------------------------TO MIF UTILITIES-------------------------------------------------
 
-def toNsString(ns): #turns a namespace into a prefix string for elements
+def toNsString(ns): 
+    """Converts namespace to string prefix for element tags."""
     mif_ns = ns[None]
     mifstr = "{%s}" % mif_ns
     return mifstr
 
 def namesOrder(orderList):
+    """Generates a list of strings that determine the order of children in an Element according to MIF schema."""
     namesOrderList = []
     for item in orderList:
         if("wrap" in item.keys()):
@@ -55,6 +57,7 @@ def namesOrder(orderList):
     return namesOrderList
 
 def generateOrder(key, value):
+    """Orders children of an element according to namesOrder if key is present in the MIF schema JSON."""
     if(key in globalVars.ORDER_DICT.keys()):
         items = [(s,value[s]) for s in namesOrder(globalVars.ORDER_DICT[key]) if s in value.keys()]
         #print((key,[item[0] for item in items]))
@@ -64,9 +67,11 @@ def generateOrder(key, value):
     return items
         
 def isTextElement(text):
-        return (isinstance(text,str) or (isinstance(text,dict) and "value" in text.items()))
+    """Determines if 'text' argument should be parsed as a etree Element containing text."""
+    return (isinstance(text,str) or (isinstance(text,dict) and "value" in text.items()))
     
-def buildTextElement(name,text): #specifically 
+def buildTextElement(name,text): 
+    """Builds a key-value pair (name,text) into an etree Element containing text."""
     root = etree.Element(name)
     
     
@@ -86,7 +91,7 @@ def buildTextElement(name,text): #specifically
                 
    
 def genericMifGenerator(rawkey,value): #root is a value in key value pair 
-    
+    "Recursive MIF serializer from MifRecord object key-value pairs."
     if not globalVars.MIF in rawkey: #add the namespace
         key = globalVars.MIF+rawkey
     else:
