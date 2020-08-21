@@ -49,7 +49,11 @@ def genericSearch( entry, item ):
     else:
         data={}
         if item.attrib:
-            data["elementAttrib"]=attribToDict(item.attrib)
+            if(tag in ["hostOrganism","organism"]):
+                data["ncbiTaxId"] = item.attrib.get("ncbiTaxId")
+            else:
+                data["elementAttrib"]=attribToDict(item.attrib)
+            
 
         for child in item: 
             tag = modifyTag(child)
@@ -117,7 +121,8 @@ class MifRecord():
         
         record = etree.parse( filename )
         entrySet = record.xpath("/x:entrySet",namespaces=globalVars.NAMESPACES)
-        self.root["elementAttrib"] = attribToDict(entrySet[0].attrib)
+        for key, val in entrySet[0].attrib.items():
+            self.root[key] = val
         entries = record.xpath( "/x:entrySet/x:entry", namespaces=globalVars.NAMESPACES )
         for entry in entries:
             entryElem = Entry( self.root )
@@ -145,17 +150,19 @@ class MifRecord():
             globalVars.ORDER_DICT = json.load(open(os.path.join(json_dir,"..","def254.json")))
             
         xpath_ns_local = {"x":nsmap[None]}
-        root = etree.Element(globalVars.MIF+"entrySet",nsmap=nsmap)
+        rootElem = etree.Element(globalVars.MIF+"entrySet",nsmap=nsmap)
         
-        for attribkey,attribval in self.root["elementAttrib"].items():
-            root.attrib[attribkey] = attribval
-            
+        for attribkey,attribval in self.root.items():
+            #root.attrib[attribkey] = attribval
+            if not attribkey=="entries":
+                rootElem.attrib[attribkey] = attribval
         
-        for entry in record.root["entries"]:
+        #print(rootElem.attrib)
+        for entry in self.root["entries"]:
             
             entryElem = etree.Element(globalVars.MIF+"entry")
             items = generateOrder("compactEntry", entry)
-            print(items)
+            #print(items)
             for key, val in items:
                 #print(key)
                 entryElem.append(genericMifGenerator(key,val))
@@ -171,9 +178,9 @@ class MifRecord():
         
                 entryElem.remove(abstractInteractionList)
             
-            root.append(entryElem)    
+            rootElem.append(entryElem)    
         
-        return root
+        return rootElem
     
     
 class Entry():
@@ -241,19 +248,19 @@ class Entry():
                     self.data["interactorList"][cId] = cInt 
 
             elif tag == 'interactionList':
-               self.data[tag] = {}
+               self.data[tag] = []
                intnElem = item.xpath( "x:interaction", namespaces=globalVars.NAMESPACES )
                for intn in intnElem:
                    (cId, cIntn) =  Interaction( self.data ).parseDom( intn )
-                   self.data["interactionList"][cId] = cIntn 
+                   self.data["interactionList"].append(cIntn)
                
                absIntnElem = item.xpath( "x:abstractInteraction", namespaces=globalVars.NAMESPACES )
                
                if absIntnElem:
-                   self.data["abstractInteractionList"] = {}
+                   self.data["abstractInteractionList"] = []
                    for absIntn in absIntnElem:
                        (cId, cIntn) =  Interaction( self.data ).parseDom( absIntn )
-                       self.data["abstractInteractionList"][cId] = cIntn 
+                       self.data["abstractInteractionList"].append(cIntn)
             
         
         return self.data
@@ -404,7 +411,7 @@ class Interaction():
                 prtElem = item.xpath( "x:participant", namespaces=globalVars.NAMESPACES )
                 for prt in prtElem: 
                     (cId, cPrt) =  Participant( self.entry ).parseDom( prt )
-                    idata[tag].append((cId,cPrt))
+                    idata[tag].append(cPrt)
                 
             elif tag in ["modelled","intraMolecular","negative"]:
                 idata[tag] = "bool"
@@ -455,10 +462,9 @@ class Participant():
             tag = item.tag[globalVars.LEN_NAMESPACE:]
             
             if tag == "interactorRef":
-                pdata["participantInteractorList"] = {}
                 refElem= item.xpath("text()")
                 for ref in refElem:
-                    pdata["participantInteractorList"][ref] = self.entry["interactorList"][ref]
+                    pdata["interactor"] = self.entry["interactorList"][ref]
                     
             elif tag=="featureList":
                pdata[tag] = {}
@@ -526,25 +532,26 @@ class Xref():
     def parseDom( self, dom ):
         #dom = dom.xpath(".",namespaces=globalVars.NAMESPACES)[0]
         #self.data = genericSearch( self.entry, dom)
-        xdata = {}
-        id = ""
+        xdata = {"refInd":{}}
         for item in dom:
             tag = item.tag[globalVars.LEN_NAMESPACE:]
             if tag == "primaryRef":
-                id = item.attrib.get("db")+":"+item.attrib.get("id")
-                xdata["primaryRef"] = attribToDict(item.attrib) 
+                attribDict = attribToDict(item.attrib)
+                db_id = item.attrib.get("db")+":"+item.attrib.get("id")
+                xdata["primaryRef"] = attribDict
+                xdata["refInd"][db_id] = attribDict
+                    
                 
             elif tag == "secondaryRef":
                 db_id = item.attrib.get("db")+":"+item.attrib.get("id")
                 attribDict = attribToDict(item.attrib)
                 if not "secondaryRef" in xdata.keys():
                     xdata["secondaryRef"] = []
-                    xdata["secRefInd"] = {}
                     
                 xdata["secondaryRef"].append(attribDict)
-                xdata["secRefInd"][db_id] = attribDict
+                xdata["refInd"][db_id] = attribDict
                 
-        return (id, xdata)
+        return (xdata)
                     
         # should return (id, data) tuple, where id is
         # set to  "db-id" + ":" + "MI:0465" (concatenation
@@ -644,9 +651,11 @@ class ListedElement():
     def parseDom( self, dom ):
         eldata = []
         for item in dom:
+            #print(item.tag)
             eldata.append(genericSearch(self.entry,item))
             
         return eldata
     
+
 
 

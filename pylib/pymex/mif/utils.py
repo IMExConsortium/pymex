@@ -98,7 +98,7 @@ def genericMifGenerator(rawkey,value): #root is a value in key value pair
     else:
         val = value.copy()
         
-    if((rawkey in ["experimentList","interactorList","availabilityList","interactionList","featureList", "abstractInteractionList"]) and isinstance(val,dict)):
+    if((rawkey in ["experimentList","interactorList","availabilityList","featureList"]) and isinstance(val,dict)):
         for expkey, expval in val.items():
             
             if rawkey=="experimentList":
@@ -123,7 +123,7 @@ def genericMifGenerator(rawkey,value): #root is a value in key value pair
     elif(rawkey=="participantList"):
         
 
-        for participantID,participant in val:
+        for participant in val:
 
             items = generateOrder("participant", participant)
             partElem = etree.Element("participant")   
@@ -135,18 +135,14 @@ def genericMifGenerator(rawkey,value): #root is a value in key value pair
 
             for partkey, partval in items:
                 #print(partkey)
-                if(partkey=="participantInteractorList"):
+                if(partkey=="interactor"):
                     
-                    for expkey, expval in partval.items():
-                        childName = "interactor"
-                        childExp = genericMifGenerator(childName,expval)
+                    childExp = genericMifGenerator(partkey,partval)
                         
-                        childExp.attrib["id"] = str(globalVars.ID_NUM)
-                        globalVars.ID_NUM+=1
+                    childExp.attrib["id"] = str(globalVars.ID_NUM)
+                    globalVars.ID_NUM+=1
                         
-                        #print(partkey,expkey)
-                        partElem.append(childExp)
-                        
+                    partElem.append(childExp)
                 else:
                     partElem.append(genericMifGenerator(partkey,partval))
             root.append(partElem)
@@ -169,7 +165,7 @@ def genericMifGenerator(rawkey,value): #root is a value in key value pair
         items = generateOrder(rawkey, val)
         for xkey, xval in val.items():
             #print(xkey)
-            if(xkey=="secRefInd"):
+            if(xkey=="refInd"):
                 continue    
             elif(isinstance(xval,dict)): #primaryRef
                 root.append(buildTextElement(globalVars.MIF+xkey,xval))
@@ -184,11 +180,16 @@ def genericMifGenerator(rawkey,value): #root is a value in key value pair
         for item in val:
                 
             if key.endswith("List"):
+                    
                 if(rawkey=="bindingFeatureList"):
                     modifiedKey = globalVars.MIF+"bindingFeatures"
                 else:
                     modifiedKey = key[:-4]
                 childElem = etree.Element(modifiedKey)
+                
+                if(rawkey in ["interactionList","abstractInteractionList"]):
+                    childElem.attrib["id"] = str(globalVars.ID_NUM)
+                    globalVars.ID_NUM+=1
             else:
                 childElem = etree.Element(key)
             root.append(childElem)
@@ -205,6 +206,9 @@ def parseChildren(root, item, key): #when recursively parsing through these obje
         if(subkey=="elementAttrib"):
             for attribkey, attribval in subval.items():
                 root.attrib[attribkey] = attribval
+                
+        elif(subkey=="ncbiTaxId"):
+            root.attrib[subkey] = subval
             
         elif(isTextElement(subval)):
             root.append(buildTextElement(subkey,subval))
