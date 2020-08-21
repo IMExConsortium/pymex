@@ -1,0 +1,357 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<entrySet xmlns="http://psi.hupo.org/mi/mif300" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://psi.hupo.org/mi/mif300 https://raw.githubusercontent.com/HUPO-PSI/miXML/master/3.0/src/MIF300.xsd" level="3" version="0" minorVersion="0">
+  <entry>
+    <source releaseDate="2020-07-07">
+      <names>
+        <shortLabel>IntAct</shortLabel>
+        <fullName>European Bioinformatics Institute</fullName>
+        <alias type="synonym" typeAc="MI:1041">IntAct</alias>
+        <alias type="synonym" typeAc="MI:1041">intact</alias>
+      </names>
+      <bibref>
+        <xref>
+          <primaryRef db="pubmed" dbAc="MI:0446" id="14681455" refType="primary-reference" refTypeAc="MI:0358"/>
+        </xref>
+      </bibref>
+      <xref>
+        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0469" refType="identity" refTypeAc="MI:0356"/>
+        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-10" refType="identity" refTypeAc="MI:0356"/>
+        <secondaryRef db="pubmed" dbAc="MI:0446" id="14681455" refType="primary-reference" refTypeAc="MI:0358"/>
+        <secondaryRef db="pubmed" dbAc="MI:0446" id="22121220" refType="method reference" refTypeAc="MI:0357"/>
+        <secondaryRef db="pubmed" dbAc="MI:0446" id="19850723" refType="method reference" refTypeAc="MI:0357"/>
+      </xref>
+      <attributeList>
+        <attribute name="url" nameAc="MI:0614">http://www.ebi.ac.uk/</attribute>
+        <attribute name="search-url" nameAc="MI:0615">http://www.ebi.ac.uk/intact/query/${ac}</attribute>
+        <attribute name="id-validation-regexp" nameAc="MI:0628">EBI-[0-9]+|IA:[0-9]+</attribute>
+        <attribute name="definition">INTerAction database (IntAct) provides an open source database and toolkit for the storage, presentation and analysis of molecular interactions.</attribute>
+        <attribute name="url" nameAc="MI:0614">http://www.ebi.ac.uk/intact</attribute>
+        <attribute name="postaladdress">European Bioinformatics Institute; Wellcome Trust Genome Campus; Hinxton, Cambridge; CB10 1SD; United Kingdom</attribute>
+        <attribute name="url" nameAc="MI:0614">http://www.ebi.ac.uk/intact/</attribute>
+      </attributeList>
+    </source>
+    <experimentList>
+      <experimentDescription id="1">
+        <names>
+          <fullName>Mock publication and experiment for abstract interactions that are not interaction evidences.</fullName>
+        </names>
+        <bibref>
+          <attributeList>
+            <attribute name="publication title" nameAc="MI:1091">Mock publication and experiment for abstract interactions that are not interaction evidences.</attribute>
+          </attributeList>
+        </bibref>
+        <interactionDetectionMethod>
+          <names>
+            <shortLabel>unspecified method</shortLabel>
+          </names>
+          <xref>
+            <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0686" refType="identity" refTypeAc="MI:0356"/>
+          </xref>
+        </interactionDetectionMethod>
+      </experimentDescription>
+    </experimentList>
+    <interactorList>
+      <interactor id="2">
+        <names>
+          <shortLabel>q15131-1</shortLabel>
+          <fullName>Cyclin-dependent kinase 10</fullName>
+          <alias type="gene name" typeAc="MI:0301">CDK10</alias>
+          <alias type="gene name synonym" typeAc="MI:0302">Cell division protein kinase 10</alias>
+          <alias type="gene name synonym" typeAc="MI:0302">Serine/threonine-protein kinase PISSLRE</alias>
+        </names>
+        <xref>
+          <primaryRef db="uniprotkb" dbAc="MI:0486" id="Q15131-1" refType="identity" refTypeAc="MI:0356"/>
+          <secondaryRef db="intact" dbAc="MI:0469" id="EBI-11507283" refType="identity" refTypeAc="MI:0356"/>
+          <secondaryRef db="intact" dbAc="MI:0469" id="EBI-1646959" refType="isoform-parent" refTypeAc="MI:0243"/>
+        </xref>
+        <interactorType>
+          <names>
+            <shortLabel>protein</shortLabel>
+            <fullName>protein</fullName>
+          </names>
+          <xref>
+            <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0326" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="intact" dbAc="MI:0469" id="EBI-619654" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+            <secondaryRef db="so" dbAc="MI:0601" id="SO:0000358" refType="see-also" refTypeAc="MI:0361"/>
+          </xref>
+        </interactorType>
+        <organism ncbiTaxId="9606">
+          <names>
+            <shortLabel>human</shortLabel>
+            <fullName>Homo sapiens</fullName>
+            <alias type="synonym" typeAc="MI:1041">Human</alias>
+          </names>
+        </organism>
+        <sequence>MAEPDLECEQIRLKCIRKEGFFTVPPEHRLGRCRSVKEFEKLNRIGEGTYGIVYRARDTQTDEIVALKKVRMDKEKDGIPISSLREITLLLRLRHPNIVELKEVVVGNHLESIFLVMGYCEQDLASLLENMPTPFSEAQVKCIVLQVLRGLQYLHRNFIIHRDLKVSNLLMTDKGCVKTADFGLARAYGVPVKPMTPKVVTLWYRAPELLLGTTTQTTSIDMWAVGCILAELLAHRPLLPGTSEIHQIDLIVQLLGTPSENIWPGFSKLPLVGQYSLRKQPYNNLKHKFPWLSEAGLRLLHFLFMYDPKKRATAGDCLESSYFKEKPLPCEPELMPTFPHHRNKRAAPATSEGQSKRCKP</sequence>
+        <attributeList>
+          <attribute name="crc64">25B28560961103F4</attribute>
+        </attributeList>
+      </interactor>
+      <interactor id="3">
+        <names>
+          <shortLabel>ccnq_human</shortLabel>
+          <fullName>Cyclin-Q</fullName>
+          <alias type="gene name" typeAc="MI:0301">CCNQ</alias>
+          <alias type="gene name synonym" typeAc="MI:0302">CDK10-activating cyclin</alias>
+          <alias type="gene name synonym" typeAc="MI:0302">Cyclin-M</alias>
+          <alias type="gene name synonym" typeAc="MI:0302">Cyclin-related protein FAM58A</alias>
+          <alias type="gene name synonym" typeAc="MI:0302">FAM58A</alias>
+        </names>
+        <xref>
+          <primaryRef db="uniprotkb" dbAc="MI:0486" id="Q8N1B3" refType="identity" refTypeAc="MI:0356"/>
+          <secondaryRef db="uniprotkb" dbAc="MI:0486" id="Q9BUU1" refType="secondary-ac" refTypeAc="MI:0360"/>
+          <secondaryRef db="uniprotkb" dbAc="MI:0486" id="Q330J9" refType="secondary-ac" refTypeAc="MI:0360"/>
+          <secondaryRef db="uniprotkb" dbAc="MI:0486" id="Q96IU5" refType="secondary-ac" refTypeAc="MI:0360"/>
+          <secondaryRef db="uniprotkb" dbAc="MI:0486" id="Q2I380" refType="secondary-ac" refTypeAc="MI:0360"/>
+          <secondaryRef db="intact" dbAc="MI:0469" id="EBI-3925043" refType="identity" refTypeAc="MI:0356"/>
+          <secondaryRef db="ensembl" dbAc="MI:0476" id="ENSG00000262919"/>
+          <secondaryRef db="ensembl" dbAc="MI:0476" id="ENSP00000461135"/>
+          <secondaryRef db="ensembl" dbAc="MI:0476" id="ENST00000576892"/>
+          <secondaryRef db="mint" dbAc="MI:0471" id="Q8N1B3"/>
+          <secondaryRef db="ensembl" dbAc="MI:0476" id="ENSP00000402949"/>
+          <secondaryRef db="ensembl" dbAc="MI:0476" id="ENST00000440428"/>
+          <secondaryRef db="go" dbAc="MI:0448" id="GO:0005634"/>
+          <secondaryRef db="go" dbAc="MI:0448" id="GO:0016538"/>
+          <secondaryRef db="go" dbAc="MI:0448" id="GO:0042025"/>
+          <secondaryRef db="interpro" dbAc="MI:0449" id="IPR043198"/>
+          <secondaryRef db="interpro" dbAc="MI:0449" id="IPR036915"/>
+          <secondaryRef db="go" dbAc="MI:0448" id="GO:0006357"/>
+          <secondaryRef db="refseq" dbAc="MI:0481" id="NP_001124469.1"/>
+          <secondaryRef db="refseq" dbAc="MI:0481" id="NP_689487.2"/>
+          <secondaryRef db="interpro" dbAc="MI:0449" id="IPR013763"/>
+          <secondaryRef db="interpro" dbAc="MI:0449" id="IPR006671"/>
+          <secondaryRef db="interpro" dbAc="MI:0449" id="IPR028759"/>
+        </xref>
+        <interactorType>
+          <names>
+            <shortLabel>protein</shortLabel>
+            <fullName>protein</fullName>
+          </names>
+          <xref>
+            <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0326" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="intact" dbAc="MI:0469" id="EBI-619654" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+            <secondaryRef db="so" dbAc="MI:0601" id="SO:0000358" refType="see-also" refTypeAc="MI:0361"/>
+          </xref>
+        </interactorType>
+        <organism ncbiTaxId="9606">
+          <names>
+            <shortLabel>human</shortLabel>
+            <fullName>Homo sapiens</fullName>
+            <alias type="synonym" typeAc="MI:1041">Human</alias>
+          </names>
+        </organism>
+        <sequence>MEAPEGGGGGPAARGPEGQPAPEARVHFRVARFIMEAGVKLGMRSIPIATACTIYHKFFCETNLDAYDPYLIAMSSIYLAGKVEEQHLRTRDIINVSNRYFNPSGEPLELDSRFWELRDSIVQCELLMLRVLRFQVSFQHPHKYLLHYLVSLQNWLNRHSWQRTPVAVTAWALLRDSYHGALCLRFQAQHIAVAVLYLALQVYGVEVPAEVEAEKPWWQVFNDDLTKPIIDNIVSDLIQIYTMDTEIP</sequence>
+        <attributeList>
+          <attribute name="crc64">E7C11BC5D23BFB82</attribute>
+        </attributeList>
+      </interactor>
+    </interactorList>
+    <interactionList>
+      <abstractInteraction id="4">
+        <names>
+          <shortLabel>cdk10-cyclinm_human</shortLabel>
+          <alias type="complex recommended name" typeAc="MI:1315">Cyclin M-CDK10 complex</alias>
+          <alias type="complex systematic name" typeAc="MI:1316">CDK10:FAM58A</alias>
+        </names>
+        <xref>
+          <primaryRef db="intenz" dbAc="MI:0585" id="2.7.11.22" refType="identity" refTypeAc="MI:0356"/>
+          <secondaryRef db="intact" dbAc="MI:0469" id="EBI-11507457" refType="identity" refTypeAc="MI:0356"/>
+          <secondaryRef db="go" dbAc="MI:0448" id="GO:0004693" refType="function" refTypeAc="MI:0355"/>
+          <secondaryRef db="go" dbAc="MI:0448" id="GO:0000307" refType="component" refTypeAc="MI:0354"/>
+          <secondaryRef db="complex portal" dbAc="MI:2279" id="CPX-326" version="1" refType="complex-primary" refTypeAc="MI:2282"/>
+          <secondaryRef db="intact" dbAc="MI:0469" id="EBI-11507390" refType="exp-evidence"/>
+          <secondaryRef db="evidence ontology" dbAc="MI:1331" id="ECO:0000353"/>
+          <secondaryRef db="go" dbAc="MI:0448" id="GO:1902749" refType="process" refTypeAc="MI:0359"/>
+          <secondaryRef db="efo" dbAc="MI:1337" id="Orphanet:140952" refType="see-also" refTypeAc="MI:0361"/>
+        </xref>
+        <participantList>
+          <participant id="5">
+            <interactorRef>2</interactorRef>
+            <biologicalRole>
+              <names>
+                <shortLabel>enzyme</shortLabel>
+                <fullName>enzyme</fullName>
+              </names>
+              <xref>
+                <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0501" refType="identity" refTypeAc="MI:0356"/>
+                <secondaryRef db="intact" dbAc="MI:0469" id="EBI-46" refType="identity" refTypeAc="MI:0356"/>
+                <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+              </xref>
+            </biologicalRole>
+            <featureList>
+              <feature id="6">
+                <names>
+                  <shortLabel>FAM58A binding region</shortLabel>
+                </names>
+                <xref>
+                  <primaryRef db="intact" dbAc="MI:0469" id="EBI-11507468" refType="identity" refTypeAc="MI:0356"/>
+                </xref>
+                <featureType>
+                  <names>
+                    <shortLabel>binding region</shortLabel>
+                    <fullName>binding-associated region</fullName>
+                    <alias type="synonym" typeAc="MI:1041">binding region</alias>
+                  </names>
+                  <xref>
+                    <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0117" refType="identity" refTypeAc="MI:0356"/>
+                    <secondaryRef db="intact" dbAc="MI:0469" id="EBI-456493" refType="identity" refTypeAc="MI:0356"/>
+                    <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                  </xref>
+                </featureType>
+                <featureRangeList>
+                  <featureRange>
+                    <startStatus>
+                      <names>
+                        <shortLabel>undetermined</shortLabel>
+                        <fullName>undetermined sequence position</fullName>
+                        <alias type="synonym" typeAc="MI:1041">undetermined</alias>
+                      </names>
+                      <xref>
+                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0339" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-448295" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                      </xref>
+                    </startStatus>
+                    <endStatus>
+                      <names>
+                        <shortLabel>undetermined</shortLabel>
+                        <fullName>undetermined sequence position</fullName>
+                        <alias type="synonym" typeAc="MI:1041">undetermined</alias>
+                      </names>
+                      <xref>
+                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0339" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-448295" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                      </xref>
+                    </endStatus>
+                  </featureRange>
+                </featureRangeList>
+              </feature>
+            </featureList>
+          </participant>
+          <participant id="7">
+            <interactorRef>3</interactorRef>
+            <biologicalRole>
+              <names>
+                <shortLabel>enzyme regulator</shortLabel>
+                <fullName>enzyme regulator</fullName>
+              </names>
+              <xref>
+                <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:1343" refType="identity" refTypeAc="MI:0356"/>
+                <secondaryRef db="intact" dbAc="MI:0469" id="EBI-9663006" refType="identity" refTypeAc="MI:0356"/>
+                <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+              </xref>
+            </biologicalRole>
+            <featureList>
+              <feature id="8">
+                <names>
+                  <shortLabel>CDK10 binding region</shortLabel>
+                </names>
+                <xref>
+                  <primaryRef db="intact" dbAc="MI:0469" id="EBI-11507465" refType="identity" refTypeAc="MI:0356"/>
+                </xref>
+                <featureType>
+                  <names>
+                    <shortLabel>binding region</shortLabel>
+                    <fullName>binding-associated region</fullName>
+                    <alias type="synonym" typeAc="MI:1041">binding region</alias>
+                  </names>
+                  <xref>
+                    <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0117" refType="identity" refTypeAc="MI:0356"/>
+                    <secondaryRef db="intact" dbAc="MI:0469" id="EBI-456493" refType="identity" refTypeAc="MI:0356"/>
+                    <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                  </xref>
+                </featureType>
+                <featureRangeList>
+                  <featureRange>
+                    <startStatus>
+                      <names>
+                        <shortLabel>undetermined</shortLabel>
+                        <fullName>undetermined sequence position</fullName>
+                        <alias type="synonym" typeAc="MI:1041">undetermined</alias>
+                      </names>
+                      <xref>
+                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0339" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-448295" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                      </xref>
+                    </startStatus>
+                    <endStatus>
+                      <names>
+                        <shortLabel>undetermined</shortLabel>
+                        <fullName>undetermined sequence position</fullName>
+                        <alias type="synonym" typeAc="MI:1041">undetermined</alias>
+                      </names>
+                      <xref>
+                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0339" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-448295" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                      </xref>
+                    </endStatus>
+                  </featureRange>
+                </featureRangeList>
+              </feature>
+            </featureList>
+          </participant>
+        </participantList>
+        <bindingFeatureList>
+          <bindingFeatures>
+            <participantFeatureRef>6</participantFeatureRef>
+            <participantFeatureRef>8</participantFeatureRef>
+          </bindingFeatures>
+        </bindingFeatureList>
+        <interactionType>
+          <names>
+            <shortLabel>direct interaction</shortLabel>
+            <fullName>direct interaction</fullName>
+          </names>
+          <xref>
+            <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0407" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="intact" dbAc="MI:0469" id="EBI-608833" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+          </xref>
+        </interactionType>
+        <organism ncbiTaxId="9606">
+          <names>
+            <shortLabel>human</shortLabel>
+            <fullName>Homo sapiens</fullName>
+            <alias type="synonym" typeAc="MI:1041">Human</alias>
+          </names>
+        </organism>
+        <interactorType>
+          <names>
+            <shortLabel>stable complex</shortLabel>
+            <fullName>stable complex</fullName>
+          </names>
+          <xref>
+            <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:1302" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="intact" dbAc="MI:0469" id="EBI-6862248" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="pubmed" dbAc="MI:0446" id="12853464" refType="primary-reference" refTypeAc="MI:0358"/>
+          </xref>
+        </interactorType>
+        <evidenceType>
+          <names>
+            <shortLabel>physical interaction evidence used in manual assertion</shortLabel>
+            <fullName>physical interaction evidence used in manual assertion</fullName>
+            <alias type="synonym" typeAc="MI:1041">IPI</alias>
+            <alias type="synonym" typeAc="MI:1041">inferred from physical interaction</alias>
+          </names>
+          <xref>
+            <primaryRef db="evidence ontology" dbAc="MI:1331" id="ECO:0000353" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="intact" dbAc="MI:0469" id="EBI-9828818" refType="identity" refTypeAc="MI:0356"/>
+          </xref>
+        </evidenceType>
+        <attributeList>
+          <attribute name="curated-complex">Cyclin-dependent protein kinase. Acts as a cell cycle regulator in some cells and as a tumor suppressor in others. Inhibits the transcriptional activity of Ets2 (P15036) by positively controlling its degradation by the proteasome, through the phosphorylation of Ser-220 and Ser-225.</attribute>
+          <attribute name="complex-properties" nameAc="MI:0629"> CDKs have a two-lobed structure. The amino-terminal lobe contains beta-sheets, the carboxy-terminal lobe is rich in alpha-helices, and the active site is sandwiched in-between.  In the cyclin-free, monomeric form the CDK catalytic cleft is closed by a region known as the T-loop, preventing enzymatic activity. Cyclin binding leads to a conformational change, enabling activation of catalytic activity.&#xd;
+&#xd;
+Several CDK10 isoforms exist but of those tested, only Q15131-1 has been shown to interact with FAM58A.</attribute>
+          <attribute name="disease" nameAc="MI:0617">Syndactyly - telecanthus - anogenital and renal malformations [Orphanet:140952]: A syndrome characterized by anal, genital and renal tract anomalies, facial dysmorphism and syndactyly. Features include anal stenosis, a rectovaginal fistula, clitoral hypertrophy, a pelvic right kidney, toe syndactyly, and telecanthus.</attribute>
+          <attribute name="accepted">Accepted 2016-JAN-25 by BMELDAL</attribute>
+        </attributeList>
+      </abstractInteraction>
+    </interactionList>
+  </entry>
+</entrySet>
