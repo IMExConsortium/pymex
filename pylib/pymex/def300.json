@@ -119,7 +119,7 @@
  
  "participant":[ {"value":"names", "type":"names"},
 		 {"value":"xref", "type":"xref"},
-		 {"value":"interactor", "type":"interactor","wrap":"participantInteractorList"},
+		 {"value":"interactor", "type":"interactor"},
 		 {"value":"participantIdentificationMethod", "type":"cvterm","wrap":"participantIdentificationMethodList"},
 		 {"value":"biologicalRole", "type":"cvterm"},
 		 {"value":"experimentalRole", "type":"cvterm","wrap":"experimentalRoleList"},
