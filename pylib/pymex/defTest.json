@@ -1,8 +1,11 @@
-{ "ExpandedEntrySet": [{"value":"entries", "type":"expandedEntry","name":"entry"}],	      
-  "CompactEntrySet": [{"value":"entries", "type":"compactEntry","name":"entry"}],	      
-  
-  "expandedEntry":[ {"value":"source", "type":"source2"},
-		    {"type":"interactionList","name":"interactionList","wrap":"interactionList"}
+{
+    "@ROOT": { "name":"EntrySet","attribute":{"level":"2", "version":"5", "minorVersion":"4" }},
+
+    "ExpandedEntrySet": [{"value":"entries", "type":"expandedEntry","name":"entry"}],	      
+    "CompactEntrySet": [{"value":"entries", "type":"compactEntry","name":"entry"}],	      
+    
+    "expandedEntry":[ {"value":"source", "type":"source2"},
+		      {"type":"interactionList","name":"interactionList","wrap":"interactionList"}
 		  ],
 
   "xpandedEntry":[ {"value":"source", "type":"source"},

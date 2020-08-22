@@ -14,6 +14,8 @@ import os
 from mif.utils import *
 import mif.globalVars as globalVars
 
+import pymex
+
 
 #------------------------------GENERIC PARSER---------------------------------------------------
 def genericSearch( entry, item ):
@@ -74,7 +76,8 @@ class MifParser():
         self.debug = debug
         
     def parse( self, filename, ver ):       
-        mif = MifRecord()
+        #mif = MifRecord()
+        mif = pymex.mif.Record()
         mif.parseDom( filename, ver )
         return mif
 
@@ -199,7 +202,7 @@ class MifRecord():
     def moGenericMifGenerator(self, nsmap, template, dom, cdata, ctype, name=None, attrib=None ):
 
         self.UID = 1
-        
+                
         if name is not None:
             dom = etree.Element(globalVars.MIF + name,nsmap=nsmap)
         if attrib is not None:
