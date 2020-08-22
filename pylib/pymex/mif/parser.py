@@ -73,8 +73,7 @@ class MifParser():
     def __init__(self,debug=False):
         self.debug = debug
         
-    def parse( self, filename, ver ):
-        "foo"
+    def parse( self, filename, ver ):       
         mif = MifRecord()
         mif.parseDom( filename, ver )
         return mif
@@ -134,7 +133,7 @@ class MifRecord():
 
     def toJson(self):
         return json.dumps(self.root, indent=2)
-
+                
     def toMif( self , ver):
         """Builds a MIF elementTree from a MifRecord object."""
         
@@ -182,6 +181,154 @@ class MifRecord():
             rootElem.append(entryElem)    
         
         return rootElem
+
+
+    def toMoMif( self, ver='test' ):
+        if(ver=="test"):
+            nsmap = {None:"http://psi.hupo.org/mi/mif","xsi":"http://www.w3.org/2001/XMLSchema-instance"}
+            attrib = {"level":"2","version":"5", "minorVersion":"4"}
+            globalVars.MIF = toNsString(nsmap)
+            json_dir = os.path.dirname(os.path.realpath(__file__))
+            template = json.load(open(os.path.join(json_dir,"..","defTest.json")))
+
+            return self.moGenericMifGenerator( nsmap, template, None, self.root,
+                                               template['ExpandedEntrySet'],
+                                               name="EntrySet", attrib=attrib )
+        return None
+    
+    def moGenericMifGenerator(self, nsmap, template, dom, cdata, ctype, name=None, attrib=None ):
+
+        self.UID = 1
+        
+        if name is not None:
+            dom = etree.Element(globalVars.MIF + name,nsmap=nsmap)
+        if attrib is not None:
+            for a in attrib:
+                dom.set(a,attrib[a])
+            
+        for cdef in ctype:            
+            chldLst = self.moGenericMifElement( nsmap, template, None, cdata, cdef)
+            for chld in chldLst:
+                dom.append( chld )
+            
+        return dom
+    
+    def moGenericMifElement(self, nsmap, template, celem, cdata, cdef ):
+        """Returns a list of elements to be added to the parent and decorates  
+           parent with attributes. 
+        """
+        retLst = []
+        if "wrap" in cdef:
+            # add wrapper        
+
+            wrapName = cdef["wrap"]
+            wrapElem = etree.Element(globalVars.MIF + wrapName)        
+        else:
+            wrapElem = None
+            
+        if "value" not in cdef: # empty wrapper
+
+            # wrapper contents definition
+            wrappedTypes = template[cdef["type"]]
+            
+            empty = True # flag: will skip if nothing inside 
+            for wtDef in wrappedTypes: # go over wrapper contents
+                                
+                if wtDef["value"] in cdata:  # check if data present 
+                    wElemData = cdata[wtDef["value"]]
+                    for wed in wElemData: # wrapper contents *must* be a list
+                        empty = False # non empty contents
+                        
+                        if "name" in wtDef:
+                            chldName = wtDef["name"]
+                        else:
+                            chldName = wtDef["value"]
+
+                        # create content element inside a wrapper
+                        chldElem = etree.Element(globalVars.MIF + chldName)   
+                        wrapElem.append(chldElem)
+
+                        # fill in according to element definition
+                        for wtp in template[wtDef["type"]]:
+                            wclLst = self.moGenericMifElement(nsmap, template,
+                                                              chldElem, wed, wtp)                        
+                            # add contents
+                            for wcd in wclLst:
+                                chldElem.append(wcd)
+                                              
+            if not empty:                                  
+                return [wrapElem]
+            else:
+                return []
+        
+        if cdef["value"] =="$UID": #  generate next id
+            self.UID += 1
+            elemData = str(self.UID) 
+        else:
+            if cdef["value"] in cdata: # data from the record 
+                elemData = cdata[ cdef["value"] ]
+            else:               
+                return [] # no data present: return empty list                   
+
+        if "name" in cdef: # if present use name definition 
+            elemName = cdef["name"]
+        else:              # otherwise use the name of record field 
+            elemName = cdef["value"]
+
+            
+        if isinstance( elemData, str):  # record field: text
+
+            # attribute or text of the parent element
+
+            if elemName.startswith('@'):  
+                if elemName == "@TEXT" : # text of parent                
+                    celem.text = str(elemData)
+                else:                    # attribute of parent
+                    celem.set(elemName[1:], str(elemData))                
+            else: 
+                if cdef["type"]=='$TEXT': # child element with text only                    
+                    chldElem = etree.Element(globalVars.MIF + elemName)
+                    chldElem.text = str( elemData )                
+
+                    if wrapElem is not None: # add to wrapper (if present) 
+                        wrapElem.append(chldElem)
+                        return [wrapElem]
+                    else: # otherwise add to return list            
+                        retLst.append(chldElem)
+            return retLst
+                    
+        if isinstance( elemData, dict): # record field: complex element 
+            # convert single value to list
+            elemData = [ elemData ]
+            
+        for celemData in elemData: # always a list here with one or more dict inside                    
+            
+            chldElem = etree.Element(globalVars.MIF + elemName)
+            
+            if cdef["type"]=='$TEXT': # text child element                 
+                chldElem = etree.Element(globalVars.MIF + elemName)
+                chldElem.text = str( elemData )
+                retLst.append(chldElem)
+            else: # complex content: build recursively
+                contType = template[cdef["type"]]
+                           
+                for contDef in contType: # go over definitions
+                    cldLst = self.moGenericMifElement(nsmap, template,
+                                                      chldElem,
+                                                      celemData,
+                                                      contDef)                
+                    for cld in cldLst:
+                        chldElem.append(cld)
+                        
+                if wrapElem is not None:  # if present, add to wrapper
+                    wrapElem.append(chldElem)
+                else:                     #  otherwise add to return list    
+                    retLst.append(chldElem)
+
+        if wrapElem is not None:
+            return [wrapElem]
+
+        return retLst
     
     
 class Entry():

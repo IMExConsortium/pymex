@@ -14,6 +14,8 @@ from urllib.request import urlopen
 from io import BytesIO
 from zipfile import ZipFile
 
+from lxml import etree as ET
+
 import pymex
 
 #test_mif25='/cluster1/mirrors/imex/intact/psi25/2018/9171338.zip'
@@ -85,16 +87,16 @@ for cs in source:
             
     if args.ofile == 'STDOUT':
          if args.oformat == 'mif254':
-             print( rec.toMif('mif254').decode("utf-8") )
+             print( ET.tostring(rec.toMoMif('test'),pretty_print=True).decode("utf-8") )
          elif args.oformat == 'mif300':
-             print( rec.toMif('mif300').decode("utf-8") )
+             print( ET.tostring(rec.toMif('mif300'),pretty_print=True).decode("utf-8") )
          else:
              print( rec.toJson() )
     else:
         with open(args.ofile,"w") as of:
             if args.oformat == 'mif254':
-                of.write( rec.toMif('mif254') )
+                of.write( ET.tostring(rec.toMoMif('mif254')).decode("utf-8") )
             elif args.oformat == 'mif300':
-                of.write( rec.toMif('mif300') )
+                of.write( ET.tostring(rec.toMif('mif300')).decode("utf-8") )
             else:
                 of.write( rec.toJson() )
