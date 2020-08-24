@@ -18,13 +18,19 @@
   "source":[ {"value":"names", "type":"names"},
 	     {"value":"bibref", "type":"bibref"},
 	     {"value":"xref", "type":"xref"},
-	     {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}
+	     {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"},
+	     {"value":"releaseDate","name":"@releaseDate","type":"$TEXT"}
 	   ],
   
   "names":[ {"value":"shortLabel", "type":"$TEXT"},
 	    {"value":"fullName", "type":"$TEXT"},
-	    {"value":"alias", "type":"$TEXT","name":"aliasList"}
+	    {"value":"alias", "type":"alias","name":"aliasList"}
 	  ],
+
+  "alias": [{"value":'typeAc', "name":"@typeAc","type":"$TEXT"},
+	    {"value":'type', "name":"@type","type":"$TEXT"},
+	    {"value":'value', "type":'$TEXT'}],
+
   
   "bibref":[ {"value":"xref", "type":"xref"},
 	     {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}
@@ -63,7 +69,7 @@
 		 {"value":"$UID", "type":"$TEXT", "name":"@id"}
 	       ],
   
-  "organism":[ {"value":"names", "type":"cvterm"},
+  "organism":[ {"value":"names", "type":"names"},
 	       {"value":"cellType", "type":"cvterm"},
 	       {"value":"compartment", "type":"cvterm"},
 	       {"value":"tissue", "type":"cvterm"},

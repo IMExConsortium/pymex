@@ -193,7 +193,7 @@ class RecordBuilder():
                             "names": {
                                 "shortLabel": ctax["sname"],
                                 "fullName": ctax["lname"] },
-                            "taxid": ctax["taxid"] } )
+                            "ncbiTaxId": ctax["taxid"] } )
                         
                 elif ln.startswith("molecule"):
                     self.feature = False
@@ -236,7 +236,7 @@ class RecordBuilder():
                         "names": {
                             "shortLabel": ctax["sname"],
                             "fullName": ctax["lname"] },
-                        "taxid": irec["taxid"] }
+                        "ncbiTaxId": irec["taxid"] }
                                         
                     # participant names
                     participant["names"] = {"shortLabel":irec["sname"].lower()}
@@ -251,7 +251,7 @@ class RecordBuilder():
 
                             ctax = {"shortLabel":taxon["sname"],
                                     "fullName":taxon["lname"],
-                                    "taxid":taxon["taxid"]}
+                                    "ncbiTaxId":taxon["taxid"]}
                             
                             hostOrganism.append(ctax)
 
@@ -356,4 +356,4 @@ class RecordBuilder():
                     participant = None
                     feature = None
                     frange = None
-        return pymex.mif254.Mif254Record( [record] )
+        return pymex.mif.Record( {"entries": [record] } )

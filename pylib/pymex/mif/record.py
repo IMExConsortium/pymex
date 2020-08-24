@@ -17,8 +17,11 @@ import mif.globalVars as globalVars
 class Record():
     """MIF record representation."""
 
-    def __init__(self):
-        self.root = {"entries":[]}
+    def __init__(self, root=None):
+        if root is not None:
+            self.root = root
+        else:
+            self.root = {"entries":[]}
     
     @property
     def entry(self):

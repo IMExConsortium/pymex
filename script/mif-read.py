@@ -81,7 +81,7 @@ s = {}
 for cs in source:
 
     if args.format == 'jmif':        
-        rec = pymex.mif.Record().fromJson(cs) 
+        rec = pymex.mif.Record().parseJson(cs) 
     else:    
         rec = mifParser.parse( cs, args.format )
             

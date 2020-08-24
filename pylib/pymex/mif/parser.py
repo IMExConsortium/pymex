@@ -22,7 +22,7 @@ def genericSearch( entry, item ):
     """Recursive search through element tree."""
     
     tag = modifyTag(item)
-    
+        
     if item.text and len(item)==0: # We have reached a leaf node: does it have attributes or not?      
         if not item.attrib:
             return item.text  
@@ -55,7 +55,7 @@ def genericSearch( entry, item ):
                 data["ncbiTaxId"] = item.attrib.get("ncbiTaxId")
             else:
                 data["elementAttrib"]=attribToDict(item.attrib)
-            
+                
 
         for child in item: 
             tag = modifyTag(child)
@@ -417,7 +417,7 @@ class Entry():
         return self.data
 
 class Source():
-    """Source representation."""
+    """Source representation."""   
     def __init__( self, entry ):
         self.data={}
         self.entry = entry
@@ -432,7 +432,10 @@ class Source():
             tag = modifyTag(item)
             self.data[tag] = genericSearch( self.entry, item )
             
-        self.data["elementAttrib"]=attribToDict(dom.attrib) #sources have attributes
+        #self.data["elementAttrib"]=attribToDict(dom.attrib) #sources have attributes
+        adict = attribToDict(dom.attrib)
+        for a in adict:
+            self.data[a] = adict[a]
         
         return self.data
     

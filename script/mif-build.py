@@ -24,7 +24,7 @@ if '-i' in sys.argv:
 
 args = parser.parse_args()
 
-rb = pymex.mif254.RecordBuilder()
+rb = pymex.mif.RecordBuilder()
 
 record = rb.build( args.source)
 
