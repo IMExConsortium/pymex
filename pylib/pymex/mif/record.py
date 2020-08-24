@@ -21,7 +21,7 @@ class Record():
         if root is not None:
             self.root = root
         else:
-            self.root = {"entries":[]}
+            self.root = {}
     
     @property
     def entry(self):
@@ -46,7 +46,169 @@ class Record():
         
     def __getitem__(self, id):
         return self.getEntry().getInteraction(id)
-    
+
+    def parseMif(self, filename, ver="mif254"):
+
+        if(ver=="mif300"):
+            globalVars.NAMESPACES = {"x":"http://psi.hupo.org/mi/mif300"}
+            
+        elif(ver=="mif254"):
+            globalVars.NAMESPACES = {"x":"http://psi.hupo.org/mi/mif"}
+
+            #load parserdefinition
+
+            json_dir = os.path.dirname( os.path.realpath(__file__) )
+            template = json.load( open( os.path.join(json_dir,"..", "defParse254.json") ) )
+     
+        globalVars.LEN_NAMESPACE = len(globalVars.NAMESPACES["x"])+2
+        
+        recordTree = ET.parse( filename )
+        rootElem = recordTree.getroot()
+        
+        self.genericParse( template, self.root, rootElem)
+        return self.root
+
+    def genericParse(self, template, rec, elem, wrapped=False):
+        
+        tag = modifyTag( elem )
+        print("\nTAG",tag,wrapped)
+
+        #find corresponding template
+        if tag in template:
+            ttempl = template[tag]
+        else:
+            ttempl = template["*"] 
+
+        print(" TTEM", ttempl)
+        
+        if elem.getparent() is not None:
+            parentElem = elem.getparent()
+            if wrapped:
+                if  parentElem.getparent() is not None:
+                    parentElem = parentElem.getparent()
+                else:
+                    parentElem = None            
+        else:
+            parentElem = None
+            
+        if parentElem is not None:
+            parentTag = modifyTag( parentElem )                
+            print(" PAR", parentTag )
+        else:
+            parentTag = None
+            print(" ROOT ELEM !!!")
+
+        if parentTag is not None and parentTag in ttempl:
+            ctempl = ttempl[parentTag]
+        else:
+            ctempl = ttempl["*"]
+
+        print("  CTEMPL", ctempl )
+
+        # find wrap flag
+        if "wrapper" in ctempl and ctempl["wrapper"] is not None:
+            cwrap = ctempl["wrapper"]
+        else:
+            #default
+            cwrap = template["*"]["*"]["wrapper"]            
+
+        print( "  CWRAP ", cwrap )
+
+        if cwrap:
+            for cchld in elem:
+                print("  CHLD",cchld.tag);
+
+                self.genericParse( template, rec, cchld,wrapped =True)
+                print( json.dumps(self.root, indent=2) )
+                
+            return 
+        
+        # find current key:        
+        if "name" in ctempl and ctempl["name"] is not None:
+            ckey = ctempl["name"]
+        else:
+            ckey = tag
+
+        print( "  CKEY  ", ckey )
+
+        # find complex flag
+        if "complex" in ctempl and ctempl["complex"] is not None:
+            ccomplex = ctempl["complex"]        
+        else:            
+            #default
+            ccomplex = template["*"]["*"]["complex"]
+
+        print( "  CCMPLX", ccomplex )
+        if ccomplex:
+            cvalue = {}
+            if elem.text:
+                val = str(elem.text).strip()
+                if len(val) > 0:
+                    cvalue["value"] = val
+        else:
+            cvalue = str(elem.text)
+                    
+        # find current store type (direct/list/index)
+        if "store" in ctempl and ctempl["store"] is not None:
+            cstore = ctempl["store"]
+        else:
+            #default
+            cstore = template["*"]["*"]["store"]
+            
+        print( "  CSTORE", cstore )
+
+        # create current value        
+        if cstore  == "direct":
+            rec[ckey] = cvalue
+        elif cstore == "list": 
+            if ckey not in rec:
+                rec[ckey] = []
+            rec[ckey].append(cvalue)
+        elif cstore == "index":
+            if ckey not in rec:
+                rec[ckey] = {}
+
+            if "ikey" in ctempl and ctempl["ikey"] is not None:
+                ikey = ctempl["ikey"]
+            else:
+                #default
+                ikey = template["*"]["*"]["ikey"]
+
+            if ikey.startswith("@"):
+                iattr= ikey[1:]
+                ikeyval = elem.get(iattr)
+                
+                if ikeyval is not None:                
+                    rec[ckey][ikeyval] = cvalue
+            
+        print("   rec[ckey]",rec[ckey])
+
+        # test if reference
+        rtgt  = None
+        if "reference" in ctempl and ctempl["reference"] is not None:
+             rtgt = ctempl["reference"]
+        else:
+            #default
+            rtgt = template["*"]["*"]["reference"]
+        
+        if rtgt is not None: 
+            # elem.text is a reference
+            rec[ckey] = "REFERENCED DICTIONARY HERE: id=" + str(elem.text)
+            print("XXXXXX",self.root["entrySet"]["entry"][0][rtgt].keys())
+            print("XXXXXX",self.root["entrySet"]["entry"][0][rtgt][str(elem.text)].keys()) 
+        else: 
+            # parse elem contents
+                
+            # add dom attributes
+            for cattr in elem.attrib:
+                cvalue[cattr] = elem.attrib[cattr]
+
+            for cchld in elem:
+                print("  CHLD",cchld.tag);
+                self.genericParse( template, cvalue, cchld)
+            print( json.dumps(self.root, indent=2) )
+        return
+        
     def parseDom( self, filename , ver):
         """Builds a MifRecord object from an MIF XML file."""
         if(ver=="mif300"):
@@ -122,12 +284,14 @@ class Record():
         return rootElem
 
     def toMoMif( self, ver='test' ):
-        if(ver=="test"):
-            nsmap = {None:"http://psi.hupo.org/mi/mif","xsi":"http://www.w3.org/2001/XMLSchema-instance"}
+        """Builds MIF elementTree from a Record object."""
         
-            globalVars.MIF = toNsString(nsmap)
-            json_dir = os.path.dirname(os.path.realpath(__file__))
-            template = json.load( open(os.path.join(json_dir,"..","defTest.json")) )
+        if(ver=="test"):
+            nsmap = {None:"http://psi.hupo.org/mi/mif", "xsi":"http://www.w3.org/2001/XMLSchema-instance"}
+        
+            globalVars.MIF = toNsString( nsmap )
+            json_dir = os.path.dirname( os.path.realpath(__file__) )
+            template = json.load( open( os.path.join(json_dir,"..", "defTest.json") ) )
 
             return self.moGenericMifGenerator( nsmap, template, None, self.root,
                                                template['ExpandedEntrySet'] )
@@ -158,8 +322,8 @@ class Record():
         return dom
     
     def moGenericMifElement(self, nsmap, template, celem, cdata, cdef ):
-        """Returns a list of elements to be added to the parent and decorates  
-           parent with attributes. 
+        """Returns a list of DOM elements to be added to the parent and/or decorates  
+           parent with attributes and text value . 
         """
         retLst = []
         if "wrap" in cdef:

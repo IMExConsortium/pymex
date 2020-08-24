@@ -1,0 +1,51 @@
+{
+    "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id", "reference":null, "wrapper": false } },
+    "entry":{"*":{"store":"list"}},
+
+    "shortLabel":{"*":{"complex":false}},
+    "fullName":{"*":{"complex":false}},
+
+    "alias":{"*":{"store":"list"}},
+    
+    "secondaryRef": {"*": {"store":"list"}},
+    
+    "attributeList":{"*":{"wrapper":true}},
+    "attribute":{"*":{"store":"list","name":"attributeList"}},
+
+    "availabilityList":{"*":{"wrapper":true}},
+    "availability":{"entry":{"store":"index","ikey":"@id","name":"availabilityList"}},
+    "availabilityRef":{"*":{"reference":"availabilityList","name":"availability"}},
+
+    "experimentList":{"*":{"wrapper":true}},
+    "experimentDescription":{"entry":{"store":"index","ikey":"@id","name":"experimentList"},
+			     "*":{"store":"list"}},
+    "experiementRef":{"*":{"reference":"experimentList","store":"list","name":"experimentList"},
+		      "confidence":{"complex":false} },
+
+
+ 
+    
+    "confidenceList":{"*":{"wrapper":true}},
+    "value":{"*":{"complex":false}},
+
+    "attributeList":{"*":{"wrapper":true}},
+		      
+    "interactorList":{"*":{"wrapper": true} },
+    
+    "interactor":{ "participant": { "store":"direct"},
+		   "*":{"store":"index", "ikey":"@id", "name":"interactorList"}},		  
+
+    "interactorRef":{"*":{"reference": "interactorList", "name":"interactor"} },
+
+    "sequence":{"*":{"complex":false}},
+
+		      
+    "interactionList":{"*":{"wrapper": true} },
+    "interactionType":{"interaction":{"store":"list"}},
+
+    "modelled":{"*":{"complex":false}},
+    "intraMolecular":{"*":{"complex":false}},
+    "negative":{"*":{"complex":false}},
+
+    "parameterList":{"*":{"wrapper":true}}
+}

@@ -310,9 +310,9 @@ class RecordBuilder():
                 elif ln.startswith("range"):
                     self.feature = True
                     if "range" not in feature:
-                        feature["featureRange"] = []
+                        feature["featureRangeList"] = []
                     frange = {}
-                    feature["featureRange"].append(frange)
+                    feature["featureRangeList"].append(frange)
 
                     cols = ln.strip().split("\t")
                     rbegin = cols[1]

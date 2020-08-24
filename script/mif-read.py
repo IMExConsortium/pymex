@@ -83,8 +83,9 @@ for cs in source:
     if args.format == 'jmif':        
         rec = pymex.mif.Record().parseJson(cs) 
     else:    
-        rec = mifParser.parse( cs, args.format )
-            
+        #rec = mifParser.parse( cs, args.format )
+        rec = pymex.mif.Record().parseMif(cs) 
+        
     if args.ofile == 'STDOUT':
          if args.oformat == 'mif254':
              print( ET.tostring(rec.toMoMif('test'),pretty_print=True).decode("utf-8") )

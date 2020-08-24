@@ -1,5 +1,5 @@
 {
-    "@ROOT": { "name":"EntrySet","attribute":{"level":"2", "version":"5", "minorVersion":"4" }},
+    "@ROOT": { "name":"entrySet","attribute":{"level":"2", "version":"5", "minorVersion":"4" }},
 
     "ExpandedEntrySet": [{"value":"entries", "type":"expandedEntry","name":"entry"}],	      
     "CompactEntrySet": [{"value":"entries", "type":"compactEntry","name":"entry"}],	      
