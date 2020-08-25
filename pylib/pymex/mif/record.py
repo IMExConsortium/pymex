@@ -79,7 +79,7 @@ class Record():
             ttempl = template["*"] 
 
         if debug:
-            print("\nTAG",tag,wrapped, len(rpath) )
+            print("\nTAG", tag, wrapped, len(rpath) )
             print(" TTEM", ttempl)
         
         if elem.getparent() is not None:
@@ -161,19 +161,9 @@ class Record():
             print( "  CCMPLX", ccomplex )
             print( "  CSTORE", cstore )
             print( "  CREFTG", rtgt )
-
-        cvalue = None
-        if ccomplex and rtgt is None:
-            cvalue = {}
-            if elem.text:
-                val = str(elem.text).strip()
-                if len(val) > 0:
-                    cvalue["value"] = val
-        else:
-            if rtgt is None:
-                cvalue = str( elem.text )
             
-        if rtgt is not None: 
+        if rtgt is not None:
+            # add referenced data
             # elem.text: a reference
             # rtgt     : path to referenced dictionary along current path
             #            within record data structure  
@@ -186,8 +176,6 @@ class Record():
                     break
 
             lastmatch = rpath[i-2][stgt[i-1]]
-            cvalue = lastmatch[stgt[i]][elem.text]
-
             if cstore == "list":
                 if ckey not in rec:
                     rec[ckey] = []
@@ -196,9 +184,17 @@ class Record():
                 rec[ckey] = lastmatch[stgt[i]][elem.text]
                 
         else:
+            # build/add current value
+            cvalue = None
+            if ccomplex:
+                cvalue = {}
+                if elem.text:
+                    val = str(elem.text).strip()
+                    if len(val) > 0:
+                        cvalue["value"] = val
+            else:
+                cvalue = str( elem.text )
 
-
-            # create current value        
             if cstore  == "direct":
                 rec[ckey] = cvalue
             elif cstore == "list": 
