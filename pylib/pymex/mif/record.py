@@ -141,52 +141,6 @@ class Record():
             #default
             ccomplex = template["*"]["*"]["complex"]
 
-        if debug:
-            print( "  CKEY  ", ckey )
-            print( "  CCMPLX", ccomplex )
-
-        if ccomplex:
-            cvalue = {}
-            if elem.text:
-                val = str(elem.text).strip()
-                if len(val) > 0:
-                    cvalue["value"] = val
-        else:
-            cvalue = str( elem.text )
-                    
-        # find current store type (direct/list/index)
-        if "store" in ctempl and ctempl["store"] is not None:
-            cstore = ctempl["store"]
-        else:
-            #default
-            cstore = template["*"]["*"]["store"]
-        if debug:     
-            print( "  CSTORE", cstore )
-
-        # create current value        
-        if cstore  == "direct":
-            rec[ckey] = cvalue
-        elif cstore == "list": 
-            if ckey not in rec:
-                rec[ckey] = []
-            rec[ckey].append(cvalue)
-        elif cstore == "index":
-            if ckey not in rec:
-                rec[ckey] = {}
-
-            if "ikey" in ctempl and ctempl["ikey"] is not None:
-                ikey = ctempl["ikey"]
-            else:
-                #default
-                ikey = template["*"]["*"]["ikey"]
-
-            if ikey.startswith("@"):
-                iattr= ikey[1:]
-                ikeyval = elem.get(iattr)
-                
-                if ikeyval is not None:                
-                    rec[ckey][ikeyval] = cvalue        
-        
         # test if reference
         rtgt  = None
         if "reference" in ctempl and ctempl["reference"] is not None:
@@ -194,7 +148,31 @@ class Record():
         else:
             #default
             rtgt = template["*"]["*"]["reference"]
-        
+
+        # find current store type (direct/list/index)
+        if "store" in ctempl and ctempl["store"] is not None:
+            cstore = ctempl["store"]
+        else:
+            #default
+            cstore = template["*"]["*"]["store"]
+             
+        if debug:
+            print( "  CKEY  ", ckey )
+            print( "  CCMPLX", ccomplex )
+            print( "  CSTORE", cstore )
+            print( "  CREFTG", rtgt )
+
+        cvalue = None
+        if ccomplex and rtgt is None:
+            cvalue = {}
+            if elem.text:
+                val = str(elem.text).strip()
+                if len(val) > 0:
+                    cvalue["value"] = val
+        else:
+            if rtgt is None:
+                cvalue = str( elem.text )
+            
         if rtgt is not None: 
             # elem.text: a reference
             # rtgt     : path to referenced dictionary along current path
@@ -209,8 +187,41 @@ class Record():
 
             lastmatch = rpath[i-2][stgt[i-1]]
             cvalue = lastmatch[stgt[i]][elem.text]
-            rec[ckey] = lastmatch[stgt[i]][elem.text]
-        else: 
+
+            if cstore == "list":
+                if ckey not in rec:
+                    rec[ckey] = []
+                rec[ckey].append( lastmatch[stgt[i]][elem.text] )
+            elif cstore == "direct":
+                rec[ckey] = lastmatch[stgt[i]][elem.text]
+                
+        else:
+
+
+            # create current value        
+            if cstore  == "direct":
+                rec[ckey] = cvalue
+            elif cstore == "list": 
+                if ckey not in rec:
+                    rec[ckey] = []
+                rec[ckey].append(cvalue)
+            elif cstore == "index":
+                if ckey not in rec:
+                    rec[ckey] = {}
+
+                if "ikey" in ctempl and ctempl["ikey"] is not None:
+                    ikey = ctempl["ikey"]
+                else:
+                    #default
+                    ikey = template["*"]["*"]["ikey"]
+
+                if ikey.startswith("@"):
+                    iattr= ikey[1:]
+                    ikeyval = elem.get(iattr)
+                
+                    if ikeyval is not None:                
+                        rec[ckey][ikeyval] = cvalue        
+                   
             # parse elem contents
                 
             # add dom attributes
@@ -313,9 +324,9 @@ class Record():
         
             globalVars.MIF = toNsString( nsmap )
             json_dir = os.path.dirname( os.path.realpath(__file__) )
-            template = json.load( open( os.path.join(json_dir,"..", "defTest.json") ) )
+            template = json.load( open( os.path.join(json_dir, "defMif254.json") ) )
 
-            return self.moGenericMifGenerator( nsmap, template, None, self.root,
+            return self.moGenericMifGenerator( nsmap, template, None, self.root["entrySet"],
                                                template['ExpandedEntrySet'] )
         return None
     

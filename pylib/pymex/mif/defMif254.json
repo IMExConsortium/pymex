@@ -1,8 +1,8 @@
 {
     "@ROOT": { "name":"entrySet","attribute":{"level":"2", "version":"5", "minorVersion":"4" }},
 
-    "ExpandedEntrySet": [{"value":"entries", "type":"expandedEntry","name":"entry"}],	      
-    "CompactEntrySet": [{"value":"entries", "type":"compactEntry","name":"entry"}],	      
+    "ExpandedEntrySet": [{"value":"entry", "type":"expandedEntry","name":"entry"}],	      
+    "CompactEntrySet": [{"value":"entry", "type":"compactEntry","name":"entry"}],	      
     
     "expandedEntry":[ {"value":"source", "type":"source2"},
 		      {"type":"interactionList","name":"interactionList","wrap":"interactionList"}
@@ -57,14 +57,14 @@
 	       {"value":"tissue", "type":"cvterm"},
 	       {"value":"ncbiTaxId", "type":"$TEXT", "name":"@ncbiTaxId"}],
   
-  "interactionList":[{"value":"interactionList", "name":"interaction","type":"interaction" }],
+  "interactionList":[{"value":"interaction", "name":"interaction","type":"interaction" }],
   
   "interaction":[ {"value":"names", "type":"names"},
 		  {"value":"xref", "type":"xref"},
 		  {"value":"availability", "type":"availability","wrap": "availabilityList"},
-		  {"value":"experimentList", "type":"experimentDescription","name":"experimentDescription",
+		  {"value":"experiment", "type":"experimentDescription","name":"experimentDescription",
 		   "wrap":"experimentList"},
-		  {"value":"participantList", "type":"participant","wrap":"participantList"},
+		  {"value":"participant", "type":"participant","wrap":"participantList"},
 		  {"value":"inferredInteraction", "type":"interaction","wrap":"inferredInteractionList"},
 		  {"value":"interactionType", "type":"cvterm"},
 		  {"value":"modelled", "type":"$TEXT"},
