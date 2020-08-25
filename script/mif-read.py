@@ -92,6 +92,7 @@ for cs in source:
          elif args.oformat == 'mif300':
              print( ET.tostring(rec.toMif('mif300'),pretty_print=True).decode("utf-8") )
          else:
+             print("JSON")
              print( rec.toJson() )
     else:
         with open(args.ofile,"w") as of:
