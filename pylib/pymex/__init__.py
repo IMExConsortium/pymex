@@ -5,8 +5,6 @@ pkg_dir = os.path.dirname( os.path.realpath(__file__) )
 version_file = open(os.path.join( pkg_dir, 'VERSION') )
 version = version_file.read().strip()
 
-import mif254
-import mif300
 import mif
 
 import pypsic
