@@ -81,10 +81,11 @@ s = {}
 for cs in source:
 
     if args.format == 'jmif':        
-        rec = pymex.mif.MifRecord().fromJson(cs) 
+        rec = pymex.mif.Record().parseJson(cs) 
     else:    
-        rec = mifParser.parse( cs, args.format )
-            
+        #rec = mifParser.parse( cs, args.format )
+        rec = pymex.mif.Record().parseMif(cs) 
+        
     if args.ofile == 'STDOUT':
          if args.oformat == 'mif254':
              print( ET.tostring(rec.toMoMif('test'),pretty_print=True).decode("utf-8") )
@@ -95,8 +96,8 @@ for cs in source:
     else:
         with open(args.ofile,"w") as of:
             if args.oformat == 'mif254':
-                of.write( ET.tostring(rec.toMoMif('mif254')).decode("utf-8") )
+                of.write( ET.tostring(rec.toMoMif('test'),pretty_print=True).decode("utf-8") )
             elif args.oformat == 'mif300':
-                of.write( ET.tostring(rec.toMif('mif300')).decode("utf-8") )
+                of.write( ET.tostring(rec.toMif('mif300'),pretty_print=True).decode("utf-8") )
             else:
                 of.write( rec.toJson() )

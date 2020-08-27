@@ -1,11 +1,14 @@
-{ "ExpandedEntrySet": [{"value":"entries", "type":"expandedEntry","name":"entry"}],	      
-  "CompactEntrySet": [{"value":"entries", "type":"compactEntry","name":"entry"}],	      
-  
-  "expandedEntry":[ {"value":"source", "type":"source2"},
-		    {"type":"interactionList","name":"interactionList","wrap":"interactionList"}
-		  ],
+{
+    "@ROOT": { "name":"entrySet","attribute":{"level":"2", "version":"5", "minorVersion":"4" }},
+    
+    "ExpandedEntrySet": [{"value":"entry", "type":"expandedEntry","name":"entry"}],	      
+    "CompactEntrySet": [{"value":"entry", "type":"compactEntry","name":"entry"}],	      
+    
+    "expandedEntry":[ {"value":"source", "type":"source2"},
+		      {"type":"interactionList","name":"interactionList","wrap":"interactionList"}
+		    ],
 
-  "xpandedEntry":[ {"value":"source", "type":"source"},
+    "xpandedEntry":[ {"value":"source", "type":"source"},
 	    {"value":"availability", "type":"availability", "wrap":"availabilityList"},
 	    {"type":"interactionList","wrap":"interactionList"},
 	    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   
@@ -54,14 +57,14 @@
 	       {"value":"tissue", "type":"cvterm"},
 	       {"value":"ncbiTaxId", "type":"$TEXT", "name":"@ncbiTaxId"}],
   
-  "interactionList":[{"value":"interactionList", "name":"interaction","type":"interaction" }],
+  "interactionList":[{"value":"interaction", "name":"interaction","type":"interaction" }],
   
   "interaction":[ {"value":"names", "type":"names"},
 		  {"value":"xref", "type":"xref"},
 		  {"value":"availability", "type":"availability","wrap": "availabilityList"},
-		  {"value":"experimentList", "type":"experimentDescription","name":"experimentDescription",
+		  {"value":"experiment", "type":"experimentDescription","name":"experimentDescription",
 		   "wrap":"experimentList"},
-		  {"value":"participantList", "type":"participant","wrap":"participantList"},
+		  {"value":"participant", "type":"participant","wrap":"participantList"},
 		  {"value":"inferredInteraction", "type":"interaction","wrap":"inferredInteractionList"},
 		  {"value":"interactionType", "type":"cvterm"},
 		  {"value":"modelled", "type":"$TEXT"},
@@ -87,11 +90,11 @@
 		   "wrap":"experimetalPreparationList"},
 		  {"value":"experimentalInteractorList", "type":"interactor",
 		   "wrap":"experimentalInteractorList"},
-		  {"value":"feature", "type":"feature", "wrap":"featureList"},
+		  {"value":"featureList", "type":"feature", "wrap":"featureList", "name":"feature"},
 		  {"value":"hostOrganism", "type":"organism", "wrap":"hostOrganismList"},
 		  {"value":"confidence", "type":"$TEXT","wrap":"confidenceList"},		 
-		  {"value":"parameter", "type":"parameter","wrap":"parameterList"},
-		  {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"},
+		  {"value":"parameterList", "type":"parameter","wrap":"parameterList"},
+		  {"value":"attributeList", "type":"attribute","name":"attribute","wrap":"attributeList"},
 		  {"value":"$UID", "type":"$TEXT", "name":"@id"}
 		],
 
@@ -112,8 +115,8 @@
 	       {"value":"featureType", "type":"cvterm"},
 	       {"value":"featureDetectionMethod", "type":"cvterm"},
 	       {"value":"experimentRef", "type":"$TEXT"},		
-	       {"value":"featureRange", "type":"frange","wrap":"featureRangeList"},
-	       {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"},
+	       {"value":"featureRangeList", "type":"frange","wrap":"featureRangeList","name":"featureRange"},
+	       {"value":"attributeList", "type":"attribute","name":"attribute","wrap":"attributeList"},
 	       {"value":"$UID", "type":"$TEXT", "name":"@id"}
 	     ],
   
@@ -166,7 +169,12 @@
 	   {"value":"version","name":"@version","type":"$TEXT"},
 	   {"value":"refType","name":"@refType","type":"$TEXT"},
 	   {"value":"refTypeAc","name":"@refTypeAc","type":"$TEXT"}
+	 ],
+
+  "availability":[ {"value":"availability", "name":"@TEXT", "type":"$TEXT"},
+		   {"value":"$UID", "type":"$TEXT", "name":"@id" }
 	 ]
+
 
   
 }
