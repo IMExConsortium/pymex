@@ -11,18 +11,30 @@ import os
 
 import pymex
 
-from mif.utils import *
-import mif.globalVars as globalVars
-
 class Record():
     """MIF record representation."""
+    
+    def modifyTag(self,item): 
+        """ Modifies tag of an item if necessary."""
+        tag = item.tag[self.LEN_NAMESPACE:]
+        return tag
+    
+    def toNsString(self,ns): 
+        """Converts namespace to string prefix for element tags."""
+        mif_ns = ns[None]
+        mifstr = "{%s}" % mif_ns
+        return mifstr
 
     def __init__(self, root=None):
         if root is not None:
             self.root = root
         else:
             self.root = {}
-    
+        
+        self.NAMESPACES = None
+        self.LEN_NAMESPACE = None
+        self.MIF = None
+        
     @property
     def entry(self):
         return self.getEntry()
@@ -50,17 +62,17 @@ class Record():
     def parseMif(self, filename, ver="mif254", debug=False):
 
         if(ver=="mif300"):
-            globalVars.NAMESPACES = {"x":"http://psi.hupo.org/mi/mif300"}
+            self.NAMESPACES = {"x":"http://psi.hupo.org/mi/mif300"}
             
         elif(ver=="mif254"):
-            globalVars.NAMESPACES = {"x":"http://psi.hupo.org/mi/mif"}
+            self.NAMESPACES = {"x":"http://psi.hupo.org/mi/mif"}
 
             #load parserdefinition
 
             json_dir = os.path.dirname( os.path.realpath(__file__) )
             template = json.load( open( os.path.join(json_dir, "defParse254.json") ) )
      
-        globalVars.LEN_NAMESPACE = len(globalVars.NAMESPACES["x"])+2
+        self.LEN_NAMESPACE = len(self.NAMESPACES["x"])+2
         
         recordTree = ET.parse( filename )
         rootElem = recordTree.getroot()
@@ -70,8 +82,8 @@ class Record():
 
     def genericParse(self, template, rec, rpath, elem, wrapped=False, debug=False):
         
-        tag = modifyTag( elem )
-        
+        tag = self.modifyTag( elem )
+        print(tag)
         #find corresponding template
         if tag in template:
             ttempl = template[tag]
@@ -93,7 +105,7 @@ class Record():
             parentElem = None
             
         if parentElem is not None:
-            parentTag = modifyTag( parentElem )
+            parentTag = self.modifyTag( parentElem )
             if debug:
                 print(" PAR", parentTag )
             
@@ -241,18 +253,18 @@ class Record():
     def parseDom( self, filename , ver):
         """Builds a MifRecord object from an MIF XML file."""
         if(ver=="mif300"):
-            globalVars.NAMESPACES = {"x":"http://psi.hupo.org/mi/mif300"}
+            self.NAMESPACES = {"x":"http://psi.hupo.org/mi/mif300"}
             
         elif(ver=="mif254"):
-            globalVars.NAMESPACES = {"x":"http://psi.hupo.org/mi/mif"}
+            self.NAMESPACES = {"x":"http://psi.hupo.org/mi/mif"}
         
-        globalVars.LEN_NAMESPACE = len(globalVars.NAMESPACES["x"])+2
+        self.LEN_NAMESPACE = len(self.NAMESPACES["x"])+2
         
         record = ET.parse( filename )
-        entrySet = record.xpath("/x:entrySet",namespaces=globalVars.NAMESPACES)
+        entrySet = record.xpath("/x:entrySet",namespaces=self.NAMESPACES)
         for key, val in entrySet[0].attrib.items():
             self.root[key] = val
-        entries = record.xpath( "/x:entrySet/x:entry", namespaces=globalVars.NAMESPACES )
+        entries = record.xpath( "/x:entrySet/x:entry", namespaces=self.NAMESPACES )
         for entry in entries:
             entryElem = pymex.mif.Entry( self.root )
             self.root["entries"].append( entryElem.parseDom( entry ) )
@@ -263,54 +275,6 @@ class Record():
 
     def toJson(self):
         return json.dumps(self.root, indent=2)
-                
-    def toMif( self , ver):
-        """Builds a MIF elementTree from a MifRecord object."""
-        
-        json_dir = os.path.dirname(os.path.realpath(__file__))
-        
-        if(ver=="mif300"):
-            nsmap = {None:"http://psi.hupo.org/mi/mif300","xsi":"http://www.w3.org/2001/XMLSchema-instance"}
-            globalVars.MIF = toNsString(nsmap)
-            globalVars.ORDER_DICT = json.load(open(os.path.join(json_dir,"..","def300.json")))
-            
-        elif(ver=="mif254"):
-            nsmap = {None:"http://psi.hupo.org/mi/mif","xsi":"http://www.w3.org/2001/XMLSchema-instance"}
-            globalVars.MIF = toNsString(nsmap)
-            globalVars.ORDER_DICT = json.load(open(os.path.join(json_dir,"..","def254.json")))
-            
-        xpath_ns_local = {"x":nsmap[None]}
-        rootElem = ET.Element(globalVars.MIF+"entrySet",nsmap=nsmap)
-        
-        for attribkey,attribval in self.root.items():
-            #root.attrib[attribkey] = attribval
-            if not attribkey=="entries":
-                rootElem.attrib[attribkey] = attribval
-        
-        #print(rootElem.attrib)
-        for entry in self.root["entries"]:
-            
-            entryElem = ET.Element(globalVars.MIF+"entry")
-            items = generateOrder("compactEntry", entry)
-            #print(items)
-            for key, val in items:
-                #print(key)
-                entryElem.append(genericMifGenerator(key,val))
-            
-            interactionList = entryElem.xpath("x:interactionList",namespaces=xpath_ns_local)[0]
-            
-            if(entryElem.xpath("x:abstractInteractionList",namespaces=xpath_ns_local)):
-                abstractInteractionList = entryElem.xpath("x:abstractInteractionList",namespaces=xpath_ns_local)[0]
-            
-                for abstractInteraction in abstractInteractionList:
-                    #print(abstractInteraction)
-                    interactionList.append(abstractInteraction)
-        
-                entryElem.remove(abstractInteractionList)
-            
-            rootElem.append(entryElem)    
-        
-        return rootElem
 
     def toMoMif( self, ver='test' ):
         """Builds MIF elementTree from a Record object."""
@@ -318,7 +282,7 @@ class Record():
         if(ver=="test"):
             nsmap = {None:"http://psi.hupo.org/mi/mif", "xsi":"http://www.w3.org/2001/XMLSchema-instance"}
         
-            globalVars.MIF = toNsString( nsmap )
+            self.MIF = self.toNsString( nsmap )
             json_dir = os.path.dirname( os.path.realpath(__file__) )
             template = json.load( open( os.path.join(json_dir, "defMif254.json") ) )
 
@@ -338,7 +302,7 @@ class Record():
         else:
             attrib = None
             
-        dom = ET.Element(globalVars.MIF + name,nsmap=nsmap)
+        dom = ET.Element(self.MIF + name,nsmap=nsmap)
         if attrib is not None:
             for a in attrib:
                 dom.set(a,attrib[a])
@@ -359,7 +323,7 @@ class Record():
             # add wrapper        
 
             wrapName = cdef["wrap"]
-            wrapElem = ET.Element(globalVars.MIF + wrapName)        
+            wrapElem = ET.Element(self.MIF + wrapName)        
         else:
             wrapElem = None
             
@@ -382,7 +346,7 @@ class Record():
                             chldName = wtDef["value"]
 
                         # create content element inside a wrapper
-                        chldElem = ET.Element(globalVars.MIF + chldName)   
+                        chldElem = ET.Element(self.MIF + chldName)   
                         wrapElem.append(chldElem)
 
                         # fill in according to element definition
@@ -424,7 +388,7 @@ class Record():
                     celem.set(elemName[1:], str(elemData))                
             else: 
                 if cdef["type"]=='$TEXT': # child element with text only                    
-                    chldElem = ET.Element(globalVars.MIF + elemName)
+                    chldElem = ET.Element(self.MIF + elemName)
                     chldElem.text = str( elemData )                
 
                     if wrapElem is not None: # add to wrapper (if present) 
@@ -440,10 +404,10 @@ class Record():
             
         for celemData in elemData: # always a list here with one or more dict inside                    
             
-            chldElem = ET.Element(globalVars.MIF + elemName)
+            chldElem = ET.Element(self.MIF + elemName)
             
             if cdef["type"]=='$TEXT': # text child element                 
-                chldElem = ET.Element(globalVars.MIF + elemName)
+                chldElem = ET.Element(self.MIF + elemName)
                 chldElem.text = str( elemData )
                 retLst.append(chldElem)
             else: # complex content: build recursively
