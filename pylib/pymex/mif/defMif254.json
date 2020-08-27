@@ -1,14 +1,14 @@
 {
     "@ROOT": { "name":"entrySet","attribute":{"level":"2", "version":"5", "minorVersion":"4" }},
-
+    
     "ExpandedEntrySet": [{"value":"entry", "type":"expandedEntry","name":"entry"}],	      
     "CompactEntrySet": [{"value":"entry", "type":"compactEntry","name":"entry"}],	      
     
     "expandedEntry":[ {"value":"source", "type":"source2"},
 		      {"type":"interactionList","name":"interactionList","wrap":"interactionList"}
-		  ],
+		    ],
 
-  "xpandedEntry":[ {"value":"source", "type":"source"},
+    "xpandedEntry":[ {"value":"source", "type":"source"},
 	    {"value":"availability", "type":"availability", "wrap":"availabilityList"},
 	    {"type":"interactionList","wrap":"interactionList"},
 	    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   

@@ -1,19 +1,22 @@
-{"ExpandedEntrySet": [{"value":"entry", "type":"expandedEntry","name":"entry"}],	      
- "CompactEntrySet": [{"value":"entry", "type":"compactEntry","name":"entry"}],	      
-  
- "expandedEntry":[ {"value":"source", "type":"source"},
-		   {"value":"availability", "type":"availability", "wrap":"availabilityList"},
-		   {"type":"interactionList","wrap":"interactionList"},
-		   {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   
-		 ],
+{
+    "@ROOT": { "name":"entrySet","attribute":{"level":"3", "version":"0", "minorVersion":"0" }},
+
+    "ExpandedEntrySet": [{"value":"entry", "type":"expandedEntry","name":"entry"}],	      
+    "CompactEntrySet": [{"value":"entry", "type":"compactEntry","name":"entry"}],	      
+    
+    "expandedEntry":[ {"value":"source", "type":"source"},
+		      {"value":"availability", "type":"availability", "wrap":"availabilityList"},
+		      {"type":"interactionList","wrap":"interactionList"},
+		      {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   
+		    ],
 
  
- "compactEntry":[ {"value":"source", "type":"source"},
-		  {"value":"availability", "type":"availability","wrap":"availabilityList"},
-		  {"value":"experiment", "type":"experiment", "name":"experimentDescription","wrap":"experimentList"},
-		  {"value":"interactor", "type":"interactor","name":"interactor","wrap":"interactorList"},
-		  {"type":"interactionList","wrap":"interactionList"},
-		  {"value":"abstractInteraction", "type":"abstractInteraction","name":"abstractInteraction","wrap":"abstractInteractionList"},
+    "compactEntry":[ {"value":"source", "type":"source"},
+		     {"value":"availability", "type":"availability","wrap":"availabilityList"},
+		     {"value":"experiment", "type":"experiment", "name":"experimentDescription","wrap":"experimentList"},
+		     {"value":"interactor", "type":"interactor","name":"interactor","wrap":"interactorList"},
+		     {"type":"interactionList","wrap":"interactionList"},
+		     {"value":"abstractInteraction", "type":"abstractInteraction","name":"abstractInteraction","wrap":"abstractInteractionList"},
 		  {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}	   
 		],
 
