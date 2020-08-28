@@ -6,7 +6,6 @@
     "fullName":{"*":{"complex":false}},
 
     "alias":{"*":{"store":"list"}},
-    
     "secondaryRef": {"*": {"store":"list"}},
     
     "attributeList":{"*":{"wrapper":true}},
@@ -43,12 +42,26 @@
     "participantList":{"*":{"wrapper": true} },
     "participant":{"*":{"store":"list"}},
 
-    
     "interactionType":{"interaction":{"store":"list"}},
 
     "modelled":{"*":{"complex":false}},
     "intraMolecular":{"*":{"complex":false}},
     "negative":{"*":{"complex":false}},
 
-    "parameterList":{"*":{"wrapper":true}}
+    "parameterList":{"*":{"wrapper":true}},
+
+    "hostOrganismList":{"*":{"wrapper":true}},
+    "hostOrganism":{"*":{"store":"list"}},
+
+    "experimentalRoleList":{"*":{"wrapper":true}},
+    "experimentalRole":{"*":{"store":"list"}},
+    
+    "experimentalPreparationList":{"*":{"wrapper":true}},
+    "experimentalPreparation":{"*":{"store":"list"}},
+
+    "featureList":{"*":{"wrapper":true}},
+    "feature":{"*":{"store":"list"}},
+
+    "featureRangeList":{"*":{"wrapper":true}},
+    "featureRange":{"*":{"store":"list"}}
 }
