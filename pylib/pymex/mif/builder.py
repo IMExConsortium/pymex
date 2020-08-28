@@ -173,8 +173,8 @@ class RecordBuilder():
                 elif ln.startswith("interaction"):
                     self.feature = False
                     interaction =  {"names":{"shortLabel": "N/A"},
-                                    "experimentList":[{"names":{"shortLabel": "N/A"}}]}
-                    record.setdefault("interactionList",[]).append(interaction)
+                                    "experiment":[{"names":{"shortLabel": "N/A"}}]}
+                    record.setdefault("interaction",[]).append(interaction)
                     
                     cols = ln.split("\t")
 
@@ -182,14 +182,14 @@ class RecordBuilder():
                     interaction["interactionType"] = self.buildCvTerm(cols[1])
                     
                     # interaction detection                 
-                    interaction["experimentList"][0]["interactionDetectionMethod"] = self.buildCvTerm(cols[2])
+                    interaction["experiment"][0]["interactionDetectionMethod"] = self.buildCvTerm(cols[2])
                                         
                     # interaction host 
                     
                     for taxid in cols[3:]:                                                
                         ctax = self.taxon( taxid )
                         
-                        interaction["experimentList"][0].setdefault("hostOrganism",[]).append( {                    
+                        interaction["experiment"][0].setdefault("hostOrganism",[]).append( {                    
                             "names": {
                                 "shortLabel": ctax["sname"],
                                 "fullName": ctax["lname"] },
@@ -198,7 +198,7 @@ class RecordBuilder():
                 elif ln.startswith("molecule"):
                     self.feature = False
                     participant = {}
-                    interaction.setdefault( "participantList",[] ).append( participant )
+                    interaction.setdefault( "participant",[] ).append( participant )
 
                     # interactor 
                     interactor = {}
@@ -356,4 +356,4 @@ class RecordBuilder():
                     participant = None
                     feature = None
                     frange = None
-        return pymex.mif.Record( {"entries": [record] } )
+        return pymex.mif.Record( {"entrySet":{ "entry":[record] } } )

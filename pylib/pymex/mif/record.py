@@ -74,8 +74,9 @@ class Record():
         return self
 
     def genericParse(self, template, ver, rec, rpath, elem, wrapped=False, debug=False):
-        
+      
         tag = self.modifyTag( elem, ver )
+
         #find corresponding template
         if tag in template:
             ttempl = template[tag]
