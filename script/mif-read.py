@@ -88,7 +88,7 @@ for cs in source:
         
     if args.ofile == 'STDOUT':
          if args.oformat == 'mif254':
-             print( ET.tostring(rec.toMoMif('test'),pretty_print=True).decode("utf-8") )
+             print( ET.tostring(rec.toMoMif('mif254'),pretty_print=True).decode("utf-8") )
          elif args.oformat == 'mif300':
              print( ET.tostring(rec.toMif('mif300'),pretty_print=True).decode("utf-8") )
          else:
