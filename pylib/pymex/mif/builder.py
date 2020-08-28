@@ -249,8 +249,8 @@ class RecordBuilder():
                         for taxid in cols[4:]:                        
                             taxon = self.taxon( taxid )
 
-                            ctax = {"shortLabel":taxon["sname"],
-                                    "fullName":taxon["lname"],
+                            ctax = {"names":{"shortLabel":taxon["sname"],
+                                             "fullName":taxon["lname"]},
                                     "ncbiTaxId":taxon["taxid"]}
                             
                             hostOrganism.append(ctax)
@@ -263,20 +263,20 @@ class RecordBuilder():
                             
                 elif ln.startswith("exprole"):
                     self.feature = False            
-                    participant.setdefault("exproleList",[])
+                    participant.setdefault("experimentalRole",[])
                     
                     cols = ln.strip().split("\t")                    
                     for role in cols[1:]:                        
                         roleCv = self.cvterm( role )
-                        participant["exproleList"].append( self.buildCvTerm( role ) )
+                        participant["experimentalRole"].append( self.buildCvTerm( role ) )
 
                 elif ln.startswith("biorole"):
                     self.feature = False            
-                    participant.setdefault("bioroleList",[])
+                    participant.setdefault("biologicalRole",[])
                     
                     cols = ln.split("\t")
                     for role in cols[1:]:                    
-                        participant["bioroleList"].append( self.buildCvTerm( role ) )
+                        participant["biologicalRole"].append( self.buildCvTerm( role ) )
                         
                 elif ln.startswith("idmethod"):
                     
@@ -292,7 +292,7 @@ class RecordBuilder():
                 elif ln.startswith("feature"):
                     self.feature = True
                     feature = {}
-                    participant.setdefault("featureList",[]).append( feature )
+                    participant.setdefault("feature",[]).append( feature )
 
                     cols = ln.strip().split("\t")                
                     feature["featureType"] = self.buildCvTerm( cols[1] )
@@ -310,9 +310,9 @@ class RecordBuilder():
                 elif ln.startswith("range"):
                     self.feature = True
                     if "range" not in feature:
-                        feature["featureRangeList"] = []
+                        feature["featureRange"] = []
                     frange = {}
-                    feature["featureRangeList"].append(frange)
+                    feature["featureRange"].append(frange)
 
                     cols = ln.strip().split("\t")
                     rbegin = cols[1]
@@ -324,7 +324,7 @@ class RecordBuilder():
                         frange["begin"]={"start": sbeg , "end": ebeg}
                         
                     elif rbegin in ['n','c']:
-                        frange["begin"] = { "position": "0" }
+                        #frange["begin"] = { "position": "0" }
 
                         if rbegin == 'n':
                             frange["beginStatus"] = self.buildCvTerm( "MI:0340" ) # n-term                            
@@ -340,7 +340,7 @@ class RecordBuilder():
                         frange["end"]={"start": sbeg , "end": ebeg}
 
                     elif rend in ['n','c']:
-                        frange["end"]={ "position": "0" }
+                        #frange["end"]={ "position": "0" }
 
                         if rend == 'n':
                             frange["endStatus"] = self.buildCvTerm( "MI:0340" ) # n-term                            

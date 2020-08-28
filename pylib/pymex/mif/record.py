@@ -31,11 +31,18 @@ class Record():
         else:
             self.root = {}
         
-        self.NAMESPACES = {"mif254":"http://psi.hupo.org/mi/mif", "mif300":"http://psi.hupo.org/mi/mif300"}
+        self.NAMESPACES = { "mif254":"http://psi.hupo.org/mi/mif",
+                            "mif300":"http://psi.hupo.org/mi/mif300"}
         self.LEN_NAMESPACE = {"mif254":28, "mif300":31}
-        self.MIFNS = {"mif254":{None:"http://psi.hupo.org/mi/mif", "xsi":"http://www.w3.org/2001/XMLSchema-instance"}, "mif300":{None:"http://psi.hupo.org/mi/mif300","xsi":"http://www.w3.org/2001/XMLSchema-instance"}}
-        self.PARSEDEF={"mif254":"defParse254.json","mif300":"defParse300.json"}
-        self.MIFDEF= {"mif254":"defMif254.json","mif300":"defMif300.json"}
+        self.MIFNS = { "mif254":{None:"http://psi.hupo.org/mi/mif",
+                                 "xsi":"http://www.w3.org/2001/XMLSchema-instance"},
+                       "mif300":{None:"http://psi.hupo.org/mi/mif300",
+                                 "xsi":"http://www.w3.org/2001/XMLSchema-instance"}}
+        
+        self.PARSEDEF={"mif254":"defParse254.json",
+                       "mif300":"defParse300.json"}
+        self.MIFDEF= {"mif254":"defMif254.json",
+                      "mif300":"defMif300.json"}
         
     @property
     def entry(self):
@@ -262,7 +269,7 @@ class Record():
     def toJson(self):
         return json.dumps(self.root, indent=2)
 
-    def toMoMif( self, ver='mif254' ):
+    def toMif( self, ver='mif254' ):
         """Builds MIF elementTree from a Record object."""
 
         json_dir = os.path.dirname( os.path.realpath(__file__) )
@@ -270,11 +277,11 @@ class Record():
             
         nsmap = self.MIFNS[ver]
 
-        return self.moGenericMifGenerator(nsmap, ver, template, None, self.root["entrySet"],
+        return self.mifGenerator(nsmap, ver, template, None, self.root["entrySet"],
                                                template['ExpandedEntrySet'] )
         return None
     
-    def moGenericMifGenerator(self, nsmap, ver, template, dom, cdata, ctype):
+    def mifGenerator(self, nsmap, ver, template, dom, cdata, ctype):
         """Returns DOM representation of the MIF record defined by the template.
         """
         
@@ -292,13 +299,13 @@ class Record():
                 dom.set(a,attrib[a])
             
         for cdef in ctype:            
-            chldLst = self.moGenericMifElement( nsmap, ver, template, None, cdata, cdef)
+            chldLst = self.mifElement( nsmap, ver, template, None, cdata, cdef)
             for chld in chldLst:
                 dom.append( chld )
             
         return dom
     
-    def moGenericMifElement(self, nsmap, ver, template, celem, cdata, cdef ):
+    def mifElement(self, nsmap, ver, template, celem, cdata, cdef ):
         """Returns a list of DOM elements to be added to the parent and/or decorates  
            parent with attributes and text value . 
         """
@@ -335,8 +342,8 @@ class Record():
 
                         # fill in according to element definition
                         for wtp in template[wtDef["type"]]:
-                            wclLst = self.moGenericMifElement(nsmap, ver, template,
-                                                              chldElem, wed, wtp)                        
+                            wclLst = self.mifElement( nsmap, ver, template,
+                                                      chldElem, wed, wtp)                        
                             # add contents
                             for wcd in wclLst:
                                 chldElem.append(wcd)
@@ -398,17 +405,17 @@ class Record():
                 contType = template[cdef["type"]]
                            
                 for contDef in contType: # go over definitions
-                    cldLst = self.moGenericMifElement(nsmap, ver, template,
-                                                      chldElem,
-                                                      celemData,
-                                                      contDef)                
+                    cldLst = self.mifElement( nsmap, ver, template,
+                                              chldElem,
+                                              celemData,
+                                              contDef)                
                     for cld in cldLst:
-                        chldElem.append(cld)
+                        chldElem.append( cld )
                         
                 if wrapElem is not None:  # if present, add to wrapper
-                    wrapElem.append(chldElem)
+                    wrapElem.append( chldElem )
                 else:                     #  otherwise add to return list    
-                    retLst.append(chldElem)
+                    retLst.append( chldElem )
 
         if wrapElem is not None:
             return [wrapElem]

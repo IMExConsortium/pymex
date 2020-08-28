@@ -40,7 +40,7 @@ record = rb.build( args.source)
 
 if args.ofile == 'STDOUT':
     if args.oformat == 'mif254':
-        print( ET.tostring(record.toMoMif('test'),pretty_print=True).decode("utf-8") )
+        print( ET.tostring(record.toMif('mif254'),pretty_print=True).decode("utf-8") )
     elif args.oformat == 'mif300':
         print( ET.tostring(record.toMif('mif300'),pretty_print=True).decode("utf-8") )
     else:
@@ -48,7 +48,7 @@ if args.ofile == 'STDOUT':
 else:
     with open(args.ofile,"w") as of:
         if args.oformat == 'mif254':
-            of.write( ET.tostring(record.toMoMif('test'),pretty_print=True).decode("utf-8") )
+            of.write( ET.tostring(record.toMif('mif254'),pretty_print=True).decode("utf-8") )
         elif args.oformat == 'mif300':
             of.write( ET.tostring(record.toMif('mif300'),pretty_print=True).decode("utf-8") )
         else:
