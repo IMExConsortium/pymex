@@ -399,7 +399,7 @@ class Record():
             
             if cdef["type"]=='$TEXT': # text child element                 
                 chldElem = ET.Element(self.toNsString(self.MIFNS[ver]) + elemName)
-                chldElem.text = str( elemData )
+                chldElem.text = str( celemData )
                 retLst.append(chldElem)
             else: # complex content: build recursively
                 contType = template[cdef["type"]]
