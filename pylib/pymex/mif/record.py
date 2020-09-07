@@ -229,7 +229,12 @@ class Record():
                 
                     if ikeyval is not None:                
                         rec[ckey][ikeyval] = cvalue        
-                   
+            
+            #create xrefInd inside xref
+            if "index" in ctempl and ctempl["index"] is not None:
+                ckeyRefInd = ctempl["index"]["name"]
+                rec[ckey][ckeyRefInd] = {}
+                
             # parse elem contents
                 
             # add dom attributes
@@ -243,8 +248,20 @@ class Record():
             cpath.append( {tag: cvalue })
                 
             for cchld in elem:
+                cchldTag = self.modifyTag(cchld, ver)
                 if debug:
                     print("  CHLD", cchld.tag);
+                if cchldTag in template["xref"]["*"]["index"]["entry"] and template["xref"]["*"]["index"]["entry"][cchldTag] is not None:
+                    keyList = template["xref"]["*"]["index"]["entry"][cchldTag]["key"]
+                    dbkey = cchld.get(keyList[0][1:])+":"+cchld.get(keyList[1][1:])
+                    rec[ckey][ckeyRefInd][dbkey] = {}
+                    self.genericParse( template, ver, rec[ckey][ckeyRefInd][dbkey], cpath, cchld)
+                    
+                    #This generates xrefInd with primaryRef:<desiredInformation>, so I have to go one layer deeper. The code below is, admittedly, a hasty fix.
+                    rec[ckey][ckeyRefInd][dbkey] = rec[ckey][ckeyRefInd][dbkey][cchldTag]
+                    if cchldTag == "secondaryRef":
+                        rec[ckey][ckeyRefInd][dbkey] = rec[ckey][ckeyRefInd][dbkey][0]
+                    
                 self.genericParse( template, ver, cvalue, cpath, cchld)
             if debug:
                 print( json.dumps(self.root, indent=2) )
@@ -422,6 +439,3 @@ class Record():
 
         return retLst    
     
-
-
-
