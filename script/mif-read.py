@@ -48,10 +48,6 @@ if '-i' in sys.argv:
 
 args = parser.parse_args()
 
-
-
-mifParser = pymex.mif.MifParser()
-    
 source = []
 
 if args.source.endswith( ".zip" ):
@@ -83,20 +79,20 @@ for cs in source:
     if args.format == 'jmif':        
         rec = pymex.mif.Record().parseJson(cs) 
     else:    
-        rec = pymex.mif.Record().parseMif(cs, ver=args.format ) 
+        rec = pymex.mif.Record().parseXml(cs, ver=args.format ) 
         
     if args.ofile == 'STDOUT':
          if args.oformat == 'mif254':
-             print( ET.tostring(rec.toMif('mif254'),pretty_print=True).decode("utf-8") )
+             print( ET.tostring(rec.toXml('mif254'),pretty_print=True).decode("utf-8") )
          elif args.oformat == 'mif300':
-             print( ET.tostring(rec.toMif('mif300'),pretty_print=True).decode("utf-8") )
+             print( ET.tostring(rec.toXml('mif300'),pretty_print=True).decode("utf-8") )
          else:
              print( rec.toJson() )
     else:
         with open(args.ofile,"w") as of:
             if args.oformat == 'mif254':
-                of.write( ET.tostring(rec.toMif('mif254'),pretty_print=True).decode("utf-8") )
+                of.write( ET.tostring(rec.toXml('mif254'),pretty_print=True).decode("utf-8") )
             elif args.oformat == 'mif300':
-                of.write( ET.tostring(rec.toMif('mif300'),pretty_print=True).decode("utf-8") )
+                of.write( ET.tostring(rec.toXml('mif300'),pretty_print=True).decode("utf-8") )
             else:
                 of.write( rec.toJson() )

@@ -4,4 +4,5 @@ from .parser import Entry
 
 from .builder import RecordBuilder
 
+from .xmlrecord import XmlRecord
 from .record import Record
