@@ -6,7 +6,6 @@ Created on Mon Jun 29 13:56:57 2020
 
 from lxml import etree as ET
 import json
-from xml.dom import minidom
 import os
 
 import pymex
@@ -26,6 +25,7 @@ class XmlRecord():
         return mifstr
 
     def __init__(self, root=None):
+
         if root is not None:
             self.root = root
         else:

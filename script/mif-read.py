@@ -79,7 +79,7 @@ for cs in source:
     if args.format == 'jmif':        
         rec = pymex.mif.Record().parseJson(cs) 
     else:    
-        rec = pymex.mif.Record().parseXml(cs, ver=args.format ) 
+        rec = pymex.mif.Record().parseMif(cs, ver=args.format ) 
         
     if args.ofile == 'STDOUT':
          if args.oformat == 'mif254':
