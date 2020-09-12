@@ -19,32 +19,36 @@ from lxml import etree as ET
 import pymex
 
 #test_mif25='/cluster1/mirrors/imex/intact/psi25/2018/9171338.zip'
-test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2019/15138291.zip'
+#test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2019/15138291.zip'
+test_mif25 ='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2018/27571176.zip'
 
 #test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2020/7984244.zip'
 #test_mif25='data/mif254/7984244.xml'
 
 parser = argparse.ArgumentParser( description='MIF Reader' )
-parser.add_argument( '--source', '-s',  dest="source", type=str, required=False,
-                     default = test_mif25, 
-                     help='File location (path or URL). Compressed file OK.')
+parser.add_argument('--source', '-s',  dest="source", type=str, 
+                    required=False, default = test_mif25, 
+                    help='File location (path or URL). Compressed file OK.')
 
-parser.add_argument( '--input-format', '-if',  dest="format", type=str, required=False,
-                     default='mif254', choices=['mif254', 'mif300','jmif'],
-                     help='Input file format [default: mif254].')
+parser.add_argument('--input-format', '-if',  dest="format", type=str, 
+                    required=False, default='mif254', 
+                    choices=['mif254', 'mif300','jmif'],
+                    help='Input file format [default: mif254].')
 
-parser.add_argument( '--output-format', '-of',  dest="oformat", type=str, required=False,
-                     default='jmif', choices=['mif254', 'mif300','jmif'],
-                     help='Output format [default: jmif].')
+parser.add_argument('--output-format', '-of',  dest="oformat", type=str, 
+                    required=False, default='jmif', 
+                    choices=['mif254', 'mif300','jmif'],
+                    help='Output format [default: jmif].')
 
-parser.add_argument( '--output', '-o', dest="ofile", type=str, required=False,
-                     default='STDOUT',
-                     help='Output file [default: STDOUT].')
+parser.add_argument('--output', '-o', dest="ofile", type=str, 
+                    required=False, default='STDOUT',
+                    help='Output file [default: STDOUT].')
 
 #spyder hack: add '-i' option only if present (as added by spyder)
 
 if '-i' in sys.argv:
-    parser.add_argument( '-i',  dest="i", type=str, required=False, default=None) 
+    parser.add_argument('-i',  dest="i", type=str, 
+                        required=False, default=None) 
 
 args = parser.parse_args()
 
@@ -83,16 +87,20 @@ for cs in source:
         
     if args.ofile == 'STDOUT':
          if args.oformat == 'mif254':
-             print( ET.tostring(rec.toXml('mif254'),pretty_print=True).decode("utf-8") )
+             print( ET.tostring(rec.toXml('mif254'),
+                                pretty_print=True).decode("utf-8") )
          elif args.oformat == 'mif300':
-             print( ET.tostring(rec.toXml('mif300'),pretty_print=True).decode("utf-8") )
+             print( ET.tostring(rec.toXml('mif300'),
+                                pretty_print=True).decode("utf-8") )
          else:
              print( rec.toJson() )
     else:
         with open(args.ofile,"w") as of:
             if args.oformat == 'mif254':
-                of.write( ET.tostring(rec.toXml('mif254'),pretty_print=True).decode("utf-8") )
+                of.write( ET.tostring(rec.toXml('mif254'),
+                                      pretty_print=True).decode("utf-8") )
             elif args.oformat == 'mif300':
-                of.write( ET.tostring(rec.toXml('mif300'),pretty_print=True).decode("utf-8") )
+                of.write( ET.tostring(rec.toXml('mif300'),
+                                      pretty_print=True).decode("utf-8") )
             else:
                 of.write( rec.toJson() )

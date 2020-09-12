@@ -1,7 +1,5 @@
-
-#from lxml import etree as ET
 import json
-#import os
+import re
 
 from pymex import mif
 
@@ -517,6 +515,41 @@ class Participant( Names,Xref ):
         return ret
     
     @property
+    def stoich(self):
+        # mif254 style
+        if "attribute" in self._participant:
+            for a in self._participant["attribute"]:
+                if "value" in a:
+                    match = re.match('Stoichiometry: (.+)',a["value"])
+                    if match:
+                        sval = match.group(1)
+                        try:                        
+                            valb = float(sval)
+                            vale = float(sval)
+                            return (valb,vale)
+                        except:
+                            return (str(sval),str(sval))
+        #mif300 style: fixed value
+        if "stoichiometry" in self._participant:
+             sval = self._participant["stoichiometry"]
+             try:                        
+                 valb = float(sval)
+                 vale = float(sval)
+                 return (valb,vale)
+             except:
+                 return (str(sval),str(sval))
+        #mif300 style: range
+        if "stoichiometryRange" in self._participant:
+             try:
+                svalb = self._participant["stoichiometryRange"]["minValue"]
+                svale = self._participant["stoichiometryRange"]["maxValue"]
+                                                      
+                return (float(svalb),float(svale))
+             except:
+                return (str(svalb),str(svale))             
+        return (0.0, 0.0)            
+    
+    @property
     def confidence( self ):
         if self._confidence is not None:
             return list(self._confidence)
@@ -542,11 +575,15 @@ class Feature(Names, Xref):
         self._feature = feature
         self._names= feature["names"]
         self._xref = feature["xref"]
+        self._range =  feature["featureRange"]       
         
         self._meth = None
         if "featureDetectionMethod" in feature:
             self._meth = feature["featureDetectionMethod"]
-        
+
+        if "attribute" in feature:
+            self._attr = feature["attribute"]
+
     @property
     def type(self):
         return CvTerm(self._feature["featureType"])
@@ -561,19 +598,65 @@ class Feature(Names, Xref):
         return None
     
     @property
-    def range(self):
-        pass
+    def range(self):         
+        ret = []
+        for r in self._range:
+            ret.append( Range(r) )
+        return ret
     
     @property
-    def attrib(self):
-        pass
-   
-    
-                
+    def attribs(self):    
+        if self._attr is None:
+            return None
+        return Attribs( self._attr )
+
+
+class Range():
+    def __init__(self, rng):
+        self._rng = rng    
+
+    @property
+    def begStat(self):
+        return CvTerm(self._rng["beginStatus"])
+
+    @property
+    def begPosition(self):
+        if "begin" in self._rng:
+            if "value" in self._rng["begin"]:
+                pos = self._rng["begin"]["value"]
+                return (int(pos),int(pos))
+            if ("begin" in self._rng["begin"]  and 
+                        "end" in self._rng["begin"]):
+                posb = self._rng["begin"]["begin"]
+                pose = self._rng["begin"]["end"]
+                return ( int(posb) , int(pose) )    
+        return None
+       
+    @property
+    def endStat(self):
+        return CvTerm(self._rng["endStatus"])
+
+    @property
+    def endPosition(self):
+        if "begin" in self._rng:
+            if "value" in self._rng["begin"]:
+                pos = self._rng["begin"]["value"]
+                return ( int(pos), int(pos) )
+            if ("begin" in self._rng["begin"]  and 
+                "end" in self._rng["begin"]):
+                posb = self._rng["begin"]["begin"]
+                pose = self._rng["begin"]["end"] 
+                return ( int(posb), int(pose) )    
+        return None
+       
+ 
 class Availability():
     """MIF Availability representation."""
     def __init__( self, avail ):
         self._avail = avail
+
+    def __repr__(self):
+        return str(self._avail)
 
         
 class CvTerm( Names, Xref ):
@@ -618,7 +701,6 @@ class Host( Names ):
         if "tissue" in self._host:
             return CvTerm(self._host["tissue"])
         return None
-
 
 
 

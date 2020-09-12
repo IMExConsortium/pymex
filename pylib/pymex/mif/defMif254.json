@@ -127,7 +127,7 @@
 		{"value":"xref", "type":"xref"}
 	      ],  
     
-    "attributeList":[{"value":"attributeList","name":"attribute","type":"attribute"}],
+    "attributeList":[{"value":"attribute","name":"attribute","type":"attribute"}],
     
     "names":[ {"value":"shortLabel", "type":"$TEXT"},
 	      {"value":"fullName", "type":"$TEXT"},
