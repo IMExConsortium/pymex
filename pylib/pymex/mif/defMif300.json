@@ -94,9 +94,9 @@
  
     "interaction":[ {"value":"names", "type":"names"},
 		    {"value":"xref", "type":"xref"},
-		    {"value":"availability", "type":"availability"},
-		    {"value":"experiment", "type":"experiment",
-		     "wrap":"experimentList"},
+		    {"value":"availability", "type":"availability"},  
+    	    {"value":"experiment", "type":"experimentDescription",
+    	    "name":"experimentDescription", "wrap":"experimentList"},
 		    {"value":"participant", "type":"participant",
 		     "wrap":"participantList"},
 		    {"value":"inferredInteraction", "type":"interaction",
@@ -123,7 +123,7 @@
 			     "wrap":"bindingFeatureList"},
 			    {"value":"interactionType","type":"cvterm"},			 
 			    {"value":"intraMolecular","type":"$TEXT"},
-			    {"value":"confidence","type":"$TEXT",
+			    {"value":"confidence","type":"confidence",
 			     "wrap":"confidenceList"},
 			    {"value":"parameterList","type":"parameter",
 			     "wrap":"parameterList"},
@@ -161,7 +161,7 @@
 		     "wrap":"featureList"},
 		    {"value":"hostOrganism", "type":"organism",
 		     "wrap":"hostOrganismList"},
-		    {"value":"confidence", "type":"$TEXT",
+		    {"value":"confidence", "type":"confidence",
 		     "wrap":"confidenceList"},		 
 		    {"value":"parameter", "type":"parameter",
 		     "wrap":"parameterList"},
@@ -225,6 +225,9 @@
     
     "attribute": [ {"value":"name", "name":"@name", "type":"$TEXT"},
 		   {"value":"nameAc", "name":"@nameAc", "type":"$TEXT"},
-		   {"value":"value", "name":"@TEXT", "type":"$TEXT"}]
+		   {"value":"value", "name":"@TEXT", "type":"$TEXT"}],
+		   
+    "confidence":[{"value":"unit", "name":"unit", "type":"cvterm"},
+                	 {"value":"value","name":"value","type":"$TEXT"}]
  
 }

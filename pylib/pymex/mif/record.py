@@ -1,5 +1,6 @@
 import json
 import re
+from copy import deepcopy
 
 from pymex import mif
 
@@ -23,18 +24,103 @@ class Record(mif.XmlRecord):
         
         self.MIFDEF= {"mif254":"defMif254.json",
                       "mif300":"defMif300.json"}
-        
+                             
     def parseMif(self, filename, ver="mif254", debug=False):
         return self.parseXml( filename, ver=ver )
    
     def toMif( self, ver='mif254' ):
         """Builds MIF elementTree from a Record object."""
+        
+        self._stoichiometryConvert( ver )        
+        
         return self.toXml( ver )
         
+    def _stoichiometryConvert(self, ver):
+        
+        for e in self.root["entrySet"]["entry"]:
+            for i in e["interaction"]:
+                for p in i["participant"]:
+                    if ver == 'mif254': 
+                        # find mif300 stoichiometry
+                        stset = False
+                        if "stoichiometry" in p:
+                            stval = str( p["stoichiometry"]["value"] )
+                            stset =True
+                        else:
+                            stval = None
+                            
+                        if "stoichiometryRange" in p:
+                            stmin = str( p["stoichiometryRange"]["minValue"] )
+                            stmax = str( p["stoichiometryRange"]["maxValue"] )
+                            stset =True
+                        else:
+                            stmin = None
+                            stmax = None
+                       
+                        if stset:   
+                            # replace/add mif254 stoichiometry
+                            if "attribute" not in p:
+                                p["attribute"]={}
+                            ast = None    
+                            for a in p["attribute"]:
+                                if ("value" in a and 
+                                    a["value"].startswith("Stoichiometry:") ):
+                                    ast = a
+                            if ast is None:        
+                                ast =  {'name': 'comment', 'nameAc': 'MI:0612'}
+                                p["attribute"].append(ast)
+                                 
+                            if stval is not None:        
+                                ast["value"] = "Stoichiometry: " + stval
+                                                 
+                            elif stmin is not None and stmax is not None:
+                                strng = stmin + " : " + stmax
+                                ast["value"] = "StoichiometryRange: " + strng
+                                        
+                    elif ver == 'mif300':
+                    
+                        # find mif254 stoichiometry
+                        stval = None
+                        stmin = None
+                        stmax = None
+                        if "attribute" in p:
+                            for a in p["attribute"]:                                
+                                if ("value" in a and 
+                                    a["value"].startswith("Stoichiometry:") 
+                                    ):
+                                        vcol= a["value"].split(" ")
+                                        stval = vcol[1]
+                                        p["attribute"].remove( a )
+                                        break
+                                                                
+                                if ("value" in a and 
+                                    a["value"].startswith("StoichiometryRange:")
+                                    ):
+                                        vcol= a["value"].split(" ")
+                                        stmin = vcol[1]
+                                        stmax = vcol[3]
+                                        p["attribute"].remove( a )
+                                        break
+                                        
+                        # replace/add mif300 stoichiometry 
+                        if stval is not None:  
+                            st = p.setdefault("stoichiometry",{})
+                            st["value"] =str( stval )
+                            
+                        else:
+                            pass
+                            #p.pop("stoichiometry", None)
+                            
+                        if stmin is not None and stmax is not None:
+                            st["minValue"] = str(stmin)                            
+                            st["maxValue"] = str(stmax)
+                        else:
+                            pass
+                            #p.pop("stoichiometryRange", None)
+                            
     @property
     def entry(self):
-        """Returns the first (default) entry of the record"""
-        
+        """Returns the first (default) entry of the record"""        
         return Entry( self.root['entrySet']['entry'][0] )
     
     @property
@@ -128,7 +214,22 @@ class Entry():
     
     def getInteraction( self, n ):
         return Interaction( self._entry , n )
-     
+  
+    @property
+    def abstIinteractions( self ):
+        ret = []        
+        for i in range( 0, len( self._entry["abstInteraction" ]) ):        
+            ret.append( AbstInteraction( self._entry, n=i ) )        
+        return ret
+    
+    @property    
+    def abstInteractionCount( self ):
+        return len( self._entry[ "abstInteraction" ] )
+    
+    def getAbstInteraction( self, n ):
+        return AbstInteraction( self._entry , n )
+    
+    
     @property
     def source(self):
         return Source(self._entry["source"])
@@ -176,9 +277,45 @@ class Xref():
             
 class Interaction(Names, Xref):
     """MIF Interaction representation."""
-    def __init__( self, entry, n ):    
+    
+    physical = {"names": {
+                 "shortLabel": "physical association",
+                 "fullName": "physical association"
+                 },
+              "xref": {
+                  "primaryRef": {
+                     "db": "psi-mi",
+                     "dbAc": "MI:0488",
+                     "id": "MI:0915",
+                     "refType": "identity",
+                     "refTypeAc": "MI:0356"
+                     } 
+                 }
+             } 
+         
+    direct = {"names": {
+                 "shortLabel": "direct interaction",
+                 "fullName": "direct interaction"
+                 },
+              "xref": {
+                  "primaryRef": {
+                     "db": "psi-mi",
+                     "dbAc": "MI:0488",
+                     "id": "MI:0407",
+                     "refType": "identity",
+                     "refTypeAc": "MI:0356"
+                     } 
+                 }
+             }           
+            
+    
+    def __init__( self, entry, n, interaction=None ): 
         self._entry = entry
-        self._interaction = entry[ "interaction" ][ n ]
+        if n is not None:
+            self._interaction = entry[ "interaction" ][ n ]
+        else:
+            self._interaction = interaction
+            
         self._source = entry[ "source" ]
         self._experiment =  self._interaction["experiment"]
         self._participant = self._interaction["participant"]
@@ -190,7 +327,93 @@ class Interaction(Names, Xref):
         self._xref = None
         if "xref" in self._interaction:
             self._xref = self._interaction["xref"]
+                
+    def expand(self, mode="spoke"):
+        """Returns a list of binary interactions generated by expansion
+        of multi-molecular interaction according to spoke or marix model.""" 
         
+        ret = []
+      
+        if len(self._participant) <=2:
+                return ret
+      
+        bait = []
+        prey = []
+        part = []
+        
+        assType = False
+        phyType = False
+        dirType = False
+        
+        if "interactionType" in self._interaction:
+            for it in self._interaction["interactionType"]:
+                if it["names"]["shortLabel"]=="association":
+                    assType = True
+                if it["names"]["shortLabel"]=="physical association":
+                    phyType = True
+                if it["names"]["shortLabel"]=="direct interaction":
+                    dirType = True   
+                    
+        for p in self._participant:
+            skip = False
+            if "experimentalRole" in p:
+                for r in p["experimentalRole"]:
+                    if r["names"]["shortLabel"] == "bait":
+                        bait.append(p)
+                    if r["names"]["shortLabel"] == "prey":
+                        prey.append(p)
+                    if r["names"]["shortLabel"] == "ancillary":
+                        skip = True
+            else:
+                skip = True 
+            if not skip:            
+                part.append(p)            
+                
+        if assType and mode == "spoke":
+            for p1 in bait:
+                for p2 in prey:
+                                      
+                    binary = {}
+                    for k in self._interaction.keys():
+                        if k not in ["participant","interactionType"]:
+                            binary[k] = self._interaction[k]
+                  
+                    itype = deepcopy( self.pysical )
+                    binary.setdefault("interactionType",[]).append( itype )
+                    bprt =  binary.setdefault("participant",[])
+                    bprt.append(p1)
+                    bprt.append(p2)
+                    
+                    ret.append( Interaction( self._entry, None, binary ) )
+                    
+        if (phyType or dirType) and mode == "matrix":           
+            for i in range(0,len(part)):
+                for j in range(i+1,part):
+                    binary = {}
+                        
+                    for k in self._interaction.keys():
+                        if k not in ["participant","interactionType"]:
+                            binary[k] = self._interaction[k]
+
+                    if  dirType:                
+                        itype = deepcopy( self.direct )
+                    else:
+                        itype = deepcopy( self.physical )
+                    binary.setdefault("interactionType",[]).append( itype )
+                    bprt =  binary.setdefault("participant",[])
+                    bprt.append(part[i])
+                    bprt.append(part[j])
+                    
+                    ret.append( Interaction( self._entry, None, binary ) )
+                    
+        return ret
+        
+    @property
+    def imexid(self):
+        if "imexId" in self._interaction:
+            return self._interaction["imexId"]
+        return None
+    
     @property
     def participants(self):
         ret = []        
@@ -238,11 +461,16 @@ class Interaction(Names, Xref):
             ret.append( Experiment( self._experiment[i] ) )
         return ret
         
+    @property
+    def availability(self):
+        if "availability" in self._interaction:
+            return self._interaction["availability"]["value"]
+        return None
+    
     @property 
     def experimentCount(self): 
         return len( self._experiment )
-  
-    
+      
     @property
     def experiment(self):
         if len( self._experiment ) == 1:
@@ -256,6 +484,106 @@ class Interaction(Names, Xref):
         else:    
             return None
                 
+    @property
+    def attribs(self):    
+        if self._attr is None:
+            return None
+        return Attribs( self._attr )
+
+    @property
+    def params(self):    
+        if self._param is None:
+            return None
+        return Params( self._param )
+       
+    @property
+    def confidence(self):
+        if "confidence" in  self._interaction:
+            return bool(self._interaction["confidence"])
+    
+    @property
+    def modelled(self):
+        if "modelled" in  self._interaction:
+            return bool(self._interaction["modelled"])
+        return False
+
+    @property
+    def intramolecular(self):
+        if "intramolecular" in  self._interaction:
+            return bool(self._interaction["intramolecular"])
+        return False
+    
+    @property
+    def negative(self):
+        if "negative" in  self._interaction:
+            return bool(self._interaction["negative"])
+        return False
+    
+
+class AbstInteraction(Names, Xref):
+    """MIF AbstractInteraction representation."""
+    def __init__( self, entry, n ):    
+        self._entry = entry
+        self._interaction = entry[ "abstractInteraction" ][ n ]
+        self._source = entry[ "source" ]       
+        self._participant = self._interaction["participant"]
+
+        self._names = None
+        if "names" in self._interaction:
+            self._names = self._interaction["names"]
+
+        self._xref = None
+        if "xref" in self._interaction:
+            self._xref = self._interaction["xref"]
+        
+    @property
+    def participants(self):
+        ret = []        
+        for i in self._participant: 
+            ret.append( Participant( i,  self._interaction ) )        
+        return ret
+        
+    @property 
+    def participantCount(self): 
+        return len( self._participant )
+
+    def getParticipant( self, n = 0 ):
+        if n < len( self._participant ):            
+            return Participant( self._participant[ n ] ) 
+        else:    
+            return None
+        
+    @property
+    def type(self):
+        if "interactionType" in self._interaction:            
+            if isinstance(self._interaction["interactionType"], dict):            
+                return CvTerm(self._interaction[ "interactionType" ])
+        return None
+
+    @property
+    def interactorType(self):
+        if "interactorType" in self._interaction:            
+            if isinstance(self._interaction["interactorType"], dict):            
+                return CvTerm(self._interaction[ "interactorType" ])
+        return None
+    
+    @property
+    def evidenceType(self):
+        if "evidenceType" in self._interaction:            
+            if isinstance(self._interaction["evidenceType"], dict):            
+                return CvTerm(self._interaction[ "evidenceType" ])
+        return None
+
+    @property
+    def organism(self):
+        if "organism" in self._interaction:                                  
+            return Host( self._interaction["organism"] )
+        return None 
+
+    @property
+    def source(self):
+        return Source( self._source )
+
     @property
     def attribs(self):    
         if self._attr is None:
@@ -515,20 +843,7 @@ class Participant( Names,Xref ):
         return ret
     
     @property
-    def stoich(self):
-        # mif254 style
-        if "attribute" in self._participant:
-            for a in self._participant["attribute"]:
-                if "value" in a:
-                    match = re.match('Stoichiometry: (.+)',a["value"])
-                    if match:
-                        sval = match.group(1)
-                        try:                        
-                            valb = float(sval)
-                            vale = float(sval)
-                            return (valb,vale)
-                        except:
-                            return (str(sval),str(sval))
+    def stoich(self):        
         #mif300 style: fixed value
         if "stoichiometry" in self._participant:
              sval = self._participant["stoichiometry"]
@@ -547,6 +862,31 @@ class Participant( Names,Xref ):
                 return (float(svalb),float(svale))
              except:
                 return (str(svalb),str(svale))             
+            
+        # mif254 style
+        if "attribute" in self._participant:
+            for a in self._participant["attribute"]:
+                if "value" in a:
+                    match = re.match('Stoichiometry: (.+)',a["value"])
+                    if match:
+                        sval = match.group(1)
+                        try:                        
+                            valb = float(sval)
+                            vale = float(sval)
+                            return (valb,vale)
+                        except:
+                            return (str(sval),str(sval))
+                        
+                    match = re.match('StoichiometryRange: (.+)',a["value"])
+                    if match:
+                        svalc = match.group(1).split(":")
+                        try:                        
+                            valb = float(svalc[0])
+                            vale = float(svalc[1])
+                            return (valb,vale)
+                        except:
+                            return (str(sval),str(sval))    
+                                                
         return (0.0, 0.0)            
     
     @property

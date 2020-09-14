@@ -76,7 +76,7 @@ class XmlRecord():
             parentTag = None
             if debug:
                 print("PAR:  ROOT ELEM !!!")
-
+        #print(parentTag)
         if parentTag is not None and parentTag in ttempl:
             ctempl = ttempl[parentTag]
         else:
@@ -170,6 +170,9 @@ class XmlRecord():
             else:
                 cvalue = str( elem.text )
 
+            #if ckey in rec:
+            #    print(ckey, rec[ckey])
+                
             if cstore  == "direct":
                 rec[ckey] = cvalue
             elif cstore == "list": 
@@ -220,7 +223,7 @@ class XmlRecord():
                     print("  CHLD", cchld.tag);
                 if 'index' in ctempl:    
                     if cchldTag in ientry and ientry[cchldTag] is not None:
-                        keyList = ctempl["index"]["entry"][cchldTag]["key"]
+                        keyList = ientry[cchldTag]["key"]
 
                         kval = []
                         for k in keyList:
@@ -293,8 +296,9 @@ class XmlRecord():
             
         for cdef in ctype:            
             chldLst = self.mifElement( nsmap, ver, template, None, cdata, cdef)
-            for chld in chldLst:
-                dom.append( chld )
+            if chldLst is not None:
+                for chld in chldLst:
+                    dom.append( chld )
             
         return dom
     
@@ -304,22 +308,20 @@ class XmlRecord():
         """
         retLst = []
         if "wrap" in cdef:
-            # add wrapper        
-
+            # add wrapper            
             wrapName = cdef["wrap"]
             wrapElem = ET.Element(self.toNsString(self.MIFNS[ver]) + wrapName)        
         else:
             wrapElem = None
             
-        if "value" not in cdef: # empty wrapper
-
+        if "value" not in cdef: # empty wrapper        
             # wrapper contents definition
             wrappedTypes = template[cdef["type"]]
             
             empty = True # flag: will skip if nothing inside 
-            for wtDef in wrappedTypes: # go over wrapper contents
-                                
-                if wtDef["value"] in cdata:  # check if data present 
+            for wtDef in wrappedTypes: # go over wrapper content
+                
+                if wtDef["value"] in cdata:   # check if data present 
                     wElemData = cdata[wtDef["value"]]
                     for wed in wElemData: # wrapper contents *must* be a list
                         empty = False # non empty contents
@@ -338,13 +340,14 @@ class XmlRecord():
                             wclLst = self.mifElement( nsmap, ver, template,
                                                       chldElem, wed, wtp)                        
                             # add contents
-                            for wcd in wclLst:
-                                chldElem.append(wcd)
+                            if wclLst is not None:
+                                for wcd in wclLst:  
+                                    chldElem.append(wcd)
                                               
             if not empty:                                  
                 return [wrapElem]
             else:
-                return []
+                return None
         
         if cdef["value"] =="$UID": #  generate next id
             self.UID += 1
@@ -394,7 +397,7 @@ class XmlRecord():
                 chldElem = ET.Element(self.toNsString(self.MIFNS[ver]) + elemName)
                 chldElem.text = str( celemData )
                 retLst.append(chldElem)
-            else: # complex content: build recursively
+            else: # complex content: build recursively                
                 contType = template[cdef["type"]]
                            
                 for contDef in contType: # go over definitions
@@ -402,16 +405,22 @@ class XmlRecord():
                                               chldElem,
                                               celemData,
                                               contDef)                
-                    for cld in cldLst:
-                        chldElem.append( cld )
-                        
-                if wrapElem is not None:  # if present, add to wrapper
-                    wrapElem.append( chldElem )
-                else:                     #  otherwise add to return list    
+                    if cldLst is not None:
+                        for cld in cldLst:  
+                            chldElem.append( cld )
+                    else: 
+                        cldLst = None
+                         
+                if wrapElem is not None:       # if present, add to wrapper
+                    if chldElem is not None:
+                        wrapElem.append( chldElem )
+                    else:
+                       wrapElem = None 
+                elif chldElem is not None:     #  otherwise add to return list    
                     retLst.append( chldElem )
 
-        if wrapElem is not None:
+        if wrapElem is not None and len(elemData) > 0:            
             return [wrapElem]
-
+        
         return retLst    
     

@@ -198,10 +198,7 @@
                                     <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0497" refType="identity" refTypeAc="MI:0356"/>
                                     <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
                                     <secondaryRef db="intact" dbAc="MI:0469" id="EBI-55" refType="identity" refTypeAc="MI:0356"/>
-                                </xref>
-				<experimentRefList>
-				  <experimentRef>3676829</experimentRef> 
-				</experimentRefList>
+                                </xref>				
                             </experimentalRole>
                         </experimentalRoleList>
                         <experimentalPreparationList>
@@ -278,7 +275,7 @@
                                     <fullName>Escherichia coli (strain K12)</fullName>
                                 </names>
                             </hostOrganism>
-                        </hostOrganismList>
+                        </hostOrganismList>                        
                         <attributeList>
                             <attribute name="comment" nameAc="MI:0612">Stoichiometry: 1.0</attribute>
                         </attributeList>
@@ -460,6 +457,19 @@
                 <modelled>false</modelled>
                 <intraMolecular>false</intraMolecular>
                 <negative>false</negative>
+		<confidenceList>
+		  <confidence>
+		    <unit>
+		      <names>
+			<shortLabel>p-value</shortLabel>
+		      </names>
+		      <xref>
+			<primaryRef db="psi-mi" dbAc="MI:0488" id="MI:9999" refType="identity" refTypeAc="MI:0356"/>
+		      </xref>
+		    </unit>
+		    <value>1.0</value>
+		  </confidence>
+		</confidenceList>
                 <attributeList>
                     <attribute name="figure legend" nameAc="MI:0599">Fig 1, Table 1</attribute>
                 </attributeList>

@@ -18,12 +18,13 @@
 
     "experimentList":{"*":{"wrapper":true}},
     "experimentDescription":{"entry":{"store":"index","ikey":"@id","name":"experimentList"},
-			     "*":{"store":"list","name":"experiment"}},
+                			     "*":{"store":"list","name":"experiment"}},
     
     "experimentRef":{"interaction":{"reference":"/entrySet/entry/experimentList","store":"list","name":"experiment"}},
     
     "confidenceList":{"*":{"wrapper":true}},
-    "confidence":{"*":{"complex":false} },
+    "confidence":{"*":{"store":"list"} },
+    
     "value":{"*":{"complex":false}},
 
     "attributeList":{"*":{"wrapper":true}},
@@ -35,6 +36,9 @@
 
     "interactorRef":{"*":{"reference": "/entrySet/entry/interactorList", "name":"interactor"} },
 
+    "interactorType":{"*":{"store":"direct"}},     
+    "evidenceType":{"*":{"store":"direct"}}, 
+    
     "sequence":{"*":{"complex":false}},
 		      
     "interactionList":{"*":{"wrapper": true} },
@@ -48,14 +52,13 @@
 		       "abstractInteraction":{"store":"direct"}
 		      },
 
-    "modelled":{"*":{"complex":false}},
     "intraMolecular":{"*":{"complex":false}},
-    "negative":{"*":{"complex":false}},
 
     "parameterList":{"*":{"wrapper":true}},
 
     "hostOrganismList":{"*":{"wrapper":true}},
     "hostOrganism":{"*":{"store":"list"}},
+    "organism":{"*":{"store":"list"}},
 
     "experimentalRoleList":{"*":{"wrapper":true}},
     "experimentalRole":{"*":{"store":"list"}},

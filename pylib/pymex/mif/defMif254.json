@@ -51,18 +51,22 @@
     
     "interaction":[ {"value":"names", "type":"names"},
 		    {"value":"xref", "type":"xref"},
-		    {"value":"availability", "type":"availability","wrap": "availabilityList"},
-		    {"value":"experiment", "type":"experimentDescription","name":"experimentDescription",
-		     "wrap":"experimentList"},
-		    {"value":"participant", "type":"participant","wrap":"participantList"},
-		    {"value":"inferredInteraction", "type":"interaction","wrap":"inferredInteractionList"},
+		    {"value":"availability", "type":"availability",
+		     "wrap": "availabilityList"},
+		    {"value":"experiment", "type":"experimentDescription",
+		     "name":"experimentDescription", "wrap":"experimentList"},
+		    {"value":"participant", "type":"participant",
+		     "wrap":"participantList"},
+		    {"value":"inferredInteraction", "type":"interaction",
+		     "wrap":"inferredInteractionList"},
 		    {"value":"interactionType", "type":"cvterm"},
 		    {"value":"modelled", "type":"$TEXT"},
 		    {"value":"intraMolecular", "type":"$TEXT"},
 		    {"value":"negative", "type":"$TEXT"},
-		    {"value":"confidence", "type":"$TEXT","wrap":"confidenceList"},
+		    {"value":"confidence", "type":"confidence","wrap":"confidenceList"},
 		    {"value":"parameter", "type":"parameter","wrap":"parameterList"},
-		    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"},
+		    {"value":"attribute", "type":"attribute",
+		     "name":"attribute","wrap":"attributeList"},
 		    {"value":"imexId", "type":"$TEXT", "name":"@imexId"},
 		    {"value":"$UID", "type":"$TEXT", "name":"@id"}		    
 		  ],
@@ -81,9 +85,9 @@
 		     "wrap":"experimentalInteractorList"},
 		    {"value":"feature", "type":"feature", "wrap":"featureList", "name":"feature"},
 		    {"value":"hostOrganism", "type":"organism", "wrap":"hostOrganismList"},
-		    {"value":"confidence", "type":"$TEXT","wrap":"confidenceList"},		 
+		    {"value":"confidence", "type":"confidence","wrap":"confidenceList"},		 
 		    {"value":"parameterList", "type":"parameter","wrap":"parameterList"},
-		    {"value":"attributeList", "type":"attribute","name":"attribute","wrap":"attributeList"},
+		    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"},
 		    {"value":"$UID", "type":"$TEXT", "name":"@id"}
 		  ],
     
@@ -160,5 +164,9 @@
     
     "availability":[ {"value":"availability", "name":"@TEXT", "type":"$TEXT"},
 		     {"value":"$UID", "type":"$TEXT", "name":"@id" }
-		   ]  
+		   ],
+	 "confidence":[{"value":"unit", "name":"unit", "type":"cvterm"},
+                	 {"value":"value","name":"value","type":"$TEXT"}]
+	 	   
+		     
 }
