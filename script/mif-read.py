@@ -24,8 +24,11 @@ import pymex
 #test_mif25 ='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2018/27571176.zip'
 
 #test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2020/7984244.zip'
-test_mif25='data/mif254/7984244.xml'
+#test_mif25 ='data/mif254/7984244.xml'
+#test_mif25 = 'data/mif254/27571176-expand-mif254.xml'
 
+#test_mif25="ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2019/31243364.zip"
+test_mif25="ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2020/15208641.zip"
 parser = argparse.ArgumentParser( description='MIF Reader' )
 parser.add_argument('--source', '-s',  dest="source", type=str, 
                     required=False, default = test_mif25, 

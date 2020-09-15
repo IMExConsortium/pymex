@@ -241,18 +241,25 @@ class Xref():
         pass
     
     def __len__(self):
+        if self._xref is None:
+            return 0
         if "secondaryRef" in  self._xref:
             return 1 + len(self._xref["secondaryRef"])
         return 1
         
     @property
-    def primaryRef(self):   
+    def primaryRef(self):
+        if self._xref is None:
+            return None
         return Reference( self._xref["primaryRef"] )
     
     @property
     def secondaryRef(self):
-        ret =[]
 
+        if self._xref is None:
+            return None
+        ret =[]
+        
         if "secondaryRef" not in self._xref:
             return ret                
         
@@ -262,6 +269,8 @@ class Xref():
     
     @property
     def xrefs(self):
+        if self._xref is None:
+            return None
         ret = []
         ret.append( Reference(self._xref["primaryRef"]) )
         
@@ -272,9 +281,13 @@ class Xref():
     
     @property
     def xrefCount(self):
-        return 1 + len(self._xref["secondaryRef"])
-    
-            
+        if self._xref is None:
+            return 0
+        if "secondaryRef" in self._xref:
+            return 1 + len(self._xref["secondaryRef"])
+        else:       
+            return 1
+             
 class Interaction(Names, Xref):
     """MIF Interaction representation."""
     
@@ -378,7 +391,7 @@ class Interaction(Names, Xref):
                         if k not in ["participant","interactionType"]:
                             binary[k] = self._interaction[k]
                   
-                    itype = deepcopy( self.pysical )
+                    itype = deepcopy( self.physical )
                     binary.setdefault("interactionType",[]).append( itype )
                     bprt =  binary.setdefault("participant",[])
                     bprt.append(p1)
@@ -388,7 +401,7 @@ class Interaction(Names, Xref):
                     
         if (phyType or dirType) and mode == "matrix":           
             for i in range(0,len(part)):
-                for j in range(i+1,part):
+                for j in range(i+1,len(part)):
                     binary = {}
                         
                     for k in self._interaction.keys():
@@ -757,10 +770,16 @@ class Participant( Names,Xref ):
     """MIF Participant representation."""
     def __init__(self, participant, interaction ):    
         self._participant = participant
-        self._interaction = interaction
-        self._names = self._participant["names"]
-        self._xref = self._participant["xref"]
         self._interactor = self._participant["interactor"]
+        self._interaction = interaction
+        
+        if "names" in  self._participant:            
+            self._names = self._participant["names"]
+        else:
+            self._names = self._interactor["names"]
+        
+        if "xref" in  self._participant:
+            self._xref = self._participant["xref"]
             
         if "hostOrganism" in self._participant:
             self._host = self._participant["hostOrganism"]
