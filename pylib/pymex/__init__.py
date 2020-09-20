@@ -6,7 +6,5 @@ version_file = open(os.path.join( pkg_dir, 'VERSION') )
 version = version_file.read().strip()
 
 import mif
-
 import pypsic
-import pycent
-import pylout
+

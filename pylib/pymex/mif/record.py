@@ -2,10 +2,10 @@ import json
 import re
 from copy import deepcopy
 
-from pymex import mif
+from pymex import xml, mif
 
-class Record(mif.XmlRecord):
-    """MIF record representation. Inherits XML parsing and serialization from XmlRecord"""
+class Record(xml.XmlRecord):
+    """MIF record representation. Inherits XML parsing and serialization from xml.XmlRecord"""
     
     def __init__(self, root=None):
 
@@ -19,11 +19,11 @@ class Record(mif.XmlRecord):
                        "mif300":{None:"http://psi.hupo.org/mi/mif300",
                                  "xsi":"http://www.w3.org/2001/XMLSchema-instance"}}
         
-        self.PARSEDEF={"mif254":"defParse254.json",
-                       "mif300":"defParse300.json"}
+        self.PARSEDEF={"mif254":"../mif/defParse254.json",
+                       "mif300":"../mif/defParse300.json"}
         
-        self.MIFDEF= {"mif254":"defMif254.json",
-                      "mif300":"defMif300.json"}
+        self.MIFDEF= {"mif254":"../mif/defMif254.json",
+                      "mif300":"../mif/defMif300.json"}
                              
     def parseMif(self, filename, ver="mif254", debug=False):
         return self.parseXml( filename, ver=ver )
