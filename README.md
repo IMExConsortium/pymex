@@ -10,10 +10,8 @@ and construction of PSI-MI endorsed interaction data files.
 ## Quick Start
 
 
-
-## Further details
-
-See: https://github.com/IMExConsortium/pymex/wiki
+---
+## Further details: https://github.com/IMExConsortium/pymex/wiki
 
 
 
