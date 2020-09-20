@@ -6,8 +6,6 @@ and construction of PSI-MI endorsed interaction data files.
 
 * ``pymex.mif`` - PSI-MI XML format support (versions 2.5.4 and 3.0.0) 
 * ``pymex.pypsiq`` - PSICQUC server access
-* ``pymex.pycent`` - IMEx Central server access
-* ``pymex.pylout`` - LinkOut file generator
 
 ## Quick Start
 
