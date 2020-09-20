@@ -11,6 +11,9 @@ and construction of PSI-MI endorsed interaction data files.
 
 
 
+## Further details
+
+See: https://github.com/IMExConsortium/pymex/wiki
 
 
 
