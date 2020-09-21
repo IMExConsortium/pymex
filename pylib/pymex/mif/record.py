@@ -9,22 +9,13 @@ class Record(xml.XmlRecord):
     
     def __init__(self, root=None):
 
-        super().__init__(root)
+        self.mifConfig = { "mif254": {"IN":"../mif/defParse254.json",
+                                      "OUT":"../mif/defMif254.json" },
+                           "mif300": {"IN":"../mif/defParse300.json",
+                                      "OUT":"../mif/defMif300.json" } }
         
-        self.NAMESPACES = { "mif254":"http://psi.hupo.org/mi/mif",
-                            "mif300":"http://psi.hupo.org/mi/mif300"}
-        self.LEN_NAMESPACE = {"mif254":28, "mif300":31}
-        self.MIFNS = { "mif254":{None:"http://psi.hupo.org/mi/mif",
-                                 "xsi":"http://www.w3.org/2001/XMLSchema-instance"},
-                       "mif300":{None:"http://psi.hupo.org/mi/mif300",
-                                 "xsi":"http://www.w3.org/2001/XMLSchema-instance"}}
-        
-        self.PARSEDEF={"mif254":"../mif/defParse254.json",
-                       "mif300":"../mif/defParse300.json"}
-        
-        self.MIFDEF= {"mif254":"../mif/defMif254.json",
-                      "mif300":"../mif/defMif300.json"}
-                             
+        super().__init__(root, config=self.mifConfig )
+                
     def parseMif(self, filename, ver="mif254", debug=False):
         return self.parseXml( filename, ver=ver )
    
@@ -33,7 +24,7 @@ class Record(xml.XmlRecord):
         
         self._stoichiometryConvert( ver )        
         
-        return self.toXml( ver )
+        return self.toXml( ver, "entrySet", "ExpandedEntrySet" )
         
     def _stoichiometryConvert(self, ver):
         

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#utf: # -*- coding-8 -*-
 """
 Created on Mon Jun 29 13:56:57 2020
 @author: andrei
@@ -15,7 +15,7 @@ class XmlRecord():
     
     def modifyTag(self,item,ver): 
         """ Modifies tag of an item if necessary."""
-        tag = item.tag[self.LEN_NAMESPACE[ver]:]
+        tag = item.tag[self.config[ver]["NSL"]:]
         return tag
     
     def toNsString(self,ns): 
@@ -24,18 +24,41 @@ class XmlRecord():
         mifstr = "{%s}" % mif_ns
         return mifstr
 
-    def __init__(self, root=None):
+    def __init__(self, root=None, config=None):
 
         if root is not None:
             self.root = root
         else:
             self.root = {}
+
+        self.config = {}
+        if config is not None:
+            myDir = os.path.dirname( os.path.realpath(__file__) )
+            for ver in config.keys():
+                self.config[ver] = {}
+                
+                verIn = config[ver]["IN"]
+                inPath = os.path.join(myDir, verIn)
+                self.config[ver]["IN"] = json.load( open(inPath ) )
+                self.config[ver]["NSL"] = len(self.config[ver]["IN"]["@NS"])+2
+                                
+                verOut = config[ver]["OUT"]
+                outPath = os.path.join(myDir, verOut)                
+                self.config[ver]["OUT"] = json.load( open( outPath ) )
+
+                # re-key  default ("*") namespace
+                
+                defns = None
+                for nk in self.config[ver]["OUT"]["@NS"]:
+                    if nk == "*":
+                        defns = self.config[ver]["OUT"]["@NS"]["*"]
+                if defns is not None:
+                    self.config[ver]["OUT"]["@NS"].pop("*", None)
+                    self.config[ver]["OUT"]["@NS"][None] = defns        
                 
     def parseXml(self, filename, ver, debug=False):
         
-        json_dir = os.path.dirname( os.path.realpath(__file__) )
-
-        template = json.load( open( os.path.join(json_dir, self.PARSEDEF[ver]) ) )
+        template = self.config[ver]["IN"]
         
         recordTree = ET.parse( filename )
         rootElem = recordTree.getroot()
@@ -246,18 +269,6 @@ class XmlRecord():
                 print( json.dumps(self.root, indent=2) )
         return
         
-    def parseDom( self, filename , ver):
-        """Builds a XmlRecord object from XML file."""
-        
-        record = ET.parse( filename )
-        entrySet = record.xpath("/%s:entrySet" % ver,namespaces=self.NAMESPACES)
-        for key, val in entrySet[0].attrib.items():
-            self.root[key] = val
-        entries = record.xpath( "/%s:entrySet/%s:entry" % (ver,ver), namespaces=self.NAMESPACES )
-        for entry in entries:
-            entryElem = pymex.mif.Entry( self.root )
-            self.root["entries"].append( entryElem.parseDom( entry ) )
-
     def parseJson(self, file ):
         self.root = json.load( file )
         return self
@@ -265,16 +276,16 @@ class XmlRecord():
     def toJson(self):
         return json.dumps(self.root, indent=2)
 
-    def toXml( self, ver='mif254' ):
+    def toXml( self, ver='mif254', rdata = "entrySet", rtype="ExpandedEntrySet" ):
         """Builds Xml elementTree from a Record object."""
 
-        json_dir = os.path.dirname( os.path.realpath(__file__) )
-        template = json.load( open( os.path.join(json_dir, self.MIFDEF[ver]) ) )
-            
-        nsmap = self.MIFNS[ver]
+        template = self.config[ver]["OUT"]
+        
+        #nsmap = self.MIFNS[ver]
+        nsmap = template["@NS"]
 
-        return self.mifGenerator(nsmap, ver, template, None, self.root["entrySet"],
-                                               template['ExpandedEntrySet'] )
+        return self.mifGenerator( nsmap, ver, template, None,
+                                  self.root[rdata], template[rtype] )
         return None
     
     def mifGenerator(self, nsmap, ver, template, dom, cdata, ctype):
@@ -289,7 +300,8 @@ class XmlRecord():
         else:
             attrib = None
             
-        dom = ET.Element(self.toNsString(self.MIFNS[ver]) + name,nsmap=nsmap)
+        #dom = ET.Element(self.toNsString(self.MIFNS[ver]) + name,nsmap=nsmap)
+        dom = ET.Element(self.toNsString(nsmap) + name,nsmap=nsmap)
         if attrib is not None:
             for a in attrib:
                 dom.set(a,attrib[a])
@@ -310,7 +322,7 @@ class XmlRecord():
         if "wrap" in cdef:
             # add wrapper            
             wrapName = cdef["wrap"]
-            wrapElem = ET.Element(self.toNsString(self.MIFNS[ver]) + wrapName)        
+            wrapElem = ET.Element(self.toNsString(nsmap) + wrapName)        
         else:
             wrapElem = None
             
@@ -332,7 +344,7 @@ class XmlRecord():
                             chldName = wtDef["value"]
 
                         # create content element inside a wrapper
-                        chldElem = ET.Element(self.toNsString(self.MIFNS[ver]) + chldName)   
+                        chldElem = ET.Element(self.toNsString(nsmap) + chldName)   
                         wrapElem.append(chldElem)
 
                         # fill in according to element definition
@@ -375,7 +387,7 @@ class XmlRecord():
                     celem.set(elemName[1:], str(elemData))                
             else: 
                 if cdef["type"]=='$TEXT': # child element with text only                    
-                    chldElem = ET.Element(self.toNsString(self.MIFNS[ver]) + elemName)
+                    chldElem = ET.Element(self.toNsString(nsmap) + elemName)
                     chldElem.text = str( elemData )                
 
                     if wrapElem is not None: # add to wrapper (if present) 
@@ -391,10 +403,10 @@ class XmlRecord():
             
         for celemData in elemData: # always a list here with one or more dict inside                    
             
-            chldElem = ET.Element(self.toNsString(self.MIFNS[ver]) + elemName)
+            chldElem = ET.Element(self.toNsString(nsmap) + elemName)
             
             if cdef["type"]=='$TEXT': # text child element                 
-                chldElem = ET.Element(self.toNsString(self.MIFNS[ver]) + elemName)
+                chldElem = ET.Element(self.toNsString(nsmap) + elemName)
                 chldElem.text = str( celemData )
                 retLst.append(chldElem)
             else: # complex content: build recursively                

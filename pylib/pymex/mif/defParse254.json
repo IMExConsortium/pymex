@@ -1,4 +1,6 @@
 {
+    "@NS":"http://psi.hupo.org/mi/mif",
+    
     "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id", "reference":null, "wrapper": false } },
     "entry":{"*":{"store":"list"}},
 

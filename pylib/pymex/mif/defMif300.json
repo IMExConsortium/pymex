@@ -1,6 +1,9 @@
 {
     "@ROOT": { "name":"entrySet","attribute":{"level":"3", "version":"0", "minorVersion":"0" }},
 
+    "@NS":{ "*":"http://psi.hupo.org/mi/mif300",
+            "xsi":"http://www.w3.org/2001/XMLSchema-instance"},
+        
     "ExpandedEntrySet": [{"value":"entry", "type":"expandedEntry","name":"entry"}],	      
     "CompactEntrySet": [{"value":"entry", "type":"compactEntry","name":"entry"}],	      
     
