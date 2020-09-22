@@ -257,7 +257,7 @@ class XmlRecord():
                             if kvl:
                                 kval.append(kvl[0])                        
                         dbkey = ':'.join(kval)
-                        rec[ckey][ckeyRefInd][dbkey] = cvalue[cchldTag][0] if cchldTag=="secondaryRef" else cvalue[cchldTag]
+                        rec[ckey][ckeyRefInd][dbkey] = cvalue[cchldTag][0] if type(cvalue[cchldTag]) is list else cvalue[cchldTag]
                     
 
             if debug:
