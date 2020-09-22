@@ -244,7 +244,10 @@ class XmlRecord():
                 cchldTag = self.modifyTag(cchld, ver)
                 if debug:
                     print("  CHLD", cchld.tag);
-                if 'index' in ctempl:    
+                    
+                self.genericParse( template, ver, cvalue, cpath, cchld)
+                
+                if 'index' in ctempl:
                     if cchldTag in ientry and ientry[cchldTag] is not None:
                         keyList = ientry[cchldTag]["key"]
 
@@ -254,17 +257,9 @@ class XmlRecord():
                             if kvl:
                                 kval.append(kvl[0])                        
                         dbkey = ':'.join(kval)
-                        rec[ckey][ckeyRefInd][dbkey] = {}
+                        rec[ckey][ckeyRefInd][dbkey] = cvalue[cchldTag][0] if type(cvalue[cchldTag]) is list else cvalue[cchldTag]
+                    
 
-                        self.genericParse( template, ver, rec[ckey][ckeyRefInd][dbkey], cpath, cchld)
-                    
-                    #This generates xrefInd with primaryRef:<desiredInformation>,
-                    # so I have to go one layer deeper. The code below is, admittedly, a hasty fix.
-                    rec[ckey][ckeyRefInd][dbkey] = rec[ckey][ckeyRefInd][dbkey][cchldTag]
-                    if cchldTag == "secondaryRef":
-                        rec[ckey][ckeyRefInd][dbkey] = rec[ckey][ckeyRefInd][dbkey][0]
-                    
-                self.genericParse( template, ver, cvalue, cpath, cchld)
             if debug:
                 print( json.dumps(self.root, indent=2) )
         return
