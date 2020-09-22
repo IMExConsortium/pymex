@@ -1,3 +1,4 @@
+import os
 import json
 import re
 from copy import deepcopy
@@ -9,10 +10,11 @@ class Record(xml.XmlRecord):
     
     def __init__(self, root=None):
 
-        self.mifConfig = { "mif254": {"IN":"../mif/defParse254.json",
-                                      "OUT":"../mif/defMif254.json" },
-                           "mif300": {"IN":"../mif/defParse300.json",
-                                      "OUT":"../mif/defMif300.json" } }
+        myDir = os.path.dirname( os.path.realpath(__file__))
+        self.mifConfig = { "mif254": {"IN": os.path.join( myDir, "defParse254.json"),
+                                      "OUT": os.path.join( myDir, "defMif254.json" )},
+                           "mif300": {"IN": os.path.join( myDir, "defParse300.json"),
+                                      "OUT": os.path.join( myDir, "defMif300.json" )}}
         
         super().__init__(root, config=self.mifConfig )
                 

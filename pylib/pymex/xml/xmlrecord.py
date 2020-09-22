@@ -39,7 +39,7 @@ class XmlRecord():
                 
                 verIn = config[ver]["IN"]
                 inPath = os.path.join(myDir, verIn)
-                self.config[ver]["IN"] = json.load( open(inPath ) )
+                self.config[ver]["IN"] = json.load( open( inPath ) )
                 self.config[ver]["NSL"] = len(self.config[ver]["IN"]["@NS"])+2
                                 
                 verOut = config[ver]["OUT"]
