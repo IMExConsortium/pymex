@@ -37,14 +37,10 @@ class XmlRecord():
             for ver in config.keys():
                 self.config[ver] = {}
                 
-                verIn = config[ver]["IN"]
-                inPath = os.path.join(myDir, verIn)
-                self.config[ver]["IN"] = json.load( open( inPath ) )
+                self.config[ver]["IN"] = json.load( open( config[ver]["IN"] ) )
                 self.config[ver]["NSL"] = len(self.config[ver]["IN"]["@NS"])+2
-                                
-                verOut = config[ver]["OUT"]
-                outPath = os.path.join(myDir, verOut)                
-                self.config[ver]["OUT"] = json.load( open( outPath ) )
+        
+                self.config[ver]["OUT"] = json.load( open( config[ver]["OUT"] ) )
 
                 # re-key  default ("*") namespace
                 
