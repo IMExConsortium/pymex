@@ -10,9 +10,6 @@
     "alias":{"*":{"store":"list"}},
     "secondaryRef": {"*": {"store":"list"}},
     
-    "attributeList":{"*":{"wrapper":true}},
-    "attribute":{"*":{"store":"list","name":"attributeList"}},
-
     "availabilityList":{"*":{"wrapper":true}},
     "availability":{"entry":{"store":"index","ikey":"@id","name":"availabilityList"}},
     "availabilityRef":{"*":{"reference":"/entrySet/entry/availabilityList","name":"availability"}},
@@ -37,14 +34,14 @@
 
     "attributeList":{"*":{"wrapper":true}},		      
 	 "attribute":	 { "*":{ "name":"attribute", "store":"list"} },       
-		      
-		      
+		      		      
     "interactorList":{"*":{"wrapper": true} },
     
     "interactor":{ "participant": { "store":"direct"},
 		   "*":{"store":"index", "ikey":"@id", "name":"interactorList"}},		  
 
     "interactorRef":{"*":{"reference": "/entrySet/entry/interactorList", "name":"interactor"} },
+    "interactorType":{"*":{"store":"direct"}},
 
     "sequence":{"*":{"complex":false}},
 		      
