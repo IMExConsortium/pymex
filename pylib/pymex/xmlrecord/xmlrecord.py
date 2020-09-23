@@ -8,8 +8,6 @@ from lxml import etree as ET
 import json
 import os
 
-import pymex
-
 class XmlRecord():
     """XML-based record representation."""
     
@@ -33,7 +31,7 @@ class XmlRecord():
 
         self.config = {}
         if config is not None:
-            myDir = os.path.dirname( os.path.realpath(__file__) )
+            
             for ver in config.keys():
                 self.config[ver] = {}
                 

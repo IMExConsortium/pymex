@@ -1,5 +1,3 @@
-import pypsic
-
 class Registry():
 
     def __init__( self, reg ):

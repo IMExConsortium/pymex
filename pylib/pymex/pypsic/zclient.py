@@ -11,7 +11,7 @@ from requests.auth import HTTPBasicAuth
 from io import StringIO
 from lxml import etree as ET
 
-import pypsic
+import pymex.pypsic
 
 class Client():
 

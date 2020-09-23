@@ -9,6 +9,7 @@ if os.path.isdir( pylib_dir ):
     print("mif-digest: using source library version")
     sys.path.insert(0,pylib_dir)
 
+    
 import argparse
 from urllib.request import urlopen
 from io import BytesIO
@@ -18,19 +19,11 @@ from lxml import etree as ET
 
 import pymex
 
-#test_mif25='/cluster1/mirrors/imex/intact/psi25/2018/9171338.zip'
-#test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2019/15138291.zip'
+#test_mif25 = 'ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2019/15138291.zip'
+#test_mif25 = 'ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2018/27571176.zip'
 
-#test_mif25 ='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2018/27571176.zip'
-
-#test_mif25='ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2020/7984244.zip'
-#test_mif25 ='data/mif254/7984244.xml'
 #test_mif25 = 'data/mif254/27571176-expand-mif254.xml'
-
 test_mif25 = 'data/mif254/15138291-compact-mif254.xml'
-
-#test_mif25="ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2019/31243364.zip"
-#test_mif25="ftp://ftp.ebi.ac.uk/pub/databases/intact/current/psi25/pmid/2020/15208641.zip"
 
 parser = argparse.ArgumentParser( description='MIF Reader' )
 parser.add_argument('--source', '-s',  dest="source", type=str, 
