@@ -153,7 +153,7 @@ class Entry():
     def interactions( self ):
         ret = []        
         for i in range( 0, len( self._entry["interaction" ]) ):        
-            ret.append( Interaction( self._entry, n=i ) )        
+            ret.append( mif.Interaction( self._entry, n=i ) )        
         return ret
     
     @property    
