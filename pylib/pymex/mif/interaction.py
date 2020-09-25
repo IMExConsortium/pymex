@@ -12,6 +12,7 @@ import json
 import re
 from copy import deepcopy
 
+import pymex
 from pymex import mif
 
 class Interaction(mif.Names, mif.Xref):

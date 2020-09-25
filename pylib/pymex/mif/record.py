@@ -6,9 +6,10 @@ Created on Wed Aug 19 02:05:33 2020
 """
 
 import os
-from pymex import *
+import pymex
+from pymex import xmlrecord, mif
 
-class Record(XmlRecord):
+class Record(xmlrecord.XmlRecord):
     """MIF record representation. Inherits XML parsing and serialization from xml.XmlRecord"""
     
     def __init__(self, root=None):
@@ -117,7 +118,7 @@ class Record(XmlRecord):
     @property
     def entry(self):
         """Returns the first (default) entry of the record"""        
-        return Entry( self.root['entrySet']['entry'][0] )
+        return mif.Entry( self.root['entrySet']['entry'][0] )
     
     @property
     def entryCount(self):
@@ -160,13 +161,13 @@ class Entry():
         return len( self._entry[ "interaction" ] )
     
     def getInteraction( self, n ):
-        return Interaction( self._entry , n )
+        return mif.Interaction( self._entry , n )
   
     @property
     def abstIinteractions( self ):
         ret = []        
         for i in range( 0, len( self._entry["abstInteraction" ]) ):        
-            ret.append( AbstInteraction( self._entry, n=i ) )        
+            ret.append( mif.AbstInteraction( self._entry, n=i ) )        
         return ret
     
     @property    
@@ -174,12 +175,12 @@ class Entry():
         return len( self._entry[ "abstInteraction" ] )
     
     def getAbstInteraction( self, n ):
-        return AbstInteraction( self._entry , n )
+        return mif.AbstInteraction( self._entry , n )
     
     
     @property
     def source(self):
-        return Source(self._entry["source"])
+        return mif.Source(self._entry["source"])
 
        
 
