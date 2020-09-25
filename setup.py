@@ -19,7 +19,7 @@ setuptools.setup( name="pymex-lukasz99",
                   long_description=long_description,
                   long_description_content_type='text/markdown',
                   url="https://github.com/IMExConsortium/pymex",
-                  download_url = 'https://github.com/IMExConsortium/pymex/archive/0.9.6.tar.gz',
+                  download_url = 'https://github.com/IMExConsortium/pymex/archive/0.9.7.tar.gz',
                   package_dir={'': 'pylib'},                
                   package_data={
                           'pymex': ['mif/*.json', 'mif/*.jmif','mif/*.xsd'],

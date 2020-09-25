@@ -641,8 +641,7 @@ class Availability():
         
 class CvTerm( Names, Xref ):
     """Mif CvTerm representation."""
-    def __init__(self, cvterm):
-        print(type(cvterm))
+    def __init__(self, cvterm):        
         self._cvterm = cvterm
         self._names = cvterm["names"]
         self._xref = cvterm["xref"]
