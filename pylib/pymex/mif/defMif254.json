@@ -1,6 +1,6 @@
 {
-    "@ROOT": { "name":"entrySet","attribute":{"level":"2", "version":"5", "minorVersion":"4" }},
-
+    "@ROOT": { "name":"entrySet","attribute":{ "xsi:schemaLocation":"http://psi.hupo.org/mi/mif https://raw.githubusercontent.com/HUPO-PSI/miXML/master/2.5/src/MIF254.xsd",
+					       "level":"2", "version":"5", "minorVersion":"4" }},
     "@NS":{ "*":"http://psi.hupo.org/mi/mif",
            "xsi":"http://www.w3.org/2001/XMLSchema-instance"},
     
@@ -78,7 +78,7 @@
 		    {"value":"xref", "type":"xref"},
 		    {"value":"interactor", "type":"interactor"},
 		    {"value":"participantIdentificationMethod", "type":"cvterm",
-		     "wrap":"participantIdentificationMethodList"},
+		     "wrap":"participantIdentificationMethodList"},		     
 		    {"value":"biologicalRole", "type":"cvterm"},
 		    {"value":"experimentalRole", "type":"cvterm", "name":"experimentalRole",
 		     "wrap":"experimentalRoleList"},

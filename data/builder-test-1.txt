@@ -1,27 +1,41 @@
 source	DIP
 #
+
 interaction	MI:0915(physical)	MI:0018(two hybrid)	4932
 molecule	protein	uprot:P60010	0:0	4932
 exprole	bait
+
 molecule	protein	uprot:P60010	0:0	4932
 exprole	prey
 #
+
 interaction	MI:0914(association)	two-hybrid	4932
+xref	wwwpdb	3COL.	identity				
+
 molecule	protein	uprot:P60010	0:0	4932
+xref	refseq	NP_12345.1
+
 molecule	protein	uprot:P60010	0:0	4932
+
 molecule	protein	uprot:P60010	0:0	4932
 #
+
 interaction	MI:0195(covalent)	two-hybrid	4932
+
 molecule	protein	uprot:P60010	0:0	4932
+expprep	MI:0350(purified)
+
 molecule	protein	uprot:P60010	0:0	4932
+exprep	purified
 #
 
 interaction	MI:0407(direct)	coip	4932
-
+figure	Fig 2, Table 1
 molecule	protein	uprot:P60010	0:0	4932
 idmethod	predet
 idmethod	western
 exprole	bait
+exprep	purified
 feature	his-tag	His Tag	His Tag
 range	n	n
 feature	mutation	p.Ala34His
@@ -29,8 +43,7 @@ idmethod	substitution-anal
 range	34	34	H
 
 molecule	protein	uprot:P60010	0:0	4932
-idmethod        anti-tag-western
+idmethod	anti-tag-western
 feature	flag-tag	Flag Tag	FLAG Tag
 range	c	c
 
-#

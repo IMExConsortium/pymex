@@ -1,5 +1,6 @@
 {
-    "@ROOT": { "name":"entrySet","attribute":{"level":"3", "version":"0", "minorVersion":"0" }},
+    "@ROOT": { "name":"entrySet","attribute":{"xsi:schemaLocation":"http://psi.hupo.org/mi/mif300 https://raw.githubusercontent.com/HUPO-PSI/miXML/master/3.0/src/MIF300.xsd",
+					      "level":"3", "version":"0", "minorVersion":"0" }},
 
     "@NS":{ "*":"http://psi.hupo.org/mi/mif300",
             "xsi":"http://www.w3.org/2001/XMLSchema-instance"},

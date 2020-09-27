@@ -1,5 +1,6 @@
 {
- "physical":"MI:0915","direct":"MI:0407",
+ "physical":"MI:0915",
+ "direct":"MI:0407",
  "association":"MI:0914",
  "bait":"MI:0496",
  "neutral":"MI:0497",
@@ -18,11 +19,29 @@
  "mutation":"MI:0118",
  "mutation-decreasing":"MI:0119",
  "mutation-disrupting":"MI:0573",
+ "experimental particp":"MI:0661",
  "predet":"MI:0396",
  "western":"MI:0113",
  "anti-tag-western":"MI:0705",
  "mutation-anal":"MI:0074",
  "deletion-anal":"MI:0033",
- "substitution-anal":"MI:0810"
+ "substitution-anal":"MI:0810",
+ "purified":"MI:0350",
+ "partially-purified":"MI:0352",
+ "cell lysate":"MI:0344",
+ "pysiological":"MI:0222",
+ "over-expressed":"MI:0506",
+ "identity":"MI:0356",
+ "uniprotkb":"MI:0486",
+ "refseq":"MI:0481",
+ "wwpdb":"MI:0805",
+ "emdb":"MI:0936",
+ "go":"MI:0448",
+ "pubmed":"MI:0446",
+ "biorxiv":"MI:2347",
+ "psi-mi":"MI:0488",
+ "dip":"MI:0465",
+ "intact":"MI:0469",
+ "mint":"MI:0471"
  }
  

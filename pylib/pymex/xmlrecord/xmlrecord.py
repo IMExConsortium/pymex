@@ -16,9 +16,9 @@ class XmlRecord():
         tag = item.tag[self.config[ver]["NSL"]:]
         return tag
     
-    def toNsString(self,ns): 
+    def toNsString(self,ns, prefix=None): 
         """Converts namespace to string prefix for element tags."""
-        mif_ns = ns[None]
+        mif_ns = ns[prefix]
         mifstr = "{%s}" % mif_ns
         return mifstr
 
@@ -293,7 +293,14 @@ class XmlRecord():
         dom = ET.Element(self.toNsString(nsmap) + name,nsmap=nsmap)
         if attrib is not None:
             for a in attrib:
-                dom.set(a,attrib[a])
+
+                if ":" in a:
+                    (ans,aname)  = a.split(":")
+                    qname = self.toNsString(nsmap,prefix=ans) + aname
+                else:
+                    qname = a
+                    
+                dom.set(qname,attrib[a])
             
         for cdef in ctype:            
             chldLst = self.mifElement( nsmap, ver, template, None, cdata, cdef)
