@@ -26,13 +26,13 @@
   "IntAct":{
       "names": {
         "shortLabel": "IntAct",
-        "fullName": "IntAct Database"
+        "fullName": "European Bioinformatics Institute"
        },
        "xref":{
           "primaryRef": {
             "db": "psi-mi",
             "dbAc": "MI:0488",
-            "id": "MI:0465",
+            "id": "MI:0469",
             "refType": "identity",
             "refTypeAc": "MI:0356"
           },
@@ -40,13 +40,36 @@
             {
               "db": "pubmed",
               "dbAc": "MI:0446",
-              "id": "14681454",
+              "id": "14681455",
               "refType": "primary-reference",
               "refTypeAc": "MI:0358"
             }
           ]
        }
    },
-   "IMEx":{}
+   "MINT":{
+      "names": {
+        "shortLabel": "MINT",
+        "fullName": "MINT, Dpt of Biology, University of Rome Tor Vergata"
+       },
+       "xref":{
+          "primaryRef": {
+            "db": "psi-mi",
+            "dbAc": "MI:0488",
+            "id": "MI:0471",
+            "refType": "identity",
+            "refTypeAc": "MI:0356"
+          },
+          "secondaryRef": [
+            {
+              "db": "pubmed",
+              "dbAc": "MI:0446",
+              "id": "27115627",
+              "refType": "primary-reference",
+              "refTypeAc": "MI:0358"
+            }
+          ]
+       }
+   }
  }
 }

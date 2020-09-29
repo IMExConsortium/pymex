@@ -16,7 +16,7 @@ from lxml import etree as ET
 
 parser = argparse.ArgumentParser( description='MIF Builder' )
 parser.add_argument( '--source', '-s',  dest="source", type=str, required=False,
-                     default = "data/builder-test-1.txt",
+                     default = "data/builder-test-1.tmif",
                      help='File location (path or URL). Compressed file OK.')
 
 parser.add_argument( '--output', '-o', dest="ofile", type=str, required=False,

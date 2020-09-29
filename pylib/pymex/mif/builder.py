@@ -11,7 +11,7 @@ class RecordBuilder():
 
     def __init__(self,debug=False):
         self.debug = debug
-        self.oboUrl = 'https://www.ebi.ac.uk/ols/api/ontologies/mi/terms?iri=http://purl.obolibrary.org/obo/'
+        self.oboUrl = 'https://www.ebi.ac.uk/ols/api/ontologies/%CVT%/terms?iri=http://purl.obolibrary.org/obo/'
         self.taxUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&retmode=xml&id='
         self.uniNs = { "up":"http://uniprot.org/uniprot" }
         self.uniUrl = 'https://www.uniprot.org/uniprot/'
@@ -39,20 +39,45 @@ class RecordBuilder():
         cvmatch = self.cvreg.match( cvid )
         if cvmatch:
             cvid = cvmatch.group(1)
+            cvlabel = None
         else:
-            cvid = self.cvdict[cvid]
-
+            try:
+                cvid = self.cvdict[cvid]
+                cvlabel = None
+            except:
+                cvlabel = cvid
+                cvid = None
+            
+        if cvlabel is not None:
+            term = {"label" : cvlabel }
+            return term
+        
         if cvid not in self.cvtrec:
 
             #fetch term from OLS
+
+            cvc = cvid.split(":")
             
-            cvurl = self.oboUrl + cvid.replace(':','_')
+            cvurl = self.oboUrl.replace("%CVT%",cvc[0].lower()) + cvid.replace(':','_')            
             jcv = json.load( urlopen( cvurl ) )
+            
             term = {}
             term['label'] = jcv['_embedded']['terms'][0]['label']
-            term['def'] = jcv['_embedded']['terms'][0]['annotation']['definition'][0]
+            
+            if "description" in jcv['_embedded']['terms'][0]:
+                 term['def'] = jcv['_embedded']['terms'][0]["description"]
+                 
+            elif "definition" in jcv['_embedded']['terms'][0]['annotation']:
+                term['def'] = jcv['_embedded']['terms'][0]['annotation']['definition'][0]
+                
             term['id'] = jcv['_embedded']['terms'][0]['obo_id']
 
+            try:
+                term["dbac"]=self.cvdict[cvc[0].lower()]["dbac"]
+                term["db"]=self.cvdict[cvc[0].lower()]["db"]
+            except:
+                term["dbac"]=None
+                term["db"]=None
             self.cvtrec[ term['id'] ] = term 
         
         return self.cvtrec[cvid]
@@ -61,26 +86,33 @@ class RecordBuilder():
         
         term = self.cvterm( cvid )
 
-        res = { "names": { "shortLabel": term["label"] },
-                "xref": {
-                    "primaryRef": self.buildXref( term["id"],
-                                                  db="psi-mi",
-                                                  dbAc= "MI:0488") } }
+        res = { "names": { "shortLabel": term["label"] } }
+
+        if "id" in term:
+            
+            res["xref"] = { "primaryRef": self.buildXref( term["id"],
+                                                          db=term["db"],
+                                                          dbAc= term["dbac"]) }
         return res
 
     def buildXref( self, acc, db="uniprotkb", dbAc="MI:0486", version = None,
                    refType="identity", refTypeAc="MI:0356" ):
     
-        res = { "db": db, "dbAc": dbAc, "id": acc,                
-                "refType": refType, "refTypeAc": refTypeAc }                    
+        res = { "id": acc, "refType": refType, "refTypeAc": refTypeAc }                    
 
+        if db is not None:
+            res["db"] = db
+            
+        if dbAc is not None:
+            res["dbAc"] = dbAc 
+        
         if version is not None: 
             res["version"] = version
 
         return res
     
     def taxon(self, taxid):
-        print(taxid)
+        
         if taxid in ["-1","in vitro"]:
             tax = {"lname":"in vitro","sname":"in vitro","taxid":"-1"}
             self.taxrec[ "-1" ] = tax
@@ -205,15 +237,31 @@ class RecordBuilder():
                     interaction["experiment"][0]["participantIdentificationMethod"] = self.buildCvTerm("experimental particp") 
                     
                     # interaction host 
+
+                    taxid =  cols[3]                
+                    ctax = self.taxon( taxid )
+
+                    interaction["experiment"][0].setdefault("hostOrganism",[]).append( {                    
+                        "names": {
+                            "shortLabel": ctax["sname"],
+                            "fullName": ctax["lname"] },
+                        "ncbiTaxId": ctax["taxid"] } )
                     
-                    for taxid in cols[3:]:                                                
-                        ctax = self.taxon( taxid )
-                        print(ctax)
-                        interaction["experiment"][0].setdefault("hostOrganism",[]).append( {                    
-                            "names": {
-                                "shortLabel": ctax["sname"],
-                                "fullName": ctax["lname"] },
-                            "ncbiTaxId": ctax["taxid"] } )
+                    if len(cols) > 4:
+                        ctype = self.buildCvTerm( cols[4] )
+                        if ctype is not None:
+                            interaction["experiment"][0]["hostOrganism"][0]["cellType"] = ctype                    
+
+                    if len(cols) > 5:
+                        compartnent = self.buildCvTerm( cols[5] )
+                        if compartnent is not None:
+                            interaction["experiment"][0]["hostOrganism"][0]["compartment"] = compartnent
+
+                    if len(cols) > 6:
+                        tissue = self.buildCvTerm( cols[6] )
+                        if tissue is not None:
+                            interaction["experiment"][0]["hostOrganism"][0]["tissue"] = tissue
+                        
                     xtgt = interaction    
                 elif ln.startswith("molecule"):
                     self.feature = False
@@ -266,15 +314,30 @@ class RecordBuilder():
                     if len(cols) > 4:
                         hostOrganism = []
                         participant["hostOrganism"] = hostOrganism 
-                        
-                        for taxid in cols[4:]:                        
-                            taxon = self.taxon( taxid )
 
-                            ctax = {"names":{"shortLabel":taxon["sname"],
-                                             "fullName":taxon["lname"]},
-                                    "ncbiTaxId":taxon["taxid"]}
-                            
-                            hostOrganism.append(ctax)
+                        taxid =  cols[4]
+                        ctax = self.taxon( taxid )
+
+                        hostOrganism.append( {
+                            "names": {
+                                "shortLabel": ctax["sname"],
+                                "fullName": ctax["lname"] },
+                            "ncbiTaxId": ctax["taxid"] } )
+
+                        if len(cols) > 5:
+                            ctype = self.buildCvTerm( cols[5] )
+                            if ctype is not None:
+                                hostOrganism[0]["cellType"] = ctype
+
+                        if len(cols) > 6:
+                            compartnent = self.buildCvTerm( cols[6] )
+                            if compartnent is not None:
+                                hostOrganism[0]["compartnent"] = compartnent
+
+                        if len(cols) > 7:
+                            tissue = self.buildCvTerm( cols[7] )
+                            if tissue is not None:
+                                hostOrganism[0]["tissue"] = tissue
 
                     #stoichiometry
                     catt = { "value":"Stoichiometry: " + cols[3],
@@ -382,7 +445,7 @@ class RecordBuilder():
 
                 elif ln.startswith("xref"):
                     cols = ln.strip().split("\t")
-                    
+                    print(cols)
                     db = cols[1]
                     acc = cols[2]
                     if len(cols) > 3:
@@ -398,8 +461,8 @@ class RecordBuilder():
                     if len(cols) > 5:
                         xtypeac = cols[5]
                     else:
-                        xtypeac = self.cvdict[xtype]
-                                            
+                        xtypeac = self.cvdict[xtype]                    
+                    
                     ver = None
                     if '.' in acc:
                         ver = acc[acc.rfind('.')+1:]

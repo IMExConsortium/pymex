@@ -396,7 +396,7 @@ class XmlRecord():
         if isinstance( elemData, dict): # record field: complex element 
             # convert single value to list
             elemData = [ elemData ]
-            
+             
         for celemData in elemData: # always a list here with one or more dict inside                    
             
             chldElem = ET.Element(self.toNsString(nsmap) + elemName)
