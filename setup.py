@@ -11,7 +11,7 @@ pkg_dir = convert_path('pylib/pymex')
 version_file = open(os.path.join(pkg_dir, 'VERSION'))
 version = version_file.read().strip()
 
-setuptools.setup( name="pymex-lukasz99",
+setuptools.setup( name="pymex",
                   version=version,
                   author="Pymex Support Group",
                   author_email="dip@mbi.ucla.edu",
