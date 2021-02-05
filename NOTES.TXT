@@ -1,6 +1,9 @@
 PYMEX NOTES
 -----------
 
+2021/02/05
+  - fixed Reference.ac property bug
+
 2020/07/10
   - added Avialability class
   - modified Experiment.build() to return (id, data) tuple  

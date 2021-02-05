@@ -143,8 +143,12 @@ class Reference():
 
     @property
     def ac(self):
+        if "id" in self._xref:
+            return self._xref["id"]
+
         if "ac" in self._xref:
             return self._xref["ac"]
+
         return None
     
     @property
