@@ -211,6 +211,7 @@
 		{"value":"endStatus", "type":"cvterm"},
 		{"value":"end", "type":"position"},
 		{"value":"endInterval", "type":"position"},
+		{"value":"sequence","type":"rseq","name":"resultingSequence"},
 		{"value":"isLink","type":"$TEXT"}
 	      ],
     
@@ -218,6 +219,10 @@
 		  {"value":"begin", "type":"$TEXT","name":"@begin"},
 		  {"value":"end", "type":"$TEXT","name":"@end"}
 		],
+    
+    "rseq":[{"value":"original","name":"originalSequence","type":"$TEXT"},
+	    {"value":"new","name":"newSequence","type":"$TEXT"}
+	   ],
     
     "cvterm": [ {"value":"names", "type":"names"},
 		{"value":"xref", "type":"xref"}

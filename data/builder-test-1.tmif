@@ -11,7 +11,7 @@ exprole	prey
 #
 
 interaction	MI:0914(association)	two-hybrid	4932
-xref	wwpdb	3COL.	identity				
+xref	wwpdb	3COL	identity				
 
 molecule	protein	uprot:P60010	0	4932
 xref	refseq	NP_12345.1
@@ -31,7 +31,7 @@ exprep	purified
 #
 
 interaction	MI:0407(direct)	coip	4932
-figure	Fig 2, Table 1
+figure	Fig 2, Table 1MI:0407
 molecule	protein	uprot:P60010	0	4932
 idmethod	predet
 idmethod	western
@@ -41,7 +41,7 @@ feature	his-tag	His Tag	His Tag
 range	n	n
 feature	mutation	p.Ala34His
 idmethod	substitution-anal
-range	34	34	H
+range	34	34
 
 molecule	protein	uprot:P60010	0	4932
 idmethod	anti-tag-western

@@ -191,26 +191,25 @@ class RecordBuilder():
         feature = None
         frange = None
         xtgt = None
-
+        seqtgt = None
         bibref = None
 
         with open( filename, 'r' ) as sf:
             for ln in sf:
                 ln = ln.strip()
+                col = [s.strip() for s in ln.strip().split("\t")]
                 
                 if ln.startswith("source"):
                     self.feature = False
                     
                     record["source"] = {}
-                    (foo, src) = ln.split("\t")
-                    
+                    src = col[1]
                     if src in self.template["source"]:
                         record["source"] =  self.template["source"][src]
                     xtgt = record["source"]
 
                 elif ln.startswith("pmid"):
-                    cols = ln.split("\t")
-                    pmid = cols[1].strip()
+                    pmid = col[1]
                     pref = self.buildXref( pmid, db="pubmed", dbAc="MI:0446",
                                            refType="primary-reference", refTypeAc="MI:0358" )    
                     bibref = {"xref":{"primaryRef": pref}}
@@ -224,13 +223,11 @@ class RecordBuilder():
                     
                     record.setdefault("interaction",[]).append(interaction)
                     
-                    cols = ln.split("\t")
-
                     # interaction type 
-                    interaction["interactionType"] = self.buildCvTerm(cols[1])
+                    interaction["interactionType"] = self.buildCvTerm(col[1])
                     
                     # interaction detection                 
-                    interaction["experiment"][0]["interactionDetectionMethod"] = self.buildCvTerm(cols[2])
+                    interaction["experiment"][0]["interactionDetectionMethod"] = self.buildCvTerm(col[2])
 
                     # participant identification
 
@@ -238,7 +235,7 @@ class RecordBuilder():
                     
                     # interaction host 
 
-                    taxid =  cols[3]                
+                    taxid =  col[3]                
                     ctax = self.taxon( taxid )
 
                     interaction["experiment"][0].setdefault("hostOrganism",[]).append( {                    
@@ -247,18 +244,18 @@ class RecordBuilder():
                             "fullName": ctax["lname"] },
                         "ncbiTaxId": ctax["taxid"] } )
                     
-                    if len(cols) > 4:
-                        ctype = self.buildCvTerm( cols[4] )
+                    if len(col) > 4:
+                        ctype = self.buildCvTerm( col[4] )
                         if ctype is not None:
-                            interaction["experiment"][0]["hostOrganism"][0]["cellType"] = ctype                    
+                            interaction["experiment"][0]["hostOrganism"][0]["cellType"] = ctype
 
-                    if len(cols) > 5:
-                        compartnent = self.buildCvTerm( cols[5] )
+                    if len(col) > 5:
+                        compartnent = self.buildCvTerm( col[5] )
                         if compartnent is not None:
                             interaction["experiment"][0]["hostOrganism"][0]["compartment"] = compartnent
 
-                    if len(cols) > 6:
-                        tissue = self.buildCvTerm( cols[6] )
+                    if len(col) > 6:
+                        tissue = self.buildCvTerm( col[6] )
                         if tissue is not None:
                             interaction["experiment"][0]["hostOrganism"][0]["tissue"] = tissue
                         
@@ -271,11 +268,9 @@ class RecordBuilder():
                     # interactor 
                     interactor = {}
                     participant["interactor"] = interactor 
-                                        
-                    cols = ln.split("\t")
-                                        
-                    if cols[2].startswith("uprot:"):
-                        (acc,ver) = (cols[2].split(".") + [""])[0:2]                        
+                                                                                
+                    if col[2].startswith("uprot:"):
+                        (acc,ver) = (col[2].split(".") + [""])[0:2]                        
                         irec = self.uniprot( acc.replace("uprot:","") )
                         if len(ver) > 0:
                             irec["version"] = ver
@@ -295,7 +290,7 @@ class RecordBuilder():
                                                          dbAc= "MI:0486" )
                     
                     #interactor type
-                    interactor["interactorType"] = self.buildCvTerm( cols[1] )
+                    interactor["interactorType"] = self.buildCvTerm( col[1] )
 
                     # interactor organism                    
                     ctax = self.taxon( irec["taxid"] )
@@ -311,11 +306,11 @@ class RecordBuilder():
                     participant["names"] = {"shortLabel":irec["sname"].lower()}
        
                     # host                     
-                    if len(cols) > 4:
+                    if len(col) > 4:
                         hostOrganism = []
                         participant["hostOrganism"] = hostOrganism 
 
-                        taxid =  cols[4]
+                        taxid =  col[4]
                         ctax = self.taxon( taxid )
 
                         hostOrganism.append( {
@@ -324,61 +319,62 @@ class RecordBuilder():
                                 "fullName": ctax["lname"] },
                             "ncbiTaxId": ctax["taxid"] } )
 
-                        if len(cols) > 5:
-                            ctype = self.buildCvTerm( cols[5] )
+                        if len(col) > 5:
+                            ctype = self.buildCvTerm( col[5] )
                             if ctype is not None:
                                 hostOrganism[0]["cellType"] = ctype
 
-                        if len(cols) > 6:
-                            compartnent = self.buildCvTerm( cols[6] )
+                        if len(col) > 6:
+                            compartnent = self.buildCvTerm( col[6] )
                             if compartnent is not None:
                                 hostOrganism[0]["compartnent"] = compartnent
 
-                        if len(cols) > 7:
-                            tissue = self.buildCvTerm( cols[7] )
+                        if len(col) > 7:
+                            tissue = self.buildCvTerm( col[7] )
                             if tissue is not None:
                                 hostOrganism[0]["tissue"] = tissue
 
                     #stoichiometry
-                    catt = { "value":"Stoichiometry: " + cols[3],
+                    catt = { "value":"Stoichiometry: " + col[3],
                              "name":"comment",
                              "nameAc":"MI:0612" }
                     participant.setdefault( "attribute", [] ).append(catt)                                                
-                            
+
+                    # seq target
+
+                    seqtgt = participant["interactor"]
+                    
                 elif ln.startswith("exprole"):
                     self.feature = False            
                     participant.setdefault("experimentalRole",[])
                     
-                    cols = ln.strip().split("\t")                    
-                    for role in cols[1:]:                                            
+                    for role in col[1:]:                                            
                         participant["experimentalRole"].append( self.buildCvTerm( role ) )
 
                 elif ln.startswith("expprep"):
                     self.feature = False            
                     participant.setdefault("experimentalPreparation",[])
                     
-                    cols = ln.strip().split("\t")                    
-                    for prep in cols[1:]:                                                
+                    for prep in col[1:]:                                                
                         participant["experimentalPreparation"].append( self.buildCvTerm( prep ) )
 
                 elif ln.startswith("biorole"):
                     self.feature = False            
                     participant.setdefault("biologicalRole",[])
                     
-                    cols = ln.split("\t")
-                    for role in cols[1:]:                    
+                    for role in col[1:]:                    
                         participant["biologicalRole"].append( self.buildCvTerm( role ) )
                         
                 elif ln.startswith("idmethod"):
 
-                    cols = ln.strip().split("\t")
+                    #cols = ln.strip().split("\t")
                                         
-                    if self.feature:
-                        mthCV = self.buildCvTerm( cols[1] )
+                    if self.feature:                        
+                        mthCV = self.buildCvTerm( col[1].strip() )
                         feature["featureDetectionMethod"] = mthCV
                     else:
                         participant.setdefault("participantIdentificationMethod",[])
-                        for mth in cols[1:]:
+                        for mth in col[1:]:
                             mthCV = self.buildCvTerm( mth )
                             participant["participantIdentificationMethod"].append( mthCV )
                                                 
@@ -387,18 +383,19 @@ class RecordBuilder():
                     feature = {}
                     participant.setdefault("feature",[]).append( feature )
 
-                    cols = ln.strip().split("\t")                
-                    feature["featureType"] = self.buildCvTerm( cols[1] )
+                    feature["featureType"] = self.buildCvTerm( col[1] )
 
-                    if len(cols) > 2:
+                    if len(col) > 2:
                         feature["names"] = {}
-                        feature["names"]["shortLabel"] = cols[2]
-                        if len(cols) > 3:
-                            feature["names"]["fullName"] = cols[3]
+                        feature["names"]["shortLabel"] = col[2]
+                        if len(col) > 3:
+                            feature["names"]["fullName"] = col[3]
                         else:
                             pass
                     else:
                         pass
+                    
+                    xtgt = feature
                     
                 elif ln.startswith("range"):
                     self.feature = True
@@ -407,9 +404,10 @@ class RecordBuilder():
                     frange = {}
                     feature["featureRange"].append(frange)
 
-                    cols = ln.strip().split("\t")
-                    rbegin = cols[1]
-                    rend = cols[2]
+                    seqtgt = frange
+
+                    rbegin = col[1]
+                    rend = col[2]
 
                     if '..' in rbegin:
                         frange["startStatus"] = self.buildCvTerm( "MI:0338" ) #range
@@ -417,8 +415,6 @@ class RecordBuilder():
                         frange["begin"]={"start": sbeg , "end": ebeg}
                         
                     elif rbegin in ['n','c']:
-                        #frange["begin"] = { "position": "0" }
-
                         if rbegin == 'n':
                             frange["beginStatus"] = self.buildCvTerm( "MI:0340" ) # n-term                            
                         else:
@@ -444,22 +440,21 @@ class RecordBuilder():
                         frange["end"]={ "position": rend }                                       
 
                 elif ln.startswith("xref"):
-                    cols = ln.strip().split("\t")
-                    print(cols)
-                    db = cols[1]
-                    acc = cols[2]
-                    if len(cols) > 3:
-                        xtype = cols[3]
+                    print(col)
+                    db = col[1]
+                    acc = col[2]
+                    if len(col) > 3:
+                        xtype = col[3]
                     else:
                         xtype = "identity"
 
-                    if len(cols) > 4:
-                        dbac = cols[4]
+                    if len(col) > 4:
+                        dbac = col[4]
                     else:
                         dbac = self.cvdict[db]
 
-                    if len(cols) > 5:
-                        xtypeac = cols[5]
+                    if len(col) > 5:
+                        xtypeac = col[5]
                     else:
                         xtypeac = self.cvdict[xtype]                    
                     
@@ -470,7 +465,7 @@ class RecordBuilder():
                         if len(ver) == 0:
                             ver = None
 
-                    if cols[0].endswith(".p"):
+                    if col[0].endswith(".p"):
                         xtgt = record["participant"]
                     
                     xref =  self.buildXref( acc, db=db, dbAc=dbac, version = ver,
@@ -487,18 +482,31 @@ class RecordBuilder():
                         xtgt["xref"]["secondaryRef"].append(xref)
                         
                 elif ln.startswith("figure"):                
-                    cols = ln.strip().split("\t")                    
-                    flabel = cols[1]
+                    flabel = col[1]
                     if "atrribute" not in interaction:
                         interaction["attribute"]= []
                     att = {"name":"figure legend", "nameAc":"MI:0599","value":flabel}
                     interaction["attribute"].append(att)
-                    
+
+                elif ln.startswith("seq"):                    
+                    seq = col[1].upper()
+                    if len(col) > 2:
+                        nseq = col[2].upper()           
+            
+                    if "startStatus" in seqtgt:  # seqtgt is range                    
+                        seqtgt["sequence"] = {}
+                        seqtgt["sequence"]["original"]=seq
+                        seqtgt["sequence"]["new"]=nseq
+                        
+                    else:
+                        seqtgt["sequence"] = seq
+                                            
                 elif ln.startswith("#"):
                     self.feature = False
                     interaction = None
                     participant = None
                     feature = None
                     frange = None
+                    seqtgt = None
                     
         return pymex.mif.Record( {"entrySet":{ "entry":[record] } } )
