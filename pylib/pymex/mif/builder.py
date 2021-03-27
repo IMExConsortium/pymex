@@ -351,13 +351,11 @@ class RecordBuilder():
                     for role in col[1:]:                                            
                         participant["experimentalRole"].append( self.buildCvTerm( role ) )
 
-                elif ln.startswith("expprep"):
+                elif ln.startswith("expprep"):                    
                     self.feature = False            
-                    participant.setdefault("experimentalPreparation",[])
-                    
+                    participant.setdefault("experimentalPreparation",[])                    
                     for prep in col[1:]:                                                
-                        participant["experimentalPreparation"].append( self.buildCvTerm( prep ) )
-
+                        participant["experimentalPreparation"].append( self.buildCvTerm( prep ) )                    
                 elif ln.startswith("biorole"):
                     self.feature = False            
                     participant.setdefault("biologicalRole",[])
@@ -365,10 +363,7 @@ class RecordBuilder():
                     for role in col[1:]:                    
                         participant["biologicalRole"].append( self.buildCvTerm( role ) )
                         
-                elif ln.startswith("idmethod"):
-
-                    #cols = ln.strip().split("\t")
-                                        
+                elif ln.startswith("idmethod"):                                        
                     if self.feature:                        
                         mthCV = self.buildCvTerm( col[1].strip() )
                         feature["featureDetectionMethod"] = mthCV
@@ -439,8 +434,7 @@ class RecordBuilder():
                         frange["endStatus"] = self.buildCvTerm( "MI:0335" ) # certain
                         frange["end"]={ "position": rend }                                       
 
-                elif ln.startswith("xref"):
-                    print(col)
+                elif ln.startswith("xref"):                    
                     db = col[1]
                     acc = col[2]
                     if len(col) > 3:
@@ -508,5 +502,5 @@ class RecordBuilder():
                     feature = None
                     frange = None
                     seqtgt = None
-                    
+
         return pymex.mif.Record( {"entrySet":{ "entry":[record] } } )
