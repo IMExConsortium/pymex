@@ -463,7 +463,7 @@ class Experiment(Names, Xref):
        
         self._pmeth = None
         if "participantIdentificationMethod" in self._experiment:
-            self._meth = self._experiment["participantIdentificationMethod"]
+            self._pmeth = self._experiment["participantIdentificationMethod"]
 
         self._fmeth = None
         if "featureIdentificationMethod" in self._experiment:
