@@ -411,9 +411,9 @@ class RecordBuilder():
                         
                     elif rbegin in ['n','c']:
                         if rbegin == 'n':
-                            frange["beginStatus"] = self.buildCvTerm( "MI:0340" ) # n-term                            
+                            frange["startStatus"] = self.buildCvTerm( "MI:1040" ) # n-term range                           
                         else:
-                            frange["beginStatus"] = self.buildCvTerm( "MI:0334" ) # c-term
+                            frange["startStatus"] = self.buildCvTerm( "MI:1039" ) # c-term range
                     else:
                         frange["startStatus"] = self.buildCvTerm( "MI:0335" ) # certain
                         frange["begin"]={ "position": rbegin }
@@ -427,9 +427,9 @@ class RecordBuilder():
                         #frange["end"]={ "position": "0" }
 
                         if rend == 'n':
-                            frange["endStatus"] = self.buildCvTerm( "MI:0340" ) # n-term                            
+                            frange["endStatus"] = self.buildCvTerm( "MI:1040" ) # n-term range                           
                         else:
-                            frange["endStatus"] = self.buildCvTerm( "MI:0334" ) # c-term
+                            frange["endStatus"] = self.buildCvTerm( "MI:1039" ) # c-term range
                     else:
                         frange["endStatus"] = self.buildCvTerm( "MI:0335" ) # certain
                         frange["end"]={ "position": rend }                                       
