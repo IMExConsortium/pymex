@@ -19,6 +19,7 @@ class RecordBuilder():
         self.cvtrec = {}
         self.taxrec = {}
         self.unirec = {}
+        self.ebirec = {}
 
         self.feature = False 
         
@@ -111,7 +112,10 @@ class RecordBuilder():
 
         return res
     
-    def taxon(self, taxid):
+    def taxon(self, taxid):  #  12234    1234:1234
+
+        (exptx,spctx) = (taxid.split(":") + [""])[0:2]
+        taxid = exptx
         
         if taxid in ["-1","in vitro"]:
             tax = {"lname":"in vitro","sname":"in vitro","taxid":"-1"}
@@ -144,7 +148,6 @@ class RecordBuilder():
         return self.taxrec[ taxid ]
         
     def uniprot(self, acc):
-
         if acc not in self.unirec:
             uprot = {}
         
@@ -180,6 +183,25 @@ class RecordBuilder():
             self.unirec[acc] = uprot
         
         return self.unirec[acc]
+
+
+    def ebi(self, acc, taxid ):
+        if acc not in self.unirec:
+            ebi = {}
+
+            ebi["acc"] = str( acc )
+            ebi["version"] = str( "" )
+            ebi["sname"] = str( "" ) 
+            
+            ebi["lname"] = str( "" ) 
+            ebi["taxid"] = str( taxid )
+                
+            self.ebirec[acc] = ebi
+
+            # db="intact" dbAc="MI:0469" 
+
+            
+        return self.ebirec[acc]
         
     def build( self, filename ):    
         
@@ -266,7 +288,8 @@ class RecordBuilder():
                     interaction.setdefault( "participant",[] ).append( participant )
 
                     # interactor 
-                    interactor = {}
+                    interactor = {"xref":{} }
+                    
                     participant["interactor"] = interactor 
                                                                                 
                     if col[2].startswith("uprot:"):
@@ -274,20 +297,28 @@ class RecordBuilder():
                         irec = self.uniprot( acc.replace("uprot:","") )
                         if len(ver) > 0:
                             irec["version"] = ver
+
+                        interactor["xref"]["primaryRef"] = self.buildXref( irec["acc"],
+                                                                           db="uniprotkb",
+                                                                           dbAc= "MI:0486" )                            
+                    elif col[2].startswith("ebi:"):
+                        (acc,ver) = (col[2].split(".") + [""])[0:2]
+                        (exptx,spctx) = (col[4].split(":") + [""])[0:2]
+                                                
+                        irec = self.ebi( acc.replace("ebi:",""), spctx )
+                        if len(ver) > 0:
+                            irec["version"] = ver
+
+                        interactor["xref"]["primaryRef"] = self.buildXref( irec["acc"],
+                                                                           db="intact",
+                                                                           dbAc= "MI:0469" )                        
                     else:
                         pass                   
                     
                     # interactor names
-                    
-                    interactor["names"] = { "shortLabel":irec["sname"].lower(),
-                                            "fullName":irec["lname"] }
-                    
-                    # interactor primary ref
-                    xref = {}
-                    interactor.setdefault("xref",xref) 
-                    xref["primaryRef"] = self.buildXref( irec["acc"],
-                                                         db="uniprotkb",
-                                                         dbAc= "MI:0486" )
+                    if irec:
+                        interactor["names"] = { "shortLabel":irec["sname"].lower(),
+                                                "fullName":irec["lname"] }                                                            
                     
                     #interactor type
                     interactor["interactorType"] = self.buildCvTerm( col[1] )
