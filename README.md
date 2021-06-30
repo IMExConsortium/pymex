@@ -8,6 +8,7 @@ and construction of PSI-MI endorsed interaction data files.
 * ``pymex.pypsiq`` - PSICQUC server access.
 
 ## Quick Start
+```
     from lxml import etree as ET
     import pymex.mif
 
@@ -25,7 +26,7 @@ and construction of PSI-MI endorsed interaction data files.
     
     recDom = rec.toMif( 'mif300' )
     print( ET.tostring(recDom,pretty_print=True).decode("utf-8") )
-
+```
 ### Further details: [Pymex Wiki](https://github.com/IMExConsortium/pymex/wiki)
 
 
