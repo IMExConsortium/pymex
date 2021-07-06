@@ -9,7 +9,7 @@ import pymex
 
 class RecordBuilder():
 
-    def __init__(self,debug=False):
+    def __init__(self,cvpath, debug=False):
         self.debug = debug
         self.oboUrl = 'https://www.ebi.ac.uk/ols/api/ontologies/%CVT%/terms?iri=http://purl.obolibrary.org/obo/'
         self.taxUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&retmode=xml&id='
@@ -32,11 +32,15 @@ class RecordBuilder():
         srcpath = os.path.join( self.pdir,'jmif-source.jmif' )
         self.template["source"] = json.load( open( srcpath, 'r' ) )["source"]
 
-        cvtpath = os.path.join( self.pdir,'jmif-cvterm.jmif' )
+        if len(cvpath) == 0:
+            cvtpath = os.path.join( self.pdir,'jmif-cvterm.jmif' )
+        else:
+            cvtpath = cvpath
+            
         self.cvdict = json.load( open( cvtpath, 'r' ) )
 
     def cvterm( self, cvid ):
-        
+        icvid = cvid
         cvmatch = self.cvreg.match( cvid )
         if cvmatch:
             cvid = cvmatch.group(1)
@@ -52,41 +56,57 @@ class RecordBuilder():
         if cvlabel is not None:
             term = {"label" : cvlabel }
             return term
-        
-        if cvid not in self.cvtrec:
+        print(cvid)
+        print("---")
+        if isinstance(cvid, str):
+            if cvid not in self.cvtrec:
+                print("s")
+                #fetch term from OLS
 
-            #fetch term from OLS
-
-            cvc = cvid.split(":")
+                cvc = cvid.split(":")
             
-            cvurl = self.oboUrl.replace("%CVT%",cvc[0].lower()) + cvid.replace(':','_')            
-            jcv = json.load( urlopen( cvurl ) )
+                cvurl = self.oboUrl.replace("%CVT%",cvc[0].lower()) + cvid.replace(':','_')            
+                jcv = json.load( urlopen( cvurl ) )
             
-            term = {}
-            term['label'] = jcv['_embedded']['terms'][0]['label']
+                term = {}
+                term['label'] = jcv['_embedded']['terms'][0]['label']
             
-            if "description" in jcv['_embedded']['terms'][0]:
-                 term['def'] = jcv['_embedded']['terms'][0]["description"]
+                if "description" in jcv['_embedded']['terms'][0]:
+                    term['def'] = jcv['_embedded']['terms'][0]["description"]
                  
-            elif "definition" in jcv['_embedded']['terms'][0]['annotation']:
-                term['def'] = jcv['_embedded']['terms'][0]['annotation']['definition'][0]
+                elif "definition" in jcv['_embedded']['terms'][0]['annotation']:
+                    term['def'] = jcv['_embedded']['terms'][0]['annotation']['definition'][0]
                 
-            term['id'] = jcv['_embedded']['terms'][0]['obo_id']
+                term['id'] = jcv['_embedded']['terms'][0]['obo_id']
 
-            try:
-                term["dbac"]=self.cvdict[cvc[0].lower()]["dbac"]
-                term["db"]=self.cvdict[cvc[0].lower()]["db"]
-            except:
-                term["dbac"]=None
-                term["db"]=None
-            self.cvtrec[ term['id'] ] = term 
-        
+                try:
+                    term["dbac"]=self.cvdict[cvc[0].lower()]["dbac"]
+                    term["db"]=self.cvdict[cvc[0].lower()]["db"]
+                except:
+                    term["dbac"]=None
+                    term["db"]=None
+                self.cvtrec[ term['id'] ] = term 
+                
+        if isinstance(cvid, dict):
+            if icvid not in self.cvtrec:
+                print( "d")
+                term = {}
+                term["id"]=cvid['id']
+                term["db"]=cvid['db']
+                term["dbac"]=cvid['dbac']                
+                term["label"]=icvid
+                self.cvtrec[ icvid ] = term 
+
+                #<primaryRef db="cabri" dbAc="MI:0246" id="ICLC HTL04001" refType="identity" refTypeAc="MI:0356"/>
+
+                
+            return self.cvtrec[icvid]
+                
         return self.cvtrec[cvid]
 
     def buildCvTerm( self, cvid ):
         
-        term = self.cvterm( cvid )
-
+        term = self.cvterm( cvid )    
         res = { "names": { "shortLabel": term["label"] } }
 
         if "id" in term:

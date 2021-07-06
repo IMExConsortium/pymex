@@ -39,6 +39,7 @@
  "emdb":"MI:0936",
  "bto":{"dbac":"MI:0473","db":"brenda"},
  "mi":{"dbac":"MI:0488","db":"psi-mi"},
+ "293T":{"id":"ICLC HTL04001", "db":"cabri","dbac":"MI:0246"},
  "cpx":"MI:2279",
  "go":"MI:0448",
  "pubmed":"MI:0446",

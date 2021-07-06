@@ -27,6 +27,10 @@ parser.add_argument( '--output-format', '-of',  dest="oformat", type=str, requir
                      default='jmif', choices=['mif254', 'mif300','jmif'],
                      help='Output format [default: jmif].')
 
+parser.add_argument( '--cvdef', '-c',  dest="cvpath", type=str, required=False,
+                     default='', 
+                     help='Custom cv term definition file location.')
+
 #spyder hack: add '-i' option only if present (as added by spyder)
 if '-i' in sys.argv:
     parser.add_argument( '-i',  dest="i", type=str, required=False, default=None) 
@@ -34,7 +38,7 @@ if '-i' in sys.argv:
 
 args = parser.parse_args()
 
-rb = pymex.mif.RecordBuilder()
+rb = pymex.mif.RecordBuilder( args.cvpath )
 
 record = rb.build( args.source)
 
