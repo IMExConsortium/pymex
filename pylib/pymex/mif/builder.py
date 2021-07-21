@@ -17,6 +17,18 @@ class RecordBuilder():
         self.uniUrl = 'https://www.uniprot.org/uniprot/'
         self.cvreg = re.compile("([^:]+:\d+)(\(.+\))?")
         self.cvtrec = {}
+        self.cdpthDict = { "IMEx":[{ "value": "imex curation",
+                                     "name": "curation depth",
+                                     "nameAc": "MI:0955" },
+                                   { "name": "imex curation",
+                                     "nameAc": "MI:0959"
+                                   }],
+                           "MIMIx":[ { "value": "mimix curation",
+                                       "name": "curation depth",
+                                       "nameAc": "MI:0955" },
+                                     { "name": "mimix curation",
+                                       "nameAc": "MI:0960"
+                                     }] }
         self.taxrec = {}
         self.unirec = {}
         self.ebirec = {}
@@ -56,11 +68,11 @@ class RecordBuilder():
         if cvlabel is not None:
             term = {"label" : cvlabel }
             return term
-        print(cvid)
-        print("---")
+        #print(cvid)
+        #print("---")
         if isinstance(cvid, str):
             if cvid not in self.cvtrec:
-                print("s")
+                #print("s")
                 #fetch term from OLS
 
                 cvc = cvid.split(":")
@@ -88,8 +100,7 @@ class RecordBuilder():
                 self.cvtrec[ term['id'] ] = term 
                 
         if isinstance(cvid, dict):
-            if icvid not in self.cvtrec:
-                print( "d")
+            if icvid not in self.cvtrec:            
                 term = {}
                 term["id"]=cvid['id']
                 term["db"]=cvid['db']
@@ -227,6 +238,8 @@ class RecordBuilder():
         
         record = {}
         source = None
+        econt = None
+        cdpth = None
         interaction = None
         interactor = None
         participant = None
@@ -235,6 +248,7 @@ class RecordBuilder():
         xtgt = None
         seqtgt = None
         bibref = None
+        
 
         with open( filename, 'r' ) as sf:
             for ln in sf:
@@ -250,6 +264,16 @@ class RecordBuilder():
                         record["source"] =  self.template["source"][src]
                     xtgt = record["source"]
 
+                elif ln.startswith("email"):
+                    econt = col[1]
+                    
+                elif ln.startswith("depth"):
+                    cdpth = col[1]
+                    if cdpth in self.cdpthDict:
+                        cdpth = self.cdpthDict[cdpth]
+                    else:
+                        cdpth = None
+                        
                 elif ln.startswith("pmid"):
                     pmid = col[1]
                     pref = self.buildXref( pmid, db="pubmed", dbAc="MI:0446",
@@ -285,7 +309,7 @@ class RecordBuilder():
                             "shortLabel": ctax["sname"],
                             "fullName": ctax["lname"] },
                         "ncbiTaxId": ctax["taxid"] } )
-                    
+                   
                     if len(col) > 4:
                         ctype = self.buildCvTerm( col[4] )
                         if ctype is not None:
@@ -301,7 +325,21 @@ class RecordBuilder():
                         if tissue is not None:
                             interaction["experiment"][0]["hostOrganism"][0]["tissue"] = tissue
                         
-                    xtgt = interaction    
+                    xtgt = interaction
+
+                    if econt is not None or cdpth is not None:
+                        interaction["experiment"][0]["attribute"] = []
+
+                        if econt is not None:                        
+                            interaction["experiment"][0]["attribute"].append(
+                                { "name":"contact-email",
+                                  "nameAc":"MI:0634",
+                                  "value":econt } )
+
+                        if cdpth is not None:
+                            for a in cdpth:
+                                interaction["experiment"][0]["attribute"].append(a)
+                                                    
                 elif ln.startswith("molecule"):
                     self.feature = False
                     participant = {}
