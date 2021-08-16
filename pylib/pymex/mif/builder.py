@@ -188,7 +188,7 @@ class RecordBuilder():
             accpath = "/up:uniprot/up:entry/up:accession/text()"
             verpath = "/up:uniprot/up:entry/@version"
             snamepath = "/up:uniprot/up:entry/up:name/text()"
-            lnamepath = "/up:uniprot/up:entry/up:protein/?/up:fullName/text()"
+            lnamepath = "/up:uniprot/up:entry/up:protein/*/up:fullName/text()"
             taxpath = "/up:uniprot/up:entry/up:organism/up:dbReference[./@type='NCBI Taxonomy']/@id"
             record = etree.parse( urlopen( uniurl ) )
         
@@ -278,6 +278,12 @@ class RecordBuilder():
                 elif ln.startswith("pmid"):
                     pmid = col[1]
                     pref = self.buildXref( pmid, db="pubmed", dbAc="MI:0446",
+                                           refType="primary-reference", refTypeAc="MI:0358" )    
+                    bibref = {"xref":{"primaryRef": pref}}
+
+                elif ln.startswith("doi"):
+                    pmid = col[1]
+                    pref = self.buildXref( pmid, db="doi", dbAc="MI:0574",
                                            refType="primary-reference", refTypeAc="MI:0358" )    
                     bibref = {"xref":{"primaryRef": pref}}
                     
