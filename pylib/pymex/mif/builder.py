@@ -117,7 +117,8 @@ class RecordBuilder():
 
     def buildCvTerm( self, cvid ):
         
-        term = self.cvterm( cvid )    
+        term = self.cvterm( cvid )
+        
         res = { "names": { "shortLabel": term["label"] } }
 
         if "id" in term:
@@ -187,7 +188,7 @@ class RecordBuilder():
             accpath = "/up:uniprot/up:entry/up:accession/text()"
             verpath = "/up:uniprot/up:entry/@version"
             snamepath = "/up:uniprot/up:entry/up:name/text()"
-            lnamepath = "/up:uniprot/up:entry/up:protein/up:recommendedName/up:fullName/text()"
+            lnamepath = "/up:uniprot/up:entry/up:protein/?/up:fullName/text()"
             taxpath = "/up:uniprot/up:entry/up:organism/up:dbReference[./@type='NCBI Taxonomy']/@id"
             record = etree.parse( urlopen( uniurl ) )
         
@@ -443,7 +444,7 @@ class RecordBuilder():
                 elif ln.startswith("expprep"):                    
                     self.feature = False            
                     participant.setdefault("experimentalPreparation",[])                    
-                    for prep in col[1:]:                                                
+                    for prep in col[1:]:                        
                         participant["experimentalPreparation"].append( self.buildCvTerm( prep ) )                    
                 elif ln.startswith("biorole"):
                     self.feature = False            
