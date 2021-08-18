@@ -20,11 +20,11 @@ setuptools.setup( name="pymex",
                   long_description_content_type='text/markdown',
                   url="https://github.com/IMExConsortium/pymex",
                   download_url = 'https://github.com/IMExConsortium/pymex/archive/'+str(version)+'.tar.gz',
-                  package_dir={'': 'pylib'},                
+                  package_dir={"": "pylib"},                
                   package_data={
-                          'pymex': ['mif/*.json', 'mif/*.jmif','mif/*.xsd'],
-                  },
-                  include_package_data=True,
+                          "": ["*.json", "*.jmif","*.xsd"],
+                          "pymex": ["*.json", "*.jmif","*.xsd"]
+                  },                  
                   packages=setuptools.find_packages(where="pylib",include=['pymex', 'pymex.*']),
                   classifiers=[
                           "Programming Language :: Python :: 3",

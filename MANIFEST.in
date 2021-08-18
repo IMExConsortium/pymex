@@ -1,1 +1,2 @@
-include pylib/pymex/*.xsd pylib/pymex/VERSION
+include  pylib/pymex/VERSION 
+ 
