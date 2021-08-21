@@ -1,16 +1,15 @@
 {
     "@NS":"http://psi.hupo.org/mi/mif300",
-    
-    "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id", "reference":null, "wrapper": false } },
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id", "reference":null, "wrapper": false, "postprocess":null} },
     "entry":{"*":{"store":"list"}},
 
     "shortLabel":{"*":{"complex":false}},
     "fullName":{"*":{"complex":false}},
 
     "alias":{"*":{"store":"list"}},
-    
+    "stoichiometry":{"*":{"postprocess":"Record.stoichconvert(self,dom,ver, parentElem, elem)"}},
     "secondaryRef": {"*": {"store":"list"}},
-    
     "attributeList":{"*":{"wrapper":true}},
     "attribute":{"*":{"store":"list","name":"attribute"}},
 
@@ -21,7 +20,7 @@
     "experimentList":{"*":{"wrapper":true}},
     "experimentDescription":{"entry":{"store":"index","ikey":"@id","name":"experimentList"},
                 			     "*":{"store":"list","name":"experiment"}},
-    
+
     "experimentRef":{"interaction":{"reference":"/entrySet/entry/experimentList",
 				    "store":"list",
 				    "name":"experiment"},
@@ -29,33 +28,33 @@
 				  "store":"list",
 				  "name":"experiment"}
 		    },
-    
+
     "confidenceList":{"*":{"wrapper":true}},
     "confidence":{"*":{"store":"list"} },
-    
+
     "value":{"*":{"complex":false}},
 
     "attributeList":{"*":{"wrapper":true}},
-		      
+
     "interactorList":{"*":{"wrapper": true} },
-    
+
     "interactor":{ "participant": { "store":"direct"},
-		   "*":{"store":"index", "ikey":"@id", "name":"interactorList"}},		  
+		   "*":{"store":"index", "ikey":"@id", "name":"interactorList"}},
 
     "interactorRef":{"*":{"reference": "/entrySet/entry/interactorList", "name":"interactor"} },
 
-    "interactorType":{"*":{"store":"direct"}},     
-    "evidenceType":{"*":{"store":"direct"}}, 
-    
+    "interactorType":{"*":{"store":"direct"}},
+    "evidenceType":{"*":{"store":"direct"}},
+
     "sequence":{"*":{"complex":false}},
-		      
+
     "interactionList":{"*":{"wrapper": true} },
     "interaction":{"*":{"store":"list"}},
     "abstractInteraction":{"*":{"store":"list"}},
 
     "participantList":{"*":{"wrapper": true} },
     "participant":{"*":{"store":"list"}},
-    
+
     "interactionType":{"interaction":{"store":"list"},
 		       "abstractInteraction":{"store":"direct"}
 		      },
@@ -70,7 +69,7 @@
 
     "experimentalRoleList":{"*":{"wrapper":true}},
     "experimentalRole":{"*":{"store":"list"}},
-    
+
     "experimentalPreparationList":{"*":{"wrapper":true}},
     "experimentalPreparation":{"*":{"store":"list"}},
 
@@ -79,9 +78,9 @@
 
     "featureRangeList":{"*":{"wrapper":true}},
     "featureRange":{"*":{"store":"list"}},
-    
+
     "bindingFeatureList":{"*":{"wrapper":true}},
     "bindingFeatures":{"*":{"store":"list"}},
     "participantFeatureRef":{"*":{"store":"list","complex":false}}
-    
+
 }
