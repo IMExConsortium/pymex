@@ -27,3 +27,6 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
 
         res = self.parseXml( urlopen(upUrl ))
         return( res )
+
+    def addFeatureEvidence(self, parameter1, parameter2):
+        return
