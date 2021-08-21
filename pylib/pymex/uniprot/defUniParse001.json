@@ -1,0 +1,42 @@
+{
+    "@NS":"http://uniprot.org/uniprot",
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id",
+		"reference":null, "wrapper": false } },
+    "entry":{"*":{"store":"list"}},
+    "accession":{"*":{"store":"list","complex":false}},
+    "name":{"entry":{"complex":false},
+	    "gene":{"wrapper":false,"store":"list"},
+	    "organism":{"wrapper":false,"store":"list"},
+	    "*":{}},
+   
+    "protein":{"*":{"wraper":false, "name":"protein"} },
+    "recommendedName":{"protein":{"wrapper":true},"*":{}},
+    "alternativeName":{"protein":{"wrapper":true},"*":{}},
+    
+    "fullName":{"protein":{"wrapper":false,"name":"name","complex":true,"store":"list"},
+		"*":{}},
+
+    "gene":{"*":{"wrapper":false}},
+    "lineage":{"*":{"wrapper":true}},
+   
+    "taxon":{"organism":{"store":"list","complex":false,"name":"lineage"},"*":{}},
+    
+    "reference":{"entry":{"store":"list"},"*":{}},
+    
+    "authorList":{"*":{"wrapper":true}},
+    "person":{"citation":{"store":"list","name":"author"}},
+    "dbReference":{"entry":{"store":"list"},
+		   "citation":{"store":"list"},
+		   "*":{"store":"list"}},
+    "scope":{"*":{"complex":false}},
+
+    "comment":{"entry":{"store":"list"},"*":{}},
+    "source":{"entry":{"store":"list"},"*":{}},
+    "property":{"dbReference":{"store":"list"},"*":{}},
+    "isoform":{"*":{"store":"list"}},
+    "event":{"*":{"store":"list"}},
+    "evidence":{"*":{"store":"list"}},
+    "feature":{"*":{"store":"list"}}
+    
+}
