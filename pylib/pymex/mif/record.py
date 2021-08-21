@@ -70,7 +70,7 @@ class Record(xmlrecord.XmlRecord):
                 elem = x
                 eval(self.postprocess[x][0])
 
-        print("testing to se")
+        
         print("length of self.postprocess: " + str(len(self.postprocess)))
 
         return dom
