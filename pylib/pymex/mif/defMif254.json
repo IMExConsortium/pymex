@@ -3,23 +3,23 @@
 					       "level":"2", "version":"5", "minorVersion":"4" }},
     "@NS":{ "*":"http://psi.hupo.org/mi/mif",
            "xsi":"http://www.w3.org/2001/XMLSchema-instance"},
-    
-    "ExpandedEntrySet": [{"value":"entry", "type":"expandedEntry","name":"entry"}],	      
-    "CompactEntrySet": [{"value":"entry", "type":"compactEntry","name":"entry"}],	      
-    
+
+    "ExpandedEntrySet": [{"value":"entry", "type":"expandedEntry","name":"entry"}],
+    "CompactEntrySet": [{"value":"entry", "type":"compactEntry","name":"entry"}],
+
     "expandedEntry":[ {"value":"source", "type":"source"},
 		      {"value":"availability", "type":"availability", "wrap":"availabilityList"},
 		      {"type":"interactionList","name":"interactionList","wrap":"interactionList"},
 		      {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}
 		    ],
-  
+
     "source":[ {"value":"names", "type":"names"},
 	       {"value":"bibref", "type":"bibref"},
 	       {"value":"xref", "type":"xref"},
 	       {"type":"attributeList","name":"attributeList","wrap":"attributeList"},
 	       {"value":"releaseDate","name":"@releaseDate","type":"$TEXT"}
 	     ],
-  
+
     "experimentDescription":[ {"value":"names", "type":"names"},
 			      {"value":"bibref", "type":"bibref"},
 			      {"value":"xref", "type":"xref"},
@@ -33,7 +33,7 @@
 			       "wrap":"attributeList"},
                               {"value":"$UID", "type":"$TEXT", "name":"@id"}
 			    ],
-    
+
     "interactor":[ {"value":"names", "type":"names"},
 		   {"value":"xref", "type":"xref"},
 		   {"value":"interactorType", "type":"cvterm"},
@@ -43,15 +43,15 @@
 		    "wrap":"attributeList"},
 		   {"value":"$UID", "type":"$TEXT", "name":"@id"}
 		 ],
-    
+
     "organism":[ {"value":"names", "type":"names"},
 		 {"value":"cellType", "type":"cvterm"},
 		 {"value":"compartment", "type":"cvterm"},
 		 {"value":"tissue", "type":"cvterm"},
 		 {"value":"ncbiTaxId", "type":"$TEXT", "name":"@ncbiTaxId"}],
-    
+
     "interactionList":[{"value":"interaction", "name":"interaction","type":"interaction" }],
-    
+
     "interaction":[ {"value":"names", "type":"names"},
 		    {"value":"xref", "type":"xref"},
 		    {"value":"availability", "type":"availability",
@@ -71,14 +71,14 @@
 		    {"value":"attribute", "type":"attribute",
 		     "name":"attribute","wrap":"attributeList"},
 		    {"value":"imexId", "type":"$TEXT", "name":"@imexId"},
-		    {"value":"$UID", "type":"$TEXT", "name":"@id"}		    
+		    {"value":"$UID", "type":"$TEXT", "name":"@id"}
 		  ],
-    
+
     "participant":[ {"value":"names", "type":"names"},
 		    {"value":"xref", "type":"xref"},
 		    {"value":"interactor", "type":"interactor"},
 		    {"value":"participantIdentificationMethod", "type":"cvterm",
-		     "wrap":"participantIdentificationMethodList"},		     
+		     "wrap":"participantIdentificationMethodList"},
 		    {"value":"biologicalRole", "type":"cvterm"},
 		    {"value":"experimentalRole", "type":"cvterm", "name":"experimentalRole",
 		     "wrap":"experimentalRoleList"},
@@ -88,13 +88,15 @@
 		     "wrap":"experimentalInteractorList"},
 		    {"value":"feature", "type":"feature", "wrap":"featureList", "name":"feature"},
 		    {"value":"hostOrganism", "type":"organism", "wrap":"hostOrganismList"},
-		    {"value":"confidence", "type":"confidence","wrap":"confidenceList"},		 
+		    {"value":"confidence", "type":"confidence","wrap":"confidenceList"},
 		    {"value":"parameterList", "type":"parameter","wrap":"parameterList"},
-		    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"},
+		    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList", "postprocess":"post value"},
 		    {"value":"$UID", "type":"$TEXT", "name":"@id"}
 		  ],
-    
-    
+
+      
+
+
     "parameter": [ {"value":"experimentRef", "type":"$TEXT"},
 		   {"value":"term", "type":"$TEXT","name":"@term"},
 		   {"value":"termAc", "type":"$TEXT","name":"@termAc"},
@@ -105,17 +107,17 @@
 		   {"value":"factor", "type":"$TEXT","name":"@factor"},
 		   {"value":"uncertainty", "type":"$TEXT","name":"@uncertainty"}
 		 ],
-    
+
     "feature": [ {"value":"names", "type":"names"},
 		 {"value":"xref", "type":"xref"},
 		 {"value":"featureType", "type":"cvterm"},
 		 {"value":"featureDetectionMethod", "type":"cvterm"},
-		 {"value":"experimentRef", "type":"$TEXT"},		
+		 {"value":"experimentRef", "type":"$TEXT"},
 		 {"value":"featureRange", "type":"frange","wrap":"featureRangeList","name":"featureRange"},
 		 {"value":"attributeList", "type":"attribute","name":"attribute","wrap":"attributeList"},
 		 {"value":"$UID", "type":"$TEXT", "name":"@id"}
 	       ],
-    
+
     "frange": [ {"value":"startStatus", "type":"cvterm"},
 		{"value":"begin", "type":"position"},
 		{"value":"beginInterval", "type":"position"},
@@ -124,39 +126,39 @@
 		{"value":"endInterval", "type":"position"},
 		{"value":"isLink","type":"$TEXT"}
 	      ],
-    
+
     "position": [ {"value":"position", "type":"$TEXT","name":"@position"},
 		  {"value":"begin", "type":"$TEXT","name":"@begin"},
 		  {"value":"end", "type":"$TEXT","name":"@end"}
 		],
-    
+
     "cvterm": [ {"value":"names", "type":"names"},
 		{"value":"xref", "type":"xref"}
-	      ],  
-    
+	      ],
+
     "attributeList":[{"value":"attribute","name":"attribute","type":"attribute"}],
-    
+
     "names":[ {"value":"shortLabel", "type":"$TEXT"},
 	      {"value":"fullName", "type":"$TEXT"},
 	      {"value":"alias", "type":"alias","name":"alias"}
 	    ],
-    
+
     "alias": [ {"value":"typeAc", "name":"@typeAc", "type":"$TEXT"},
 	       {"value":"type", "name":"@type", "type":"$TEXT"},
 	       {"value":"value", "name":"@TEXT", "type":"$TEXT"}],
-    
+
     "attribute": [ {"value":"name", "name":"@name", "type":"$TEXT"},
 		   {"value":"nameAc", "name":"@nameAc", "type":"$TEXT"},
 		   {"value":"value", "name":"@TEXT", "type":"$TEXT"}],
-    
+
     "bibref":[ {"value":"xref", "type":"xref"},
 	       {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList"}
 	     ],
-    
+
     "xref":[ {"value":"primaryRef", "type":"ref"},
 	     {"value":"secondaryRef", "type":"ref"}
 	   ],
-    
+
     "ref": [ {"value":"id","name":"@id","type":"$TEXT"},
 	     {"value":"db","name":"@db","type":"$TEXT"},
 	     {"value":"dbAc","name":"@dbAc","type":"$TEXT"},
@@ -164,12 +166,12 @@
 	     {"value":"refType","name":"@refType","type":"$TEXT"},
 	     {"value":"refTypeAc","name":"@refTypeAc","type":"$TEXT"}
 	   ],
-    
+
     "availability":[ {"value":"availability", "name":"@TEXT", "type":"$TEXT"},
 		     {"value":"$UID", "type":"$TEXT", "name":"@id" }
 		   ],
 	 "confidence":[{"value":"unit", "name":"unit", "type":"cvterm"},
                 	 {"value":"value","name":"value","type":"$TEXT"}]
-	 	   
-		     
+
+
 }

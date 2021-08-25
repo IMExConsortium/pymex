@@ -31,7 +31,10 @@ class XmlRecord():
             self.root = {}
 
         self.config = {}
+        #postprocess dictionary structure:
+        #{current element : [function call, parent of current element]}
         self.postprocess = {}
+        self.recordTree = None
         self.version = None
         if config is not None:
 
@@ -58,6 +61,15 @@ class XmlRecord():
                     self.config[ver]["OUT"]["@NS"].pop("*", None)
                     self.config[ver]["OUT"]["@NS"][None] = defns
 
+    def parseXml2(self, ver, debug=False):
+        template = self.config[ver]["IN"]
+
+        #adding version of inputted xml file to metadata
+        self.version = ver
+        rootElem = self.recordTree.getroot()
+        self.genericParse( template, ver, self.root, [] , rootElem, debug )
+        return self
+
     def parseXml(self, filename, ver, debug=False):
 
         #dictionary representation of json file
@@ -69,7 +81,7 @@ class XmlRecord():
         #tree data structure from etree; holds the parsed data from passed in xml file.
         #returns elementTree object
         #documentobject structure
-        recordTree = ET.parse( filename )
+        self.recordTree = ET.parse( filename )
         #find stoichiometry elements if 254:
         print(ver)
         #if (ver == "mif254"):
@@ -78,7 +90,7 @@ class XmlRecord():
         #root.tag, root.attrib
         #for child in root iterates over children of the root.
         #TODO: test this out with xml file to determine exactly how it works - what constitutes a "child" in the context of these xml files
-        rootElem = recordTree.getroot()
+        rootElem = self.recordTree.getroot()
         #template describes what to expect
         self.genericParse( template, ver, self.root, [] , rootElem, debug )
         return self
@@ -146,10 +158,10 @@ class XmlRecord():
         #postprocessing specifications
         #must happen before wrapper check since postprocess elements may be wrappers
         if "postprocess" in ctempl and ctempl["postprocess"] is not None:
-            print("postprocess inside JSON")
-            #functionName : [current element, parent of current element]
+            #print("postprocess inside JSON")
+            #current element : [function call, parent of current element]
             self.postprocess[elem] = [ctempl["postprocess"], elem.getparent()]
-            print(self.postprocess)
+            #print(self.postprocess)
 
 
         # find wrap flag
@@ -495,6 +507,7 @@ class XmlRecord():
                 for chld in chldLst:
                     #appending to an ET.element, must be of element type
                     dom.append( chld )
+            #postprocess
 
         #updating postprocess to contain new participants, constructed in dom
         print("testtestetsts")
@@ -566,6 +579,8 @@ class XmlRecord():
                                 for wcd in wclLst:
                                     chldElem.append(wcd)
 
+
+
             if not empty:
                 #print("WRAP ELEM")
                 #print(wrapElem)
@@ -574,6 +589,10 @@ class XmlRecord():
             else:
                 return None
 
+        print(cdef.keys())
+        if "postprocess" in cdef:
+            print(cdef["postprocess"])
+            print(cdata.keys())        
 
 
         if cdef["value"] =="$UID": #  generate next id
@@ -591,6 +610,7 @@ class XmlRecord():
             #print(elemName)
         else:              # otherwise use the name of record field
             elemName = cdef["value"]
+
 
 
 
@@ -656,7 +676,7 @@ class XmlRecord():
                     retLst.append( chldElem )
 
         if wrapElem is not None and len(elemData) > 0:
-            print("FINAL TEXT")
+            #print("FINAL TEXT")
             #print(ET.tostring(wrapElem, pretty_print=True).decode("utf-8"))
             return [wrapElem]
 

@@ -1,0 +1,397 @@
+{
+  "entrySet": {
+    "{http://www.w3.org/2001/XMLSchema-instance}schemaLocation": "http://psi.hupo.org/mi/mif300 https://raw.githubusercontent.com/HUPO-PSI/miXML/master/3.0/src/MIF300.xsd",
+    "level": "3",
+    "version": "0",
+    "minorVersion": "0",
+    "entry": [
+      {
+        "source": {
+          "names": {
+            "shortLabel": "DIP",
+            "fullName": "Database of Interacting Proteins"
+          },
+          "xref": {
+            "primaryRef": {
+              "id": "MI:0465",
+              "db": "psi-mi",
+              "dbAc": "MI:0488",
+              "refType": "identity",
+              "refTypeAc": "MI:0356"
+            },
+            "secondaryRef": [
+              {
+                "id": "14681454",
+                "db": "pubmed",
+                "dbAc": "MI:0446",
+                "refType": "primary-reference",
+                "refTypeAc": "MI:0358"
+              }
+            ]
+          }
+        },
+        "interaction": [
+          {
+            "id": "8",
+            "names": {
+              "shortLabel": "N/A"
+            },
+            "experiment": [
+              {
+                "id": "2",
+                "names": {
+                  "shortLabel": "N/A"
+                },
+                "bibref": {
+                  "xref": {
+                    "primaryRef": {
+                      "id": "23637410",
+                      "db": "pubmed",
+                      "dbAc": "MI:0446",
+                      "refType": "primary-reference",
+                      "refTypeAc": "MI:0358"
+                    }
+                  }
+                },
+                "hostOrganism": [
+                  {
+                    "ncbiTaxId": "9606",
+                    "names": {
+                      "shortLabel": "man",
+                      "fullName": "Homo sapiens"
+                    }
+                  }
+                ],
+                "interactionDetectionMethod": {
+                  "names": {
+                    "shortLabel": "confocal microscopy"
+                  },
+                  "xref": {
+                    "primaryRef": {
+                      "id": "MI:0663",
+                      "db": "psi-mi",
+                      "dbAc": "MI:0488",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  }
+                },
+                "participantIdentificationMethod": {
+                  "names": {
+                    "shortLabel": "experimental participant identification"
+                  },
+                  "xref": {
+                    "primaryRef": {
+                      "id": "MI:0661",
+                      "db": "psi-mi",
+                      "dbAc": "MI:0488",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  }
+                }
+              }
+            ],
+            "participant": [
+              {
+                "id": "5",
+                "names": {
+                  "shortLabel": "ncap_ibvb"
+                },
+                "interactor": {
+                  "id": "3",
+                  "names": {
+                    "shortLabel": "ncap_ibvb",
+                    "fullName": "Nucleoprotein"
+                  },
+                  "xref": {
+                    "primaryRef": {
+                      "id": "P69596",
+                      "db": "uniprotkb",
+                      "dbAc": "MI:0486",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  },
+                  "interactorType": {
+                    "names": {
+                      "shortLabel": "protein"
+                    },
+                    "xref": {
+                      "primaryRef": {
+                        "id": "MI:0326",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  },
+                  "organism": [
+                    {
+                      "ncbiTaxId": "11122",
+                      "names": {
+                        "shortLabel": "Avian infectious bronchitis virus (strain Beaudette)",
+                        "fullName": "Avian infectious bronchitis virus (strain Beaudette)"
+                      }
+                    }
+                  ]
+                },
+                "participantIdentificationMethodList": {
+                  "participantIdentificationMethod": {
+                    "names": {
+                      "shortLabel": "predetermined participant"
+                    },
+                    "xref": {
+                      "primaryRef": {
+                        "id": "MI:0396",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  }
+                },
+                "biologicalRole": {
+                  "names": {
+                    "shortLabel": "unspecified role"
+                  },
+                  "xref": {
+                    "primaryRef": {
+                      "id": "MI:0499",
+                      "db": "psi-mi",
+                      "dbAc": "MI:0488",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  }
+                },
+                "experimentalRole": [
+                  {
+                    "names": {
+                      "shortLabel": "neutral component"
+                    },
+                    "xref": {
+                      "primaryRef": {
+                        "id": "MI:0497",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  }
+                ],
+                "feature": [
+                  {
+                    "id": "4",
+                    "names": {
+                      "shortLabel": "egfp tag"
+                    },
+                    "featureType": {
+                      "names": {
+                        "shortLabel": "enhanced green fluorescent protein tag"
+                      },
+                      "xref": {
+                        "primaryRef": {
+                          "id": "MI:0734",
+                          "db": "psi-mi",
+                          "dbAc": "MI:0488",
+                          "refType": "identity",
+                          "refTypeAc": "MI:0356"
+                        }
+                      }
+                    },
+                    "featureRange": [
+                      {
+                        "startStatus": {
+                          "names": {
+                            "shortLabel": "n-terminal range"
+                          },
+                          "xref": {
+                            "primaryRef": {
+                              "id": "MI:1040",
+                              "db": "psi-mi",
+                              "dbAc": "MI:0488",
+                              "refType": "identity",
+                              "refTypeAc": "MI:0356"
+                            }
+                          }
+                        },
+                        "endStatus": {
+                          "names": {
+                            "shortLabel": "n-terminal range"
+                          },
+                          "xref": {
+                            "primaryRef": {
+                              "id": "MI:1040",
+                              "db": "psi-mi",
+                              "dbAc": "MI:0488",
+                              "refType": "identity",
+                              "refTypeAc": "MI:0356"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "hostOrganism": [
+                  {
+                    "ncbiTaxId": "9606",
+                    "names": {
+                      "shortLabel": "man",
+                      "fullName": "Homo sapiens"
+                    },
+                    "cellType": {
+                      "names": {
+                        "shortLabel": "cabri:ICLC HTL04001"
+                      }
+                    }
+                  }
+                ],
+                "stoichiometry": {
+                  "value": "1.9"
+                }
+              },
+              {
+                "id": "7",
+                "names": {
+                  "shortLabel": "g3bp1_human"
+                },
+                "interactor": {
+                  "id": "6",
+                  "names": {
+                    "shortLabel": "g3bp1_human",
+                    "fullName": "Ras GTPase-activating protein-binding protein 1"
+                  },
+                  "xref": {
+                    "primaryRef": {
+                      "id": "Q13283",
+                      "db": "uniprotkb",
+                      "dbAc": "MI:0486",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  },
+                  "interactorType": {
+                    "names": {
+                      "shortLabel": "protein"
+                    },
+                    "xref": {
+                      "primaryRef": {
+                        "id": "MI:0326",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  },
+                  "organism": [
+                    {
+                      "ncbiTaxId": "9606",
+                      "names": {
+                        "shortLabel": "man",
+                        "fullName": "Homo sapiens"
+                      }
+                    }
+                  ]
+                },
+                "participantIdentificationMethodList": {
+                  "participantIdentificationMethod": {
+                    "names": {
+                      "shortLabel": "immunocytochemistry"
+                    },
+                    "xref": {
+                      "primaryRef": {
+                        "id": "MI:1200",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  }
+                },
+                "biologicalRole": {
+                  "names": {
+                    "shortLabel": "unspecified role"
+                  },
+                  "xref": {
+                    "primaryRef": {
+                      "id": "MI:0499",
+                      "db": "psi-mi",
+                      "dbAc": "MI:0488",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  }
+                },
+                "experimentalRole": [
+                  {
+                    "names": {
+                      "shortLabel": "neutral component"
+                    },
+                    "xref": {
+                      "primaryRef": {
+                        "id": "MI:0497",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  }
+                ],
+                "hostOrganism": [
+                  {
+                    "ncbiTaxId": "9606",
+                    "names": {
+                      "shortLabel": "man",
+                      "fullName": "Homo sapiens"
+                    },
+                    "cellType": {
+                      "names": {
+                        "shortLabel": "293T"
+                      },
+                      "xref": {
+                        "primaryRef": {
+                          "id": "ICLC HTL04001",
+                          "db": "cabri",
+                          "dbAc": "MI:0246",
+                          "refType": "identity",
+                          "refTypeAc": "MI:0356"
+                        }
+                      }
+                    }
+                  }
+                ],
+                "stoichiometry": {
+                  "value": "1"
+                }
+              }
+            ],
+            "interactionType": [
+              {
+                "names": {
+                  "shortLabel": "colocalization"
+                },
+                "xref": {
+                  "primaryRef": {
+                    "id": "MI:0403",
+                    "db": "psi-mi",
+                    "dbAc": "MI:0488",
+                    "refType": "identity",
+                    "refTypeAc": "MI:0356"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -36,7 +36,7 @@
     "property":{"dbReference":{"store":"list"},"*":{}},
     "isoform":{"*":{"store":"list"}},
     "event":{"*":{"store":"list"}},
-    "evidence":{"*":{"store":"list"}},
-    "feature":{"*":{"store":"list", "postprocess":"addFeatureEvidence(parameter1, parameter2)" }}
+    "evidence":{"*":{"store":"index", "ikey":"@key"}},
+    "feature":{"*":{"store":"index", "ikey":"@key"}}
 
 }

@@ -69,8 +69,9 @@ class Record(xmlrecord.XmlRecord):
                 parentElem = self.postprocess[x][1]
                 elem = x
                 eval(self.postprocess[x][0])
+                
 
-        
+
         print("length of self.postprocess: " + str(len(self.postprocess)))
 
         return dom

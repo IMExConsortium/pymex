@@ -165,6 +165,7 @@
             </hostOrganismList>
             <attributeList>
               <attribute name="comment" nameAc="MI:0612">Stoichiometry: 1</attribute>
+              <attribute name="comment2" nameAc="MI:0612">other: 3</attribute>
             </attributeList>
           </participant>
           <participant id="7">
