@@ -115,8 +115,18 @@ class XmlRecord():
                 if debug:
                     print("  CHLD",cchld.tag);
 
-                # LS:  for wrapped elements, cchld contains DOM
-                #      element of the wrapped list
+                # LS:  for wrapped elements (eg <attribute> with stoichiometry info):
+                #        cchld contains current DOM element of
+                #        the wrapped list - eg <attribute>... <.>
+                #        rec contains the data structure corresponding to the parent
+                #        of the wrapper, eg 
+                #          <participant>...<.> 
+                #        for stoichiometry, this is where "stoichiometry":"3"
+                #        key/value pair should be added
+                #
+                # if present, the postprocessing function should run here instead of
+                # the genericParse to extract the necessary data from cchld and place
+                # it in the rec                
                 
                 print("\nWRAPPED " + str(cchld))
                 print("REC@WRA " + str(rec.keys()))
@@ -249,9 +259,16 @@ class XmlRecord():
                 if debug:
                     print("  CHLD", cchld.tag);
 
-                # LS: for unwrapped elements cchld contains
-                #     unwrapped elelent
-
+                # LS: for unwrapped elements (eg <comment> elements in uniprot)
+                #       cchld contains unwrapped element       
+                #       cvalue contains the data structure corresponding to
+                #       the parent of the cchld element
+                #
+                # if present, postprocessing should run instead of the genericParse
+                # below to extract the data from the cchld element and add it to cvalue
+                # this can be done, if conveninet, by calling genericParse with properly
+                # set cvalue argument;   
+                
                 print("\nUNWRAPPED: " + str(cchld))
                 print("REC@UWR " + str(cvalue.keys()))
                 
