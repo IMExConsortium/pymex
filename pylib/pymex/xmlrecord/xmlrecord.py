@@ -118,7 +118,8 @@ class XmlRecord():
                 # LS:  for wrapped elements, cchld contains DOM
                 #      element of the wrapped list
                 
-                print("WRAPPED" + str(cchld))
+                print("\nWRAPPED " + str(cchld))
+                print("REC@WRA " + str(rec.keys()))
                     
                 self.genericParse( template, ver, rec, rpath, cchld, wrapped =True)
                 if debug:
@@ -197,7 +198,7 @@ class XmlRecord():
             #     for incoming piece of date whereas cvalue is
             #     set to the incoming piece of data; 
                     
-            print("$TEXT: ckey " +  ckey + " cvalue: " + str(cvalue) )
+            print("\n$TEXT: ckey " +  ckey + " cvalue: " + str(cvalue) )
             
             if cstore  == "direct":
                 rec[ckey] = cvalue
@@ -251,7 +252,8 @@ class XmlRecord():
                 # LS: for unwrapped elements cchld contains
                 #     unwrapped elelent
 
-                print("UNWRAPPED:" + str(cchld))
+                print("\nUNWRAPPED: " + str(cchld))
+                print("REC@UWR " + str(cvalue.keys()))
                 
                 self.genericParse( template, ver, cvalue, cpath, cchld)
                 
