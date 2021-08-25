@@ -186,9 +186,10 @@ class XmlRecord():
                         cvalue["value"] = val
             else:
                 cvalue = str( elem.text )
-
-            #if ckey in rec:
-            #    print(ckey, rec[ckey])
+                
+                            
+                # postprocess here 
+                    
                 
             if cstore  == "direct":
                 rec[ckey] = cvalue
@@ -256,6 +257,9 @@ class XmlRecord():
 
             if debug:
                 print( json.dumps(self.root, indent=2) )
+                    
+                    
+                
         return
         
     def parseJson(self, file ):

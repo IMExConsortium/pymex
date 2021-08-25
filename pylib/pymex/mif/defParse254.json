@@ -37,8 +37,9 @@
     "confidence":{"*":{"store":"list"} },
     "value":{"*":{"complex":false}},
 
-    "attributeList":{"*":{"wrapper":true}},		      
-	 "attribute":	 { "*":{ "name":"attribute", "store":"list"} },       
+    "attributeList":{"*":{"wrapper":true}},
+	
+	"attribute": { "*":{ "name":"attribute", "store":"list"} },       
 		      		      
     "interactorList":{"*":{"wrapper": true} },
     

@@ -310,7 +310,7 @@ class Participant( Names,Xref ):
     """MIF Participant representation."""
     def __init__(self, participant, interaction ):    
         self._participant = participant
-        self._interactor = self._participant["interactor"]
+        self._interactor = self._participant.getdefault("interactor",None)
         self._interaction = interaction
         
         if "names" in  self._participant:            
