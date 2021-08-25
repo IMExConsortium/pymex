@@ -115,6 +115,11 @@ class XmlRecord():
                 if debug:
                     print("  CHLD",cchld.tag);
 
+                # LS:  for wrapped elements, cchld contains DOM
+                #      element of the wrapped list
+                
+                print("WRAPPED" + str(cchld))
+                    
                 self.genericParse( template, ver, rec, rpath, cchld, wrapped =True)
                 if debug:
                     print( json.dumps(self.root, indent=2) )                
@@ -187,10 +192,13 @@ class XmlRecord():
             else:
                 cvalue = str( elem.text )
                 
-                            
-                # postprocess here 
+            # LS: for $TEXT fields
+            #     when here, ckey is set to the dictionary key
+            #     for incoming piece of date whereas cvalue is
+            #     set to the incoming piece of data; 
                     
-                
+            print("$TEXT: ckey " +  ckey + " cvalue: " + str(cvalue) )
+            
             if cstore  == "direct":
                 rec[ckey] = cvalue
             elif cstore == "list": 
@@ -239,7 +247,12 @@ class XmlRecord():
                 cchldTag = self.modifyTag(cchld, ver)
                 if debug:
                     print("  CHLD", cchld.tag);
-                    
+
+                # LS: for unwrapped elements cchld contains
+                #     unwrapped elelent
+
+                print("UNWRAPPED:" + str(cchld))
+                
                 self.genericParse( template, ver, cvalue, cpath, cchld)
                 
                 if 'index' in ctempl:
