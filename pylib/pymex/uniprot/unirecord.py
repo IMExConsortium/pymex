@@ -2,6 +2,7 @@ import os
 
 from urllib.request import urlopen
 import pymex
+from lxml import etree as ET
 
 print("UniRecord: import")
 
@@ -18,7 +19,14 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         super().__init__(root, config=self.uniConfig )
 
     def parseXml(self, filename, ver="uni001", debug=False):
-        res =  super().parseXml( filename, ver=ver )
+
+
+
+        self.recordTree = ET.parse(filename)
+        self.preprocessComments(ver)
+
+
+        res =  super().parseXml2(ver=ver )
         #print(res)
 
         #change to Record class function - postprocess()
@@ -48,12 +56,19 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
                 print("not feature")
 
         #re-parsing newly edited tree
-        res2 = super().parseXml2(ver=ver)
+        #res2 = super().parseXml2(ver=ver)
 
-        print(res2)
+        print(res)
 
 
-        return res2
+        return res
+
+
+    def preprocessComments(self, ver):
+        #uses self.recordTree ElementTree object to modify the element tree into separate comments of different types
+        for comment in self.recordTree.iter("{http://uniprot.org/uniprot}comment"):
+            print(comment.tag)
+        return
 
     def getRecord(self, ac="P60010"):
         upUrl = self.url.replace( "%%ACC%%", ac )

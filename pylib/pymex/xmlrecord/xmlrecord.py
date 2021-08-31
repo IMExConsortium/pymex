@@ -61,14 +61,6 @@ class XmlRecord():
                     self.config[ver]["OUT"]["@NS"].pop("*", None)
                     self.config[ver]["OUT"]["@NS"][None] = defns
 
-    def parseXml2(self, ver, debug=False):
-        template = self.config[ver]["IN"]
-
-        #adding version of inputted xml file to metadata
-        self.version = ver
-        rootElem = self.recordTree.getroot()
-        self.genericParse( template, ver, self.root, [] , rootElem, debug )
-        return self
 
     def parseXml(self, filename, ver, debug=False):
 
@@ -95,15 +87,16 @@ class XmlRecord():
         self.genericParse( template, ver, self.root, [] , rootElem, debug )
         return self
 
-    # def findStoich254(self, elementTree, ver):
-    #     for x in elementTree.iter():
-    #         if (x.tag[self.config[ver]["NSL"]:] == "attribute" and "name" in x.attrib):
-    #             if (x.attrib["name"]=="comment" and "Stoichiometry" in x.text):
-    #                 #appending all 254 stoichiometry elements to postprocess list
-    #                 self.postprocess[x.getparent().getparent()] = x.getparent()
-    #                 print(self.postprocess)
+    #same as parseXml, but directly takes in an ElementTree objecr rather than converting a file into one.
+    def parseXml2(self, ver, debug=False):
+        template = self.config[ver]["IN"]
 
-#elem is root element?
+        #adding version of inputted xml file to metadata
+        self.version = ver
+        rootElem = self.recordTree.getroot()
+        self.genericParse( template, ver, self.root, [] , rootElem, debug )
+        return self
+
     def genericParse(self, template, ver, rec, rpath, elem, wrapped=False, debug=False):
 
         tag = self.modifyTag( elem, ver )
@@ -592,7 +585,7 @@ class XmlRecord():
         print(cdef.keys())
         if "postprocess" in cdef:
             print(cdef["postprocess"])
-            print(cdata.keys())        
+            print(cdata.keys())
 
 
         if cdef["value"] =="$UID": #  generate next id
