@@ -8,7 +8,7 @@
     "fullName":{"*":{"complex":false}},
 
     "alias":{"*":{"store":"list"}},
-    "stoichiometry":{"*":{"postprocess":"Record.stoichconvert(self,dom,ver, parentElem, elem)"}},
+    "stoichiometry":{"*":{}},
     "secondaryRef": {"*": {"store":"list"}},
     "attributeList":{"*":{"wrapper":true}},
     "attribute":{"*":{"store":"list","name":"attribute"}},

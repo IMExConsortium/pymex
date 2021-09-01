@@ -114,8 +114,9 @@ class XmlRecord():
             print("\nTAG", tag, wrapped, len(rpath) )
             print(" TTEM", ttempl)
 
-        #what is the relevence of asking if the root element has a parent; won't this always be false.
-        #recursion^
+
+
+
         if elem.getparent() is not None:
             parentElem = elem.getparent()
             if wrapped:
@@ -153,8 +154,14 @@ class XmlRecord():
         if "postprocess" in ctempl and ctempl["postprocess"] is not None:
             #print("postprocess inside JSON")
             #current element : [function call, parent of current element]
-            self.postprocess[elem] = [ctempl["postprocess"], elem.getparent()]
+            #self.postprocess[elem] = [ctempl["postprocess"], elem.getparent()]
             #print(self.postprocess)
+            if self.isSpecial(elem, rec):
+                print("converted stoich254")
+                #rec["stoichiometry"]={'value': 'poop'}
+                #print(rec)
+
+
 
 
         # find wrap flag
@@ -372,6 +379,40 @@ class XmlRecord():
                 print( json.dumps(self.root, indent=2) )
         return
 
+    def isSpecial(self, element, rec):
+        """Checks if post process element is an attribute list element containing a stoichiometry attribute, converts dictionary format if so"""
+        stoichAttribute = self.getStoichiometry(element)
+        if stoichAttribute is not None:
+            participant = element.getparent()
+            newRec = self.stoich254to300(participant, stoichAttribute)
+            rec["stoichiometry"] = {'value': newRec}
+
+            return True
+        return False
+
+    def getStoichiometry(self, elem):
+        """Checks if element contains an attribute which contains the text Stoichiometry"""
+        for x in elem.iter():
+            if (x.tag[self.config[self.version]["NSL"]:] == "attribute" and "name" in x.attrib):
+                if (x.attrib["name"]=="comment" and "Stoichiometry" in x.text):
+                    return x
+        return None
+
+    def stoich254to300(self, participant, stoich):
+        stoich.getparent().remove(stoich)
+        #participant[-1].clear()
+        #stoichiometry value
+        value = ""
+        #parsing text for stoichiometry value
+        text = stoich.text
+        for char in text:
+            if char.isnumeric() or char==".":
+                value = value + char
+
+        #ET.SubElement(participant, "stoichiometry", {"value": value})
+        return value
+
+
     def parseJson(self, file ):
         self.root = json.load( file )
         return self
@@ -582,10 +623,10 @@ class XmlRecord():
             else:
                 return None
 
-        print(cdef.keys())
+        #print(cdef.keys())
         if "postprocess" in cdef:
             print(cdef["postprocess"])
-            print(cdata.keys())
+            print(cdata)
 
 
         if cdef["value"] =="$UID": #  generate next id
@@ -667,6 +708,8 @@ class XmlRecord():
                        wrapElem = None
                 elif chldElem is not None:     #  otherwise add to return list
                     retLst.append( chldElem )
+
+
 
         if wrapElem is not None and len(elemData) > 0:
             #print("FINAL TEXT")

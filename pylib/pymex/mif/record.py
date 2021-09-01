@@ -59,17 +59,17 @@ class Record(xmlrecord.XmlRecord):
 #===========================#
 
 
-        if (not ver==self.version):
-            print("conversion")
-            print(self.postprocess)
-            #evaluating post process functions, which are the keys of the self.postprocess dictionary
-            for x in self.postprocess:
+        # if (not ver==self.version):
+        #     print("conversion")
+        #     print(self.postprocess)
+        #     #evaluating post process functions, which are the keys of the self.postprocess dictionary
+        #     for x in self.postprocess:
+        #
+        #         print(x)
+        #         parentElem = self.postprocess[x][1]
+        #         elem = x
+        #         eval(self.postprocess[x][0])
 
-                print(x)
-                parentElem = self.postprocess[x][1]
-                elem = x
-                eval(self.postprocess[x][0])
-                
 
 
         print("length of self.postprocess: " + str(len(self.postprocess)))
@@ -105,16 +105,16 @@ class Record(xmlrecord.XmlRecord):
 
     #ver is version of self (current Record object)
     #invariant: if self.version is 300, elem must be a stoichiometry element since it only takes stoich elements at parsing
-    def isStoichiometry(self, elem, ver):
-        if (ver == 'mif300'):
-            return True
-        elif (ver == 'mif254'):
-            for x in elem.iter():
-                if (x.tag[self.config[ver]["NSL"]:] == "attribute" and "name" in x.attrib):
-                    if (x.attrib["name"]=="comment" and "Stoichiometry" in x.text):
-                        return True
-        else:
-            return False
+    # def isStoichiometry(self, elem, ver):
+    #     if (ver == 'mif300'):
+    #         return True
+    #     elif (ver == 'mif254'):
+    #         for x in elem.iter():
+    #             if (x.tag[self.config[ver]["NSL"]:] == "attribute" and "name" in x.attrib):
+    #                 if (x.attrib["name"]=="comment" and "Stoichiometry" in x.text):
+    #                     return True
+    #     else:
+    #         return False
 
     def findParticipant(self, participant, elementTree, ver):
         #getting participant id from old participant
@@ -176,21 +176,21 @@ class Record(xmlrecord.XmlRecord):
         return
 
     #function for creating and adding 300 version of stoichiometry data using 254 version element:
-    def stoich254to300(self, participant, stoich):
-        oldStoich = participant[-1]
-        participant.remove(oldStoich)
-        #participant[-1].clear()
-        #stoichiometry value
-        value = ""
-        #parsing text for stoichiometry value
-        text = stoich[0].text
-        for char in text:
-            if char.isnumeric() or char==".":
-                value = value + char
-
-
-        ET.SubElement(participant, "stoichiometry", {"value": value})
-        return
+    # def stoich254to300(self, participant, stoich):
+    #     oldStoich = participant[-1]
+    #     participant.remove(oldStoich)
+    #     #participant[-1].clear()
+    #     #stoichiometry value
+    #     value = ""
+    #     #parsing text for stoichiometry value
+    #     text = stoich[0].text
+    #     for char in text:
+    #         if char.isnumeric() or char==".":
+    #             value = value + char
+    #
+    #
+    #     ET.SubElement(participant, "stoichiometry", {"value": value})
+    #     return
 
     # #how does this currently handle it?
     # def _stoichiometryConvert(self, ver):
