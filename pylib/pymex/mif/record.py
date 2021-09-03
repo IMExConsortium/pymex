@@ -37,22 +37,17 @@ class Record(xmlrecord.XmlRecord):
         
         return self.toXml( ver, "entrySet", "ExpandedEntrySet" )
 
+    def prep1( self, arg1=None, arg2=None, arg3=None ):        
+        print(" prep1 here: arg1=", arg1)
 
-    def prep1( arg1=None, arg2=None, arg3=None):
-
-        print(" prep1 here...")
-
-    def prep2( arg1=None, arg2=None, arg3=None):
-
-        print(" prep2 here...")
+    def prep2( self, arg1=None, arg2=None, arg3=None ):
+        print(" prep2 here: arg1=", arg1)
         
-    def stConv1( arg1=None, arg2=None, arg3=None):
-
-        print(" stconv1 here...")
+    def stConv1( self, arg1=None, arg2=None, arg3=None ):
+        print(" stconv1 here: arg1=", arg1)
         
-    def stConv2( arg1=None, arg2=None, arg3=None):
-
-        print(" stconv2 here...")
+    def stConv2( self, arg1=None, arg2=None, arg3=None  ):
+        print(" stconv2 here: arg1", arg1)
         
     def _stoichiometryConvert(self, ver):
         

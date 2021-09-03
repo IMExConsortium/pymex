@@ -118,9 +118,9 @@ class XmlRecord():
             print( "  CWRAP ", cwrap )
 
         if( "prep" in ctempl ):
-            print("PREP:", ctempl["prep"], self.process[ ctempl["prep"] ])  
+            print("\nPREP:", ctempl["prep"], self.process[ ctempl["prep"] ])
+            print(tag,elem, list(rec.keys() ), sep=" || " )
             self.process[ ctempl["prep"] ]()
-
 
         if cwrap:
             for cchld in elem:
@@ -132,7 +132,8 @@ class XmlRecord():
                     print( json.dumps(self.root, indent=2) )
 
             if( "post" in ctempl ):        
-                print("WRAPPED:", ctempl["post"], self.process[ ctempl["post"] ] )
+                print("\nWRAPPED:", ctempl["post"], self.process[ ctempl["post"] ] )
+                print(tag, elem, list( rec.keys() ) ,sep=" || ")
                 self.process[ ctempl["post"] ]()
 
             return 
@@ -268,8 +269,9 @@ class XmlRecord():
                         rec[ckey][ckeyRefInd][dbkey] = cvalue[cchldTag][0] if type(cvalue[cchldTag]) is list else cvalue[cchldTag]
 
             if( "post" in ctempl ): 
-                print( "UNWRAPPED:", ctempl["post"], self.process[ ctempl["post"] ] )
-                self.process[ ctempl["post"] ]()
+                print( "\nUNWRAPPED:", ctempl["post"], self.process[ ctempl["post"] ] )
+                print(tag, elem, list(rec.keys()) ,sep = " || ")
+                #self.process[ ctempl["post"] ]()
 
             if debug:
                 print( json.dumps(self.root, indent=2) )
