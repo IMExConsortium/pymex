@@ -282,11 +282,45 @@ class RecordBuilder():
                     bibref = {"xref":{"primaryRef": pref}}
 
                 elif ln.startswith("doi"):
-                    pmid = col[1]
-                    pref = self.buildXref( pmid, db="doi", dbAc="MI:0574",
+                    doi = col[1]
+                    pref = self.buildXref( doi, db="doi", dbAc="MI:0574",
                                            refType="primary-reference", refTypeAc="MI:0358" )    
                     bibref = {"xref":{"primaryRef": pref}}
+
+                elif ln.startswith("pdb"):
+                    pdb = col[1]
+                    pref = self.buildXref( pdb, db="wwpdb", dbAc="MI:0805",
+                                           refType="primary-reference", refTypeAc="MI:0358" )    
+                    bibref = {"xref":{"primaryRef": pref}}
+
+                elif ln.startswith("bibref"):
+
+                    xdb = col[1]
+                    xdbAc = None
+                    if xdb == "pubmed":
+                        xdbAc = "MI:0446"  
+                    elif xdb == "doi":
+                        xdbAc="MI:0574"
+                    elif xdb == "wwpdb":
+                        xdbAc ="MI:0805"
+
+                    print(col[1],xdbAc)
                     
+                    xac = col[2]
+                    xtac = col[3]
+                    xtname = col[4] 
+                 
+                    pref = self.buildXref( xac, db=xdb, dbAc=xdbAc,
+                                           refType=xtname, refTypeAc=xtac )                        
+
+                    if bibref == None:
+                        bibref = {"xref":{"primaryRef": pref}}
+                    else:
+                        if not "secondaryRef" in bibref["xref"]:
+                            bibref["xref"]["secondaryRef"]= []
+                            
+                        bibref["xref"]["secondaryRef"].append(pref)
+                        
                 elif ln.startswith("interaction"):
                     self.feature = False
                     interaction =  {"names":{"shortLabel": "N/A"},
@@ -296,7 +330,8 @@ class RecordBuilder():
                     
                     record.setdefault("interaction",[]).append(interaction)
                     
-                    # interaction type 
+                    # interaction type
+                    print(col)
                     interaction["interactionType"] = self.buildCvTerm(col[1])
                     
                     # interaction detection                 
@@ -546,6 +581,7 @@ class RecordBuilder():
                     if len(col) > 5:
                         xtypeac = col[5]
                     else:
+                        print(xtype)
                         xtypeac = self.cvdict[xtype]                    
                     
                     ver = None

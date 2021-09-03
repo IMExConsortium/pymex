@@ -32,6 +32,7 @@
  "physiological":"MI:0222",
  "over-expressed":"MI:0506",
  "identity":"MI:0356",
+ "inferred-from":"MI:1351",
  "complex-component":"MI:2284",
  "uniprotkb":"MI:0486",
  "refseq":"MI:0481",
