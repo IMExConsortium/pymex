@@ -110,6 +110,8 @@ class XmlRecord():
         if debug:
             print( "  CWRAP ", cwrap )
 
+        print("PREP:", ctempl)
+            
         if cwrap:
             for cchld in elem:
                 if debug:
@@ -117,7 +119,9 @@ class XmlRecord():
 
                 self.genericParse( template, ver, rec, rpath, cchld, wrapped =True)
                 if debug:
-                    print( json.dumps(self.root, indent=2) )                
+                    print( json.dumps(self.root, indent=2) )
+
+            print("WRAPPED:", ctempl)
             return 
         
         # find current key:        
@@ -254,7 +258,7 @@ class XmlRecord():
                         dbkey = ':'.join(kval)
                         rec[ckey][ckeyRefInd][dbkey] = cvalue[cchldTag][0] if type(cvalue[cchldTag]) is list else cvalue[cchldTag]
                     
-
+            print("UNWRAPPED:", ctempl)
             if debug:
                 print( json.dumps(self.root, indent=2) )
                     

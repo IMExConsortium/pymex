@@ -37,9 +37,13 @@
     "confidence":{"*":{"store":"list"} },
     "value":{"*":{"complex":false}},
 
-    "attributeList":{"*":{"wrapper":true}},
+    "attributeList": { "*":{"wrapper":true},
+                       "participant":{"wrapper":true,"post":"Record.stConv1","prep":"Record.prep1"}
+                     },
 	
-	"attribute": { "*":{ "name":"attribute", "store":"list"} },       
+	"attribute": { "*":{ "name":"attribute", "store":"list"},
+                   "participant":{"post":"Record.stConv2","prep":"Record.prep2"}
+                 },   
 		      		      
     "interactorList":{"*":{"wrapper": true} },
     
