@@ -38,11 +38,11 @@
     "value":{"*":{"complex":false}},
 
     "attributeList": { "*":{"wrapper":true},
-                       "participant":{"wrapper":true,"post":"Record.stConv1","prep":"Record.prep1"}
+                       "participant":{"wrapper":true,"post":"stConv1","prep":"prep1"}
                      },
 	
 	"attribute": { "*":{ "name":"attribute", "store":"list"},
-                   "participant":{"post":"Record.stConv2","prep":"Record.prep2"}
+                   "participant":{"post":"stConv2","prep":"prep2"}
                  },   
 		      		      
     "interactorList":{"*":{"wrapper": true} },

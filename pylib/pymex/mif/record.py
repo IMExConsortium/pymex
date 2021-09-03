@@ -20,7 +20,12 @@ class Record(xmlrecord.XmlRecord):
                            "mif300": {"IN": os.path.join( myDir, "defParse300.json"),
                                       "OUT": os.path.join( myDir, "defMif300.json" )}}
         
-        super().__init__(root, config=self.mifConfig )
+        super().__init__( root,
+                          config = self.mifConfig,
+                          process = { "prep1":self.prep1,
+                                      "prep2":self.prep2,
+                                      "stConv1":self.stConv1,
+                                      "stConv2": self.stConv2} )
                 
     def parseMif(self, filename, ver="mif254", debug=False):
         return self.parseXml( filename, ver=ver )
@@ -31,6 +36,23 @@ class Record(xmlrecord.XmlRecord):
         self._stoichiometryConvert( ver )        
         
         return self.toXml( ver, "entrySet", "ExpandedEntrySet" )
+
+
+    def prep1( arg1=None, arg2=None, arg3=None):
+
+        print(" prep1 here...")
+
+    def prep2( arg1=None, arg2=None, arg3=None):
+
+        print(" prep2 here...")
+        
+    def stConv1( arg1=None, arg2=None, arg3=None):
+
+        print(" stconv1 here...")
+        
+    def stConv2( arg1=None, arg2=None, arg3=None):
+
+        print(" stconv2 here...")
         
     def _stoichiometryConvert(self, ver):
         
