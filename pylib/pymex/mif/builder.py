@@ -275,26 +275,8 @@ class RecordBuilder():
                     else:
                         cdpth = None
                         
-                elif ln.startswith("pmid"):
-                    pmid = col[1]
-                    pref = self.buildXref( pmid, db="pubmed", dbAc="MI:0446",
-                                           refType="primary-reference", refTypeAc="MI:0358" )    
-                    bibref = {"xref":{"primaryRef": pref}}
-
-                elif ln.startswith("doi"):
-                    doi = col[1]
-                    pref = self.buildXref( doi, db="doi", dbAc="MI:0574",
-                                           refType="primary-reference", refTypeAc="MI:0358" )    
-                    bibref = {"xref":{"primaryRef": pref}}
-
-                elif ln.startswith("pdb"):
-                    pdb = col[1]
-                    pref = self.buildXref( pdb, db="wwpdb", dbAc="MI:0805",
-                                           refType="primary-reference", refTypeAc="MI:0358" )    
-                    bibref = {"xref":{"primaryRef": pref}}
-
-                elif ln.startswith("bibref"):
-
+                if ln.startswith("bibref"):
+                    
                     xdb = col[1]
                     xdbAc = None
                     if xdb == "pubmed":
