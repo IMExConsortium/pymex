@@ -1,0 +1,46 @@
+{
+    "@NS":"http://uniprot.org/uniprot",
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id",
+		"reference":null, "wrapper": false } },
+    "entry":{"*":{"store":"list"}},
+    "accession":{"*":{"store":"list","complex":false}},
+    "name":{
+        "entry":{"complex":false},
+	    "gene":{"wrapper":false,"store":"list"},
+	    "organism":{"wrapper":false,"store":"list"},
+	    "*":{}},
+   
+    "protein":{"*":{"wraper":false, "name":"protein"} },
+    "recommendedName":{"protein":{"wrapper":false,"store":"direct","*":{} } },
+    "alternativeName":{"protein":{"wrapper":false,"store":"list","*":{} }},
+    
+    "fullName":{
+        "recommendedName":{"wrapper":false,"name":"fullName","complex":false,"store":"direct"},
+        "alternativeName":{"wrapper":false,"name":"fullName","complex":false,"store":"direct"}},
+    "shortName":{"recommendedName":{"wrapper":false,"name":"shortName","complex":false,"store":"direct"},
+                 "alternativeName":{"wrapper":false,"name":"shortName","complex":false,"store":"direct"}},
+    
+    "gene":{"*":{"wrapper":false}},
+    "lineage":{"*":{"wrapper":true}},
+   
+    "taxon":{"organism":{"store":"list","complex":false,"name":"lineage"},"*":{}},
+    
+    "reference":{"entry":{"store":"list"},"*":{}},
+    
+    "authorList":{"*":{"wrapper":true}},
+    "person":{"citation":{"store":"list","name":"author"}},
+    "dbReference":{"entry":{"store":"list"},
+		   "citation":{"store":"list"},
+		   "*":{"store":"list"}},
+    "scope":{"*":{"complex":false}},
+
+    "comment":{"entry":{"store":"list"},"*":{}},
+    "source":{"entry":{"store":"list"},"*":{}},
+    "property":{"dbReference":{"store":"list"},"*":{}},
+    "isoform":{"*":{"store":"list"}},
+    "event":{"*":{"store":"list"}},
+    "evidence":{"*":{"store":"list"}},
+    "feature":{"*":{"store":"list"}}
+    
+}

@@ -249,7 +249,7 @@ class RecordBuilder():
         xtgt = None
         seqtgt = None
         bibref = None
-        
+        ibibref = None
 
         with open( filename, 'r' ) as sf:
             for ln in sf:
@@ -285,35 +285,62 @@ class RecordBuilder():
                         xdbAc="MI:0574"
                     elif xdb == "wwpdb":
                         xdbAc ="MI:0805"
-
-                    print(col[1],xdbAc)
-                    
+                        
                     xac = col[2]
-                    xtac = col[3]
-                    xtname = col[4] 
+                    if len(col) > 3:
+                        xtac = col[3]
+                        xtac = re.sub(r'\(.*\)', '',col[3])
+                        print(col[3], xtac)
+
+                    else:
+                        xtac = "MI:0358"
+
+            
+                    tterm = self.cvterm( xtac )
+
+                    print(tterm)
+                    
+                    #xtname = col[4] 
                  
                     pref = self.buildXref( xac, db=xdb, dbAc=xdbAc,
-                                           refType=xtname, refTypeAc=xtac )                        
+                                           refType=tterm['label'], refTypeAc=tterm['id'] )                        
 
-                    if bibref == None:
-                        bibref = {"xref":{"primaryRef": pref}}
-                    else:
-                        if not "secondaryRef" in bibref["xref"]:
-                            bibref["xref"]["secondaryRef"]= []
+                    if interaction is None:
+                        if bibref == None:
+                            bibref = {"xref":{"primaryRef": pref}}
+                        else:
+                            if not "secondaryRef" in bibref["xref"]:
+                                bibref["xref"]["secondaryRef"]= []
                             
-                        bibref["xref"]["secondaryRef"].append(pref)
+                            bibref["xref"]["secondaryRef"].append(pref)
+
+                    else:
+                        if ibibref == None:
+                            ibibref = {"xref":{"primaryRef": pref}}
+                        else:
+                            if not "secondaryRef" in ibibref["xref"]:
+                                ibibref["xref"]["secondaryRef"]= []
+                            
+                            ibibref["xref"]["secondaryRef"].append(pref)
+
+                        interaction["experiment"][0]["bibref"] = ibibref
+
                         
                 elif ln.startswith("interaction"):
+
+                    ibibref = None
+                    
                     self.feature = False
                     interaction =  {"names":{"shortLabel": "N/A"},
                                     "experiment":[{"names":{"shortLabel": "N/A"}}]}
+
                     if bibref is not None:
                         interaction["experiment"][0]["bibref"] = bibref
                     
                     record.setdefault("interaction",[]).append(interaction)
                     
                     # interaction type
-                    print(col)
+                    
                     interaction["interactionType"] = self.buildCvTerm(col[1])
                     
                     # interaction detection                 
