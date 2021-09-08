@@ -22,13 +22,20 @@ class XmlRecord():
         mifstr = "{%s}" % mif_ns
         return mifstr
 
-    def __init__(self, root=None, config=None):
+    def __init__(self, root=None, config=None, process=None):
 
-        if root is not None:
-            self.root = root
-        else:
+        self.version = None 
+        
+        if root is None:
             self.root = {}
+        else:
+            self.root = root
 
+        if process is None:            
+            self.process = {}
+        else:
+            self.process = process
+                        
         self.config = {}
         if config is not None:
             
@@ -110,6 +117,11 @@ class XmlRecord():
         if debug:
             print( "  CWRAP ", cwrap )
 
+        if( "prep" in ctempl ):
+            print("\nPREP:", ctempl["prep"], self.process[ ctempl["prep"] ])
+            print(tag,elem, list(rec.keys() ), sep=" || " )
+            self.process[ ctempl["prep"] ]()
+
         if cwrap:
             for cchld in elem:
                 if debug:
@@ -117,7 +129,13 @@ class XmlRecord():
 
                 self.genericParse( template, ver, rec, rpath, cchld, wrapped =True)
                 if debug:
-                    print( json.dumps(self.root, indent=2) )                
+                    print( json.dumps(self.root, indent=2) )
+
+            if( "post" in ctempl ):        
+                print("\nWRAPPED:", ctempl["post"], self.process[ ctempl["post"] ] )
+                print(tag, elem, list( rec.keys() ) ,sep=" || ")
+                self.process[ ctempl["post"] ]()
+
             return 
         
         # find current key:        
@@ -187,10 +205,6 @@ class XmlRecord():
             else:
                 cvalue = str( elem.text )
                 
-                            
-                # postprocess here 
-                    
-                
             if cstore  == "direct":
                 rec[ckey] = cvalue
             elif cstore == "list": 
@@ -253,7 +267,11 @@ class XmlRecord():
                                 kval.append(kvl[0])                        
                         dbkey = ':'.join(kval)
                         rec[ckey][ckeyRefInd][dbkey] = cvalue[cchldTag][0] if type(cvalue[cchldTag]) is list else cvalue[cchldTag]
-                    
+
+            if( "post" in ctempl ): 
+                print( "\nUNWRAPPED:", ctempl["post"], self.process[ ctempl["post"] ] )
+                print(tag, elem, list(rec.keys()) ,sep = " || ")
+                #self.process[ ctempl["post"] ]()
 
             if debug:
                 print( json.dumps(self.root, indent=2) )
