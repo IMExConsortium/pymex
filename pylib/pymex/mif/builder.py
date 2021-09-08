@@ -68,8 +68,7 @@ class RecordBuilder():
         if cvlabel is not None:
             term = {"label" : cvlabel }
             return term
-        #print(cvid)
-        #print("---")
+
         if isinstance(cvid, str):
             if cvid not in self.cvtrec:
                 #print("s")
@@ -283,25 +282,19 @@ class RecordBuilder():
                         xdbAc = "MI:0446"  
                     elif xdb == "doi":
                         xdbAc="MI:0574"
-                    elif xdb == "wwpdb":
+                    elif xdb in ["wwpdb","pdb"]:
                         xdbAc ="MI:0805"
+                        xdb = "wwpdb"
                         
                     xac = col[2]
                     if len(col) > 3:
                         xtac = col[3]
-                        xtac = re.sub(r'\(.*\)', '',col[3])
-                        print(col[3], xtac)
+                        xtac = re.sub(r'\(.*\)', '',col[3])                        
 
                     else:
                         xtac = "MI:0358"
-
             
                     tterm = self.cvterm( xtac )
-
-                    print(tterm)
-                    
-                    #xtname = col[4] 
-                 
                     pref = self.buildXref( xac, db=xdb, dbAc=xdbAc,
                                            refType=tterm['label'], refTypeAc=tterm['id'] )                        
 
@@ -576,22 +569,19 @@ class RecordBuilder():
 
                 elif ln.startswith("xref"):                    
                     db = col[1]
+                    
+                    if db in self.cvdict:
+                        dbac = self.cvdict[db]
+                    else:
+                        dbac = None
+                        
                     acc = col[2]
                     if len(col) > 3:
                         xtype = col[3]
                     else:
-                        xtype = "identity"
+                        xtype = "MI:0356(identity)"
 
-                    if len(col) > 4:
-                        dbac = col[4]
-                    else:
-                        dbac = self.cvdict[db]
-
-                    if len(col) > 5:
-                        xtypeac = col[5]
-                    else:
-                        print(xtype)
-                        xtypeac = self.cvdict[xtype]                    
+                    cvxtype = self.cvterm(xtype)                    
                     
                     ver = None
                     if '.' in acc:
@@ -602,9 +592,9 @@ class RecordBuilder():
 
                     if col[0].endswith(".p"):
                         xtgt = record["participant"]
-                    
+                        
                     xref =  self.buildXref( acc, db=db, dbAc=dbac, version = ver,
-                                            refType=xtype, refTypeAc=xtypeac )
+                                            refType=cvxtype['label'], refTypeAc=cvxtype['id'] )
 
                     if "xref" not in xtgt:                    
                         xtgt["xref"] = {}
