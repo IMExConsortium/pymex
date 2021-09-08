@@ -131,10 +131,11 @@ class XmlRecord():
                 if debug:
                     print( json.dumps(self.root, indent=2) )
 
-            if( "post" in ctempl ):        
-                print("\nWRAPPED:", ctempl["post"], self.process[ ctempl["post"] ] )
-                print(tag, elem, list( rec.keys() ) ,sep=" || ")
-                self.process[ ctempl["post"] ]()
+            if( "post" in ctempl ):
+                if debug:
+                    print("\nWRAPPED:", ctempl["post"], self.process[ ctempl["post"] ] )
+                    print(tag, elem, list( rec.keys() ) ,sep=" || ")
+                self.process[ ctempl["post"] ](elem, rec)
 
             return 
         
@@ -268,11 +269,11 @@ class XmlRecord():
                         dbkey = ':'.join(kval)
                         rec[ckey][ckeyRefInd][dbkey] = cvalue[cchldTag][0] if type(cvalue[cchldTag]) is list else cvalue[cchldTag]
 
-            if( "post" in ctempl ): 
-                print( "\nUNWRAPPED:", ctempl["post"], self.process[ ctempl["post"] ] )
-                print(tag, elem, list(rec.keys()) ,sep = " || ")
-                #self.process[ ctempl["post"] ]()
-
+            if( "post" in ctempl ):
+                if debug:
+                    print( "\nUNWRAPPED:", ctempl["post"], self.process[ ctempl["post"] ] )
+                    print(tag, elem, list(rec.keys()) ,sep = " || ")
+                self.process[ ctempl["post"] ](elem, rec)
             if debug:
                 print( json.dumps(self.root, indent=2) )
                     

@@ -44,10 +44,14 @@ class Record(xmlrecord.XmlRecord):
         print(" prep2 here: arg1=", arg1)
         
     def stConv1( self, arg1=None, arg2=None, arg3=None ):
-        print(" stconv1 here: arg1=", arg1)
-        
+        for attr in arg2['attribute']:
+            if attr['name'] == "comment" and attr['value'].startswith("stoichiometry:"):                
+                print("STOICHIOMETRY: ",attr)
+                arg2['stoichiometry']=attr['value'].replace("stoichiometry:","").strip()
+              
     def stConv2( self, arg1=None, arg2=None, arg3=None  ):
         print(" stconv2 here: arg1", arg1)
+        print(" stconv2 here: arg2=", arg2)
         
     def _stoichiometryConvert(self, ver):
         

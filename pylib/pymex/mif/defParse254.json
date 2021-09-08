@@ -42,7 +42,7 @@
                      },
 	
 	"attribute": { "*":{ "name":"attribute", "store":"list"},
-                   "participant":{"post":"stConv2","prep":"prep2"}
+                   "participant":{"post":"stConv2","prep":"prep2","store":"list"}
                  },   
 		      		      
     "interactorList":{"*":{"wrapper": true} },

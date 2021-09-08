@@ -7,7 +7,7 @@
     "accession":{"*":{"store":"list","complex":false}},
     "name":{
         "entry":{"complex":false},
-	    "gene":{"wrapper":false,"store":"list"},
+	    "gene":{"wrapper":false,"store":"list","post":"geneName"},
 	    "organism":{"wrapper":false,"store":"list"},
 	    "*":{}},
    
@@ -35,7 +35,9 @@
 		   "*":{"store":"list"}},
     "scope":{"*":{"complex":false}},
 
-    "comment":{"entry":{"store":"list"},"*":{}},
+    "comment":{ "entry":{"store":"list"},
+               "*":{}},
+
     "source":{"entry":{"store":"list"},"*":{}},
     "property":{"dbReference":{"store":"list"},"*":{}},
     "isoform":{"*":{"store":"list"}},

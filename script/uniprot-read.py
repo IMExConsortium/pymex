@@ -27,6 +27,10 @@ parser.add_argument('--mode', '-m', dest="mode", type=str,
                     required=False, default='get',
                     help='Mode.')
 
+parser.add_argument('--output', '-o', dest="ofile", type=str, 
+                    required=False, default='STDOUT',
+                    help='Output file [default: STDOUT].')
+
 #spyder hack: add '-i' option only if present (as added by spyder)
 
 if '-i' in sys.argv:
@@ -38,10 +42,15 @@ args = parser.parse_args()
 ucl = pymex.up.UniRecord()
 ucr = ucl.getRecord(args.upr)
 
-#print(type(ucr.root))
-
 tmp = ucr.root["uniprot"]["entry"][0]
 
 tmp= ucr.entry
 
-print(json.dumps(tmp,indent=1))
+if args.ofile == 'STDOUT':
+    print( json.dumps(tmp,indent=1) )
+else:
+    with open(args.ofile,"w") as of:
+        of.write( json.dumps(tmp,indent=1) )
+
+
+
