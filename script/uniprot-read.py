@@ -46,6 +46,8 @@ tmp = ucr.root["uniprot"]["entry"][0]
 
 tmp= ucr.entry
 
+print("Entry name: ", ucr.name['entry'])
+
 if args.ofile == 'STDOUT':
     print( json.dumps(tmp,indent=1) )
 else:

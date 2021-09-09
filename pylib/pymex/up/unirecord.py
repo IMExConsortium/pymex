@@ -14,30 +14,33 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         self.url="https://www.uniprot.org/uniprot/%%ACC%%.xml"
     
         super().__init__(root, config=self.uniConfig,
-                         process = { "geneName": self.geneName,
-                                     "protName": self.protName,
-                                     "accession": self.accession,
-                                     "comment": self.comment,
-                                     "xref": self.xref,
-                                     "feature": self.feature})
+                         process = { "geneName": self._geneName,
+                                     "protName": self._protName,
+                                     "accession": self._accession,
+                                     "comment": self._comment,
+                                     "xref": self._xref,
+                                     "feature": self._feature})
         
     def parseXml(self, filename, ver="uni_v001", debug=False):
         res =  super().parseXml( filename, ver=ver )
                 
         return res
-        
-    def protName( self, elem, rec ):
+
+    def getRecord(self, ac="P60010"):
+        upUrl = self.url.replace( "%%ACC%%", ac )                
+
+        res = self.parseXml( urlopen(upUrl ))
+        self.record = res
+        return( res )
+    
+    def _protName( self, elem, rec ):
         if self.debug:
             print("protName: elem=", elem)
             print("protName: rec.keys=",list(rec.keys()))        
  
         if "protein" in rec:
-            print(rec["protein"])
-
             protein = rec["protein"]
             rec["_protein"] = {"name":{}}
-
-            #print("CN", )
             
             for cname in protein:
                 if "recommendedName" == cname:                     
@@ -59,23 +62,18 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
                         if "shortName" in altname:
                             calt["short"] = altname["shortName"]
                         rec["_protein"]["name"]["alt"].append( calt ) 
-                        
-                       
-    def geneName( self, elem, rec ):
+                                               
+    def _geneName( self, elem, rec ):
         if self.debug:
             print("geneName: elem=", elem)
             print("geneName: rec.keys=",list(rec.keys()))        
         if "gene" in rec:
-            #print(rec["gene"])
-
             gene = rec["gene"]
             rec["_gene"] = {"name":{}}
 
             for cgene in gene["name"]:
                 cval  = cgene["value"]
                 ctype = cgene["type"]
-
-                #print("CN",ctype,cval)
                 
                 if ctype not in rec["gene"]["name"]:
                     if ctype != "primary":
@@ -84,10 +82,9 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
                         rec["_gene"]["name"][ctype]=cval
 
                 if ctype != "primary":
-                    rec["_gene"]["name"][ctype].append(cval)
-                    
+                    rec["_gene"]["name"][ctype].append(cval)                    
 
-    def accession( self, elem, rec ):
+    def _accession( self, elem, rec ):
         if "_accession" not in rec:
             rec["_accession"]={"primary":None}
             
@@ -98,34 +95,35 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
                 rec["_accession"]["secondary"] = []
             rec["_accession"]["secondary"].append(rec["accession"][-1])
                 
-    def comment( self, elem, rec ):
+    def _comment( self, elem, rec ):
         if self.debug:
             print("TYPE:",rec["comment"][-1]["type"])
         ccom = rec.setdefault("_comment",{})
         ctp = ccom.setdefault(rec["comment"][-1]["type"],[])
         ctp.append( rec["comment"][-1] )    
             
-    def xref( self, elem, rec ):
+    def _xref( self, elem, rec ):
         if self.debug:
             print("XREF TYPE:",rec["dbReference"][-1]["type"])
         ccom = rec.setdefault("_xref",{})
         ctp = ccom.setdefault(rec["dbReference"][-1]["type"],[])
         ctp.append( rec["dbReference"][-1] )    
 
-    def feature( self, elem, rec ):
+    def _feature( self, elem, rec ):
         if self.debug:
             print("FEATURE TYPE:",rec["feature"][-1]["type"])
         ccom = rec.setdefault("_feature",{})
-        ctp = ccom.setdefault(rec["feature"][-1]["type"],[])
+
+        if rec["feature"][-1]["type"] == "sequence variant":
+            ntp = "variant"
+        elif rec["feature"][-1]["type"] == "mutagenesis site":
+            ntp = "mutation"
+        else:
+            ntp = rec["feature"][-1]["type"]
+            
+        ctp = ccom.setdefault(ntp,[])
         ctp.append( rec["feature"][-1] )    
             
-    def getRecord(self, ac="P60010"):
-        upUrl = self.url.replace( "%%ACC%%", ac )                
-
-        res = self.parseXml( urlopen(upUrl ))
-        self.record = res
-        return( res )
-
     @property
     def entry( self ): 
          return self.root["uniprot"]["entry"][0]
@@ -134,10 +132,16 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
     def accession(self):
         return self.root["uniprot"]["entry"][0]["_accession"]
      
+    #@property
+    #def name( self ):
+    #    return self.root["uniprot"]["entry"][0]["name"]
+
     @property
     def name( self ):
-        return self.root["uniprot"]["entry"][0]["name"]
-
+        return { "entry": self.root["uniprot"]["entry"][0]["name"],
+                 "protein": self.protein,
+                 "gene": self.gene }
+    
     @property
     def protein( self ):
         return self.root["uniprot"]["entry"][0]["_protein"]
