@@ -4,14 +4,14 @@
     "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id",
 		"reference":null, "wrapper": false } },
     "entry":{"*":{"store":"list"}},
-    "accession":{"*":{"store":"list","complex":false}},
+    "accession":{"*":{"store":"list","complex":false, "post":"accession"}},
     "name":{
         "entry":{"complex":false},
-	    "gene":{"wrapper":false,"store":"list","post":"geneName"},
+	    "gene":{"wrapper":false,"store":"list"},
 	    "organism":{"wrapper":false,"store":"list"},
 	    "*":{}},
    
-    "protein":{"*":{"wraper":false, "name":"protein"} },
+    "protein":{"*":{"wraper":false, "post":"protName"} },
     "recommendedName":{"protein":{"wrapper":false,"store":"direct","*":{} } },
     "alternativeName":{"protein":{"wrapper":false,"store":"list","*":{} }},
     
@@ -21,7 +21,8 @@
     "shortName":{"recommendedName":{"wrapper":false,"name":"shortName","complex":false,"store":"direct"},
                  "alternativeName":{"wrapper":false,"name":"shortName","complex":false,"store":"direct"}},
     
-    "gene":{"*":{"wrapper":false}},
+    "gene":{"*":{"wrapper":false,"post":"geneName"}},
+
     "lineage":{"*":{"wrapper":true}},
    
     "taxon":{"organism":{"store":"list","complex":false,"name":"lineage"},"*":{}},
@@ -30,12 +31,13 @@
     
     "authorList":{"*":{"wrapper":true}},
     "person":{"citation":{"store":"list","name":"author"}},
-    "dbReference":{"entry":{"store":"list"},
+    "dbReference":{
+        "entry":{"store":"list","post":"xref"},
 		   "citation":{"store":"list"},
 		   "*":{"store":"list"}},
     "scope":{"*":{"complex":false}},
 
-    "comment":{ "entry":{"store":"list"},
+    "comment":{ "entry":{"store":"list","post":"comment"},
                "*":{}},
 
     "source":{"entry":{"store":"list"},"*":{}},
@@ -43,6 +45,6 @@
     "isoform":{"*":{"store":"list"}},
     "event":{"*":{"store":"list"}},
     "evidence":{"*":{"store":"list"}},
-    "feature":{"*":{"store":"list"}}
+    "feature":{"*":{"store":"list", "post":"feature"}}
     
 }
