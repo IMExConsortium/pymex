@@ -562,11 +562,8 @@ class XmlRecord():
             function = self.post[cdef["postprocess"]](cdata, celem, wrapElem)
 
         if wrapElem is not None and len(wrapElem) > 0:
-            if debug:
-                print( "wrapElem:", ET.tostring(wrapElem, pretty_print=True).decode("utf-8") )
+            #print( "wrapElem:", ET.tostring(wrapElem, pretty_print=True).decode("utf-8") )
             return [wrapElem]
-        else:
-            if debug:
-                print( "retLst:", retLst )
         
+        #print( "retLst:", retLst )
         return retLst

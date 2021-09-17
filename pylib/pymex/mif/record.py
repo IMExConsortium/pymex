@@ -68,7 +68,7 @@ class Record(xmlrecord.XmlRecord):
         for element in attributes:
             if "value" in element:
                 value = element["value"]
-                if "stoichiometry" in value.lower():
+                if value.strip().lower().startswith("stoichiometry"):
                     rec["attribute"].remove(element)
                     return value
 
