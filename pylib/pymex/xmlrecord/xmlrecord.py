@@ -350,7 +350,6 @@ class XmlRecord():
                 ientry = ctempl["index"]["entry"]
 
             #this is important for defining the structure of this rpath
-            #
             for cchld in elem:
                 cchldTag = self.modifyTag(cchld, ver)
                 if debug:
@@ -377,7 +376,6 @@ class XmlRecord():
                 print( json.dumps(self.root, indent=2) )
 
             #postprocessing specifications
-            #must happen before wrapper check since postprocess elements may be wrappers
             if "postprocess" in ctempl and ctempl["postprocess"] is not None:
                 self.post[ctempl["postprocess"]](elem, rec)
 
@@ -401,15 +399,13 @@ class XmlRecord():
 
         #nsmap = self.MIFNS[ver]
         nsmap = template["@NS"]
-        print(template["@NS"])
-        print("Template[rtype]:")
-        print(template[rtype])
+
 
         return self.mifGenerator( nsmap, ver, template, None,
                                   self.root[rdata], template[rtype] )
         return None
 
-    
+
 
 
     #ctype is [{"value":"entry", "type":"expandedEntry","name":"entry"}]
@@ -448,12 +444,6 @@ class XmlRecord():
                 for chld in chldLst:
                     #appending to an ET.element, must be of element type
                     dom.append( chld )
-            #postprocess
-
-        #updating postprocess to contain new participants, constructed in dom
-        print("testtestetsts")
-        print(self.config[ver]["NSL"])
-
 
         return dom
 
@@ -551,8 +541,7 @@ class XmlRecord():
                     celem.text = str(elemData)
                 else:                    # attribute of parent
                     celem.set(elemName[1:], str(elemData))
-                    if (celem.tag=="participant"):
-                        print(elemName[1:], "  :   " ,str(elemData))
+
             else:
                 if cdef["type"]=='$TEXT': # child element with text only
                     chldElem = ET.Element(self.toNsString(nsmap) + elemName)
