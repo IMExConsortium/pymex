@@ -103,8 +103,8 @@ for cs in source:
                                 pretty_print=True).decode("utf-8") )
          else:
              print( rec.toJson() )
-             print('its def this')
-         print("just maing sure")
+
+         
     else:
         with open(args.ofile,"w") as of:
             if args.oformat == 'mif254':
