@@ -90,11 +90,11 @@
 		    {"value":"hostOrganism", "type":"organism", "wrap":"hostOrganismList"},
 		    {"value":"confidence", "type":"confidence","wrap":"confidenceList"},
 		    {"value":"parameterList", "type":"parameter","wrap":"parameterList"},
-		    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList", "postprocess":"post value"},
+		    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList", "postprocess":"getStoich"},
 		    {"value":"$UID", "type":"$TEXT", "name":"@id"}
 		  ],
 
-      
+
 
 
     "parameter": [ {"value":"experimentRef", "type":"$TEXT"},

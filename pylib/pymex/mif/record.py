@@ -21,8 +21,13 @@ class Record(xmlrecord.XmlRecord):
                            "mif300": {"IN": os.path.join( myDir, "defParse300.json"),
                                       "OUT": os.path.join( myDir, "defMif300.json" )}}
 
+        postFuncs = {"stoichiometry":self.isSpecial, "getStoich":self.buildStoich}
         #initializes this class to have all the properties of the parent class
-        super().__init__(root, config=self.mifConfig )
+        super().__init__(root, config=self.mifConfig, post=postFuncs )
+
+    def stoichConvert(self):
+        print("I am here")
+        return
 
     def parseMif(self, filename, ver="mif254", debug=False):
         return self.parseXml( filename, ver=ver )
@@ -81,7 +86,65 @@ class Record(xmlrecord.XmlRecord):
     #     self.testvariable = num + self.testvariable
     #     return
 
+    def buildStoich(self, data, element, wrapElem):
+        #if wrap elem is not None, append new stoichiometry attribute to it.
+        #using info in cdata["stoichiometry"] (a)
+        #use mifElememt to build the new element using attribute definition
+        #return generated dom.
+        if wrapElem is not None:
+            print("UEUEUEU")
+            if "stoichiometry" in data:
+                print(data["stoichiometry"])
+                stoich = data["stoichiometry"]
+                value = stoich["value"]
+                newString = "Stoichiometry: " + value
+                print("new String:")
+                print(newString)
+                newAttr = ET.SubElement(wrapElem, "attribute", {"name": "comment"})
+                newAttr.text = newString
+        print("printing a:")
+        print(data.keys())
+        print("printing b:")
+        print([child for child in element])
+        print("printing c:")
+        print(wrapElem)
+        return
 
+    def isSpecial(self, element, rec):
+        """Checks if post process element is an attribute list element containing a stoichiometry attribute, converts dictionary format if so"""
+        stoichAttribute = self.getStoichiometry(element, rec)
+        if stoichAttribute is not None:
+            newRec = self.stoich254to300(stoichAttribute)
+
+            rec["stoichiometry"] = {'value': newRec}
+
+            return True
+        return False
+
+    def getStoichiometry(self, elem, rec):
+        """Checks if rec contains an attribute which contains the text Stoichiometry"""
+        attributes = rec["attribute"]
+        for element in attributes:
+            if "value" in element:
+                value = element["value"]
+                if "Stoichiometry" in value:
+                    rec["attribute"].remove(element)
+                    return value
+
+        return None
+
+    def stoich254to300(self,stoich):
+        """Uses stoichiometry attribute text to extract the stoichiometry value"""
+        #stoich.getparent().remove(stoich)
+        value = ""
+        #parsing text for stoichiometry value
+        #text = stoich.text
+        for char in stoich:
+            if char.isnumeric() or char==".":
+                value = value + char
+
+        #ET.SubElement(participant, "stoichiometry", {"value": value})
+        return value
 
 
 

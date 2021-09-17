@@ -37,7 +37,7 @@
     "confidence":{"*":{"store":"list"} },
     "value":{"*":{"complex":false}},
 
-  "attributeList":{"*":{"wrapper":true,  "postprocess":"Record.stoichconvert(self,dom, ver,  parentElem, elem)"}},
+  "attributeList":{"*":{"wrapper":true,  "postprocess":"stoichiometry"}},
 	 "attribute":	 { "*":{ "name":"attribute", "store":"list"} },
 
     "interactorList":{"*":{"wrapper": true} },

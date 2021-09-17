@@ -22,7 +22,7 @@ class XmlRecord():
         mifstr = "{%s}" % mif_ns
         return mifstr
 
-    def __init__(self, root=None, config=None):
+    def __init__(self, root=None, config=None, post=None):
 
 
         if root is not None:
@@ -31,6 +31,7 @@ class XmlRecord():
             self.root = {}
 
         self.config = {}
+        self.post = post
         #postprocess dictionary structure:
         #{current element : [function call, parent of current element]}
         self.postprocess = {}
@@ -149,17 +150,8 @@ class XmlRecord():
             print("  CTEMPL", ctempl )
 
 
-        #postprocessing specifications
-        #must happen before wrapper check since postprocess elements may be wrappers
-        if "postprocess" in ctempl and ctempl["postprocess"] is not None:
-            #print("postprocess inside JSON")
-            #current element : [function call, parent of current element]
-            #self.postprocess[elem] = [ctempl["postprocess"], elem.getparent()]
-            #print(self.postprocess)
-            if self.isSpecial(elem, rec):
-                print("converted stoich254")
-                #rec["stoichiometry"]={'value': 'poop'}
-                #print(rec)
+
+
 
 
 
@@ -183,7 +175,13 @@ class XmlRecord():
                 self.genericParse( template, ver, rec, rpath, cchld, wrapped =True)
                 if debug:
                     print( json.dumps(self.root, indent=2) )
+            #postprocessing specifications
+            #must happen before wrapper check since postprocess elements may be wrappers
+            if "postprocess" in ctempl and ctempl["postprocess"] is not None:
+                self.post[ctempl["postprocess"]](elem, rec)
+
             return
+
 
         # find current key:
         #checking the attributes, not the tags
@@ -377,40 +375,15 @@ class XmlRecord():
 
             if debug:
                 print( json.dumps(self.root, indent=2) )
+
+            #postprocessing specifications
+            #must happen before wrapper check since postprocess elements may be wrappers
+            if "postprocess" in ctempl and ctempl["postprocess"] is not None:
+                self.post[ctempl["postprocess"]](elem, rec)
+
         return
 
-    def isSpecial(self, element, rec):
-        """Checks if post process element is an attribute list element containing a stoichiometry attribute, converts dictionary format if so"""
-        stoichAttribute = self.getStoichiometry(element)
-        if stoichAttribute is not None:
-            participant = element.getparent()
-            newRec = self.stoich254to300(participant, stoichAttribute)
-            rec["stoichiometry"] = {'value': newRec}
 
-            return True
-        return False
-
-    def getStoichiometry(self, elem):
-        """Checks if element contains an attribute which contains the text Stoichiometry"""
-        for x in elem.iter():
-            if (x.tag[self.config[self.version]["NSL"]:] == "attribute" and "name" in x.attrib):
-                if (x.attrib["name"]=="comment" and "Stoichiometry" in x.text):
-                    return x
-        return None
-
-    def stoich254to300(self, participant, stoich):
-        stoich.getparent().remove(stoich)
-        #participant[-1].clear()
-        #stoichiometry value
-        value = ""
-        #parsing text for stoichiometry value
-        text = stoich.text
-        for char in text:
-            if char.isnumeric() or char==".":
-                value = value + char
-
-        #ET.SubElement(participant, "stoichiometry", {"value": value})
-        return value
 
 
     def parseJson(self, file ):
@@ -436,73 +409,7 @@ class XmlRecord():
                                   self.root[rdata], template[rtype] )
         return None
 
-    # #function for creating and adding 254 version of stoichiometry data using 300 version element:
-    # def stoich300to254(self, participant, stoich):
-    #     #stoichiometry value
-    #     value = stoich.attrib["value"]
-    #
-    #     #adding data in 254 format:
-    #
-    #     #first creating attribute list wrapper
-    #     attrList = ET.SubElement(participant, "attributeList")
-    #     #creating the attribute element that holds the Stoichiometry data
-    #     stoichElem = ET.SubElement(attrList, "attribute", {"name": "comment"})
-    #     #creating string for attribute text:
-    #     stoichText = "Stoichiometry: " + str(value)
-    #     stoichElem.text = stoichText
-    #
-    #     return
-    #
-    # #function for creating and adding 300 version of stoichiometry data using 254 version element:
-    # def stoich254to300(self, participant, stoich):
-    #     oldStoich = participant[-1]
-    #     participant.remove(oldStoich)
-    #     #participant[-1].clear()
-    #     #stoichiometry value
-    #     value = None
-    #     #parsing text for stoichiometry value
-    #     text = stoich[0].text
-    #     for char in text:
-    #         if char.isnumeric():
-    #             value = char
-    #
-    #
-    #     ET.SubElement(participant, "stoichiometry", {"value": value})
-    #     return
-    #
-    # #using participant-stoichoimetry element pairings from initial parsing, find the corresponding elements in the new tree constructed by toMif()
-    # def findParticipants(self, newTree, ver):
-    #     participantIDs = []
-    #     newParticipantElems = []
-    #     for participant in self.postprocess:
-    #         attributes = participant.attrib
-    #         id = attributes.get("id")
-    #         participantIDs.append(id)
-    #
-    #
-    #
-    #     allElems = newTree.findall(".//")
-    #     print(len(allElems))
-    #     print("partid")
-    #     print(participantIDs)
-    #     for id in participantIDs:
-    #         for i in allElems:
-    #             print(i.tag[self.config[ver]["NSL"]:])
-    #
-    #             #TODO: don't hardcode indexing
-    #             if i.tag[self.config[ver]["NSL"]:]=="participant" and i.attrib["id"]==id:
-    #                 newParticipantElems.append(i)
-    #
-    #                 print(i)
-    #
-    #     newPostProcess = {}
-    #     counter = 0
-    #     print("debug")
-    #     print(len(newParticipantElems))
-    #     for i in self.postprocess:
-    #         newPostProcess[newParticipantElems[counter]] = self.postprocess[i]
-    #         counter += 1
-    #     self.postprocess = newPostProcess
+    
 
 
     #ctype is [{"value":"entry", "type":"expandedEntry","name":"entry"}]
@@ -547,18 +454,7 @@ class XmlRecord():
         print("testtestetsts")
         print(self.config[ver]["NSL"])
 
-        # #checking if contruction version is the same as record version; need some conversions if false:
-        # if self.version != ver:
-        #
-        #     self.findParticipants(dom, ver)
 
-
-        #using the previously recorded stoich elements (either "attribute" or "stoichiometry"), add the appropriate version to the dom element structure
-            #for stoich in self.postprocess:
-                #if ver == "mif254":
-                    #self.stoich300to254(stoich, self.postprocess[stoich])
-                #elif ver == "mif300":
-                    #self.stoich254to300(stoich, self.postprocess[stoich])
         return dom
 
     #returns list of ET.element type?
@@ -566,12 +462,9 @@ class XmlRecord():
         """Returns a list of DOM elements to be added to the parent and/or decorates
            parent with attributes and text value .
         """
-
-        if celem is not None and celem.tag == "participant":
-            print('PARTICIPANT')
-
-
         retLst = []
+
+
         if "wrap" in cdef:
             # add wrapper
             wrapName = cdef["wrap"]
@@ -586,10 +479,12 @@ class XmlRecord():
             wrappedTypes = template[cdef["type"]]
 
             empty = True # flag: will skip if nothing inside
+            #iterating through values in new dictionary, which is just another entry in the json
             for wtDef in wrappedTypes: # go over wrapper content
 
                 if wtDef["value"] in cdata:   # check if data present
                     wElemData = cdata[wtDef["value"]]
+                    #iterate through root dictionary, wElemData is a piece of self.root
                     for wed in wElemData: # wrapper contents *must* be a list
                         empty = False # non empty contents
 
@@ -601,6 +496,7 @@ class XmlRecord():
                             chldName = wtDef["value"]
 
                         # create content element inside a wrapper
+                        #tag o new element is an explicitly defined name in root, or just the same name as the value.
                         chldElem = ET.Element(self.toNsString(nsmap) + chldName)
                         wrapElem.append(chldElem)
 
@@ -616,17 +512,15 @@ class XmlRecord():
 
 
             if not empty:
-                #print("WRAP ELEM")
-                #print(wrapElem)
+
                 return [wrapElem]
 
             else:
                 return None
 
-        #print(cdef.keys())
-        if "postprocess" in cdef:
-            print(cdef["postprocess"])
-            print(cdata)
+
+
+
 
 
         if cdef["value"] =="$UID": #  generate next id
@@ -640,8 +534,7 @@ class XmlRecord():
 
         if "name" in cdef: # if present use name definition
             elemName = cdef["name"]
-            #print("[][][][]")
-            #print(elemName)
+
         else:              # otherwise use the name of record field
             elemName = cdef["value"]
 
@@ -711,11 +604,13 @@ class XmlRecord():
 
 
 
+        if "postprocess" in cdef:
+            function = self.post[cdef["postprocess"]](cdata, celem, wrapElem)
+
+
         if wrapElem is not None and len(elemData) > 0:
-            #print("FINAL TEXT")
             #print(ET.tostring(wrapElem, pretty_print=True).decode("utf-8"))
             return [wrapElem]
 
-        #print("COMPLEX TEXT")
-        #print(retLst)
+
         return retLst
