@@ -25,21 +25,15 @@ class Record(xmlrecord.XmlRecord):
         #initializes this class to have all the properties of the parent class
         super().__init__(root, config=self.mifConfig, post=postFuncs )
 
-
     def parseMif(self, filename, ver="mif254", debug=False):
         return self.parseXml( filename, ver=ver )
-
-
 
     def toMif( self, ver='mif254' ):
         """Builds MIF elementTree from a Record object."""
 
-        dom = self.toXml( ver, "entrySet", "ExpandedEntrySet" )
-
-        print("length of self.postprocess: " + str(len(self.postprocess)))
+        dom = self.toXml( ver, "entrySet", "ExpandedEntrySet" )        
 
         return dom
-
 
     def buildStoich(self, data, element, wrapElem):
         #if wrap elem is not None, append new stoichiometry attribute to it.
@@ -56,7 +50,9 @@ class Record(xmlrecord.XmlRecord):
         return
 
     def isSpecial(self, element, rec):
-        """Checks if post process element is an attribute list element containing a stoichiometry attribute, converts dictionary format if so"""
+        """Checks if post process element is an attribute list element 
+           containing a stoichiometry attribute, converts dictionary format if so
+        """
         stoichAttribute = self.getStoichiometry(element, rec)
         if stoichAttribute is not None:
             newRec = self.stoich254to300(stoichAttribute)
@@ -72,7 +68,7 @@ class Record(xmlrecord.XmlRecord):
         for element in attributes:
             if "value" in element:
                 value = element["value"]
-                if "Stoichiometry" in value:
+                if "stoichiometry" in value.lower():
                     rec["attribute"].remove(element)
                     return value
 
@@ -87,7 +83,6 @@ class Record(xmlrecord.XmlRecord):
                 value = value + char
 
         return value
-
 
     @property
     def entry(self):

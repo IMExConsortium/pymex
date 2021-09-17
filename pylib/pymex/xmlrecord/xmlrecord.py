@@ -62,7 +62,6 @@ class XmlRecord():
                     self.config[ver]["OUT"]["@NS"].pop("*", None)
                     self.config[ver]["OUT"]["@NS"][None] = defns
 
-
     def parseXml(self, filename, ver, debug=False):
 
         #dictionary representation of json file
@@ -115,9 +114,6 @@ class XmlRecord():
             print("\nTAG", tag, wrapped, len(rpath) )
             print(" TTEM", ttempl)
 
-
-
-
         if elem.getparent() is not None:
             parentElem = elem.getparent()
             if wrapped:
@@ -149,13 +145,6 @@ class XmlRecord():
         if debug:
             print("  CTEMPL", ctempl )
 
-
-
-
-
-
-
-
         # find wrap flag
         if "wrapper" in ctempl and ctempl["wrapper"] is not None:
             cwrap = ctempl["wrapper"]
@@ -181,7 +170,6 @@ class XmlRecord():
                 self.post[ctempl["postprocess"]](elem, rec)
 
             return
-
 
         # find current key:
         #checking the attributes, not the tags
@@ -212,8 +200,6 @@ class XmlRecord():
         else:
             #default
             cstore = template["*"]["*"]["store"]
-
-
 
         if debug:
             print( "  CKEY  ", ckey )
@@ -371,7 +357,6 @@ class XmlRecord():
                         dbkey = ':'.join(kval)
                         rec[ckey][ckeyRefInd][dbkey] = cvalue[cchldTag][0] if type(cvalue[cchldTag]) is list else cvalue[cchldTag]
 
-
             if debug:
                 print( json.dumps(self.root, indent=2) )
 
@@ -380,9 +365,6 @@ class XmlRecord():
                 self.post[ctempl["postprocess"]](elem, rec)
 
         return
-
-
-
 
     def parseJson(self, file ):
         self.root = json.load( file )
@@ -405,11 +387,9 @@ class XmlRecord():
                                   self.root[rdata], template[rtype] )
         return None
 
-
-
-
     #ctype is [{"value":"entry", "type":"expandedEntry","name":"entry"}]
     #cdata is root dictionary datastructure
+    
     def mifGenerator(self, nsmap, ver, template, dom, cdata, ctype):
         """Returns DOM representation of the MIF record defined by the template.
         """
@@ -437,8 +417,7 @@ class XmlRecord():
                 dom.set(qname,attrib[a])
 
         for cdef in ctype:
-            #passing in nsmap: {'xsi': 'http://www.w3.org/2001/XMLSchema-instance', None: 'http://psi.hupo.org/mi/mif'}
-            #passing in ver string, json template, none for celem (currentelement), root[rdata] (everything inside the root dictionary), and key inside ctype dictionary (keys: value, type, name)
+            
             chldLst = self.mifElement( nsmap, ver, template, None, cdata, cdef)
             if chldLst is not None:
                 for chld in chldLst:
@@ -447,13 +426,11 @@ class XmlRecord():
 
         return dom
 
-    #returns list of ET.element type?
     def mifElement(self, nsmap, ver, template, celem, cdata, cdef ):
-        """Returns a list of DOM elements to be added to the parent and/or decorates
-           parent with attributes and text value .
+        """Returns a list of DOM elements (ET.element type ) to be added to 
+           the parent and/or decorates parent with attributes and text value .
         """
         retLst = []
-
 
         if "wrap" in cdef:
             # add wrapper
@@ -465,10 +442,11 @@ class XmlRecord():
 
         if "value" not in cdef: # empty wrapper
 
-            # wrapper contents definition
+            # definition of wrapper contents
             wrappedTypes = template[cdef["type"]]
 
             empty = True # flag: will skip if nothing inside
+            
             #iterating through values in new dictionary, which is just another entry in the json
             for wtDef in wrappedTypes: # go over wrapper content
 
@@ -486,7 +464,9 @@ class XmlRecord():
                             chldName = wtDef["value"]
 
                         # create content element inside a wrapper
-                        #tag o new element is an explicitly defined name in root, or just the same name as the value.
+                        # tag of new element is an explicitly defined name in root,
+                        # or just the same name as the value.
+                        
                         chldElem = ET.Element(self.toNsString(nsmap) + chldName)
                         wrapElem.append(chldElem)
 
@@ -499,19 +479,12 @@ class XmlRecord():
                                 for wcd in wclLst:
                                     chldElem.append(wcd)
 
-
-
             if not empty:
 
                 return [wrapElem]
 
             else:
                 return None
-
-
-
-
-
 
         if cdef["value"] =="$UID": #  generate next id
             self.UID += 1
@@ -527,10 +500,6 @@ class XmlRecord():
 
         else:              # otherwise use the name of record field
             elemName = cdef["value"]
-
-
-
-
 
         if isinstance( elemData, str):  # record field: text
 
@@ -552,10 +521,8 @@ class XmlRecord():
                         return [wrapElem]
                     else: # otherwise add to return list
                         retLst.append(chldElem)
-            #print("SIMPLE TEXT")
-            #print(retLst)
+           
             return retLst
-
 
         if isinstance( elemData, dict): # record field: complex element
             # convert single value to list
@@ -591,15 +558,15 @@ class XmlRecord():
                 elif chldElem is not None:     #  otherwise add to return list
                     retLst.append( chldElem )
 
-
-
         if "postprocess" in cdef:
             function = self.post[cdef["postprocess"]](cdata, celem, wrapElem)
 
-
-        if wrapElem is not None and len(elemData) > 0:
-            #print(ET.tostring(wrapElem, pretty_print=True).decode("utf-8"))
+        if wrapElem is not None and len(wrapElem) > 0:
+            if debug:
+                print( "wrapElem:", ET.tostring(wrapElem, pretty_print=True).decode("utf-8") )
             return [wrapElem]
-
-
+        else:
+            if debug:
+                print( "retLst:", retLst )
+        
         return retLst
