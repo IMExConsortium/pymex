@@ -158,3 +158,7 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
     def feature( self ):
         return self.root["uniprot"]["entry"][0]["_feature"]
      
+    @property
+    def comment( self ):
+        return self.root["uniprot"]["entry"][0]["_comment"]
+     

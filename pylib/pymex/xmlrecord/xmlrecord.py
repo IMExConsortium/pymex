@@ -237,8 +237,9 @@ class XmlRecord():
             # parse elem contents
                 
             # add dom attributes
-            for cattr in elem.attrib:
-                cvalue[cattr] = str( elem.attrib[cattr] )
+            for cattr in elem.attrib:                
+                if isinstance(cvalue, dict):
+                    cvalue[cattr] = str( elem.attrib[cattr] )
 
             cpath = []
             for p in rpath:

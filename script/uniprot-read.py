@@ -46,13 +46,30 @@ tmp = ucr.root["uniprot"]["entry"][0]
 
 tmp= ucr.entry
 
-print("Entry name: ", ucr.name['entry'])
-
 if args.ofile == 'STDOUT':
     print( json.dumps(tmp,indent=1) )
 else:
     with open(args.ofile,"w") as of:
         of.write( json.dumps(tmp,indent=1) )
 
+        
+print("Entry name: ", ucr.name['entry'])
+        
+#print( "Names: ", ucr.name )
+#print( "\nComments:", ucr.comment.keys() )
+#for k in ucr.comment:
+#    print( " comments:",k," :: " , ucr.comment[k] )
+
+#print( "\nFeatures:",list(ucr.feature.keys()))
+#for k in ucr.feature:
+#    print( " feature:",k," :: " , ucr.feature[k] )
+
+#print( "\nXref:",list(ucr.xref.keys()))
+#for k in ucr.xref:
+#    print( " xref:",k," :: " , ucr.xref[k] )
+
+#print( "Acc[primary]: ", ucr.accession['primary'] )
+#print( "Acc[secondary]: ", ucr.accession['secondary'] )
 
 
+    
