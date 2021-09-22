@@ -151,6 +151,10 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         return self.root["uniprot"]["entry"][0]["_gene"]
 
     @property
+    def taxon( self ):
+        return self.root["uniprot"]["entry"][0]["organism"]
+
+    @property
     def xref( self ):
         return self.root["uniprot"]["entry"][0]["_xref"]
 
