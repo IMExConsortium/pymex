@@ -30,6 +30,7 @@
     "reference":{"entry":{"store":"list"},"*":{}},
     
     "authorList":{"*":{"wrapper":true}},
+    "editorList":{"*":{"wrapper":true}},
     "person":{"citation":{"store":"list","name":"author"}},
     "dbReference":{
         "entry":{"store":"list","post":"xref"},
