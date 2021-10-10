@@ -1,0 +1,260 @@
+<entrySet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://psi.hupo.org/mi/mif" xsi:schemaLocation="http://psi.hupo.org/mi/mif https://raw.githubusercontent.com/HUPO-PSI/miXML/master/2.5/src/MIF254.xsd" level="2" version="5" minorVersion="4">
+  <entry>
+    <source>
+      <names>
+        <shortLabel>DIP</shortLabel>
+        <fullName>Database of Interacting Proteins</fullName>
+      </names>
+      <xref>
+        <primaryRef id="MI:0465" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+        <secondaryRef id="14681454" db="pubmed" dbAc="MI:0446" refType="primary-reference" refTypeAc="MI:0358"/>
+      </xref>
+    </source>
+    <interactionList>
+      <interaction id="8">
+        <names>
+          <shortLabel>N/A</shortLabel>
+        </names>
+        <experimentList>
+          <experimentDescription id="2">
+            <names>
+              <shortLabel>N/A</shortLabel>
+            </names>
+            <bibref>
+              <xref>
+                <primaryRef id="23637410" db="pubmed" dbAc="MI:0446" refType="primary-reference" refTypeAc="MI:0358"/>
+              </xref>
+            </bibref>
+            <hostOrganismList>
+              <hostOrganism ncbiTaxId="9606">
+                <names>
+                  <shortLabel>man</shortLabel>
+                  <fullName>Homo sapiens</fullName>
+                </names>
+              </hostOrganism>
+            </hostOrganismList>
+            <interactionDetectionMethod>
+              <names>
+                <shortLabel>confocal microscopy</shortLabel>
+              </names>
+              <xref>
+                <primaryRef id="MI:0663" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+              </xref>
+            </interactionDetectionMethod>
+            <participantIdentificationMethod>
+              <names>
+                <shortLabel>experimental participant identification</shortLabel>
+              </names>
+              <xref>
+                <primaryRef id="MI:0661" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+              </xref>
+            </participantIdentificationMethod>
+          </experimentDescription>
+        </experimentList>
+        <participantList>
+          <participant id="5">
+            <names>
+              <shortLabel>ncap_ibvb</shortLabel>
+            </names>
+            <interactor id="3">
+              <names>
+                <shortLabel>ncap_ibvb</shortLabel>
+                <fullName>Nucleoprotein</fullName>
+              </names>
+              <xref>
+                <primaryRef id="P69596" db="uniprotkb" dbAc="MI:0486" refType="identity" refTypeAc="MI:0356"/>
+              </xref>
+              <interactorType>
+                <names>
+                  <shortLabel>protein</shortLabel>
+                </names>
+                <xref>
+                  <primaryRef id="MI:0326" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+                </xref>
+              </interactorType>
+              <organism ncbiTaxId="11122">
+                <names>
+                  <shortLabel>Avian infectious bronchitis virus (strain Beaudette)</shortLabel>
+                  <fullName>Avian infectious bronchitis virus (strain Beaudette)</fullName>
+                </names>
+              </organism>
+            </interactor>
+            <participantIdentificationMethodList>
+              <participantIdentificationMethod>
+                <names>
+                  <shortLabel>anti-tag immunocytochemistry</shortLabel>
+                </names>
+                <xref>
+                  <primaryRef id="MI:1201" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+                </xref>
+              </participantIdentificationMethod>
+              <participantIdentificationMethod>
+                <names>
+                  <shortLabel>predetermined participant</shortLabel>
+                </names>
+                <xref>
+                  <primaryRef id="MI:0396" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+                </xref>
+              </participantIdentificationMethod>
+            </participantIdentificationMethodList>
+            <biologicalRole>
+              <names>
+                <shortLabel>unspecified role</shortLabel>
+              </names>
+              <xref>
+                <primaryRef id="MI:0499" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+              </xref>
+            </biologicalRole>
+            <experimentalRoleList>
+              <experimentalRole>
+                <names>
+                  <shortLabel>neutral component</shortLabel>
+                </names>
+                <xref>
+                  <primaryRef id="MI:0497" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+                </xref>
+              </experimentalRole>
+            </experimentalRoleList>
+            <featureList>
+              <feature id="4">
+                <names>
+                  <shortLabel>egfp tag</shortLabel>
+                </names>
+                <featureType>
+                  <names>
+                    <shortLabel>enhanced green fluorescent protein tag</shortLabel>
+                  </names>
+                  <xref>
+                    <primaryRef id="MI:0734" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+                  </xref>
+                </featureType>
+                <featureRangeList>
+                  <featureRange>
+                    <startStatus>
+                      <names>
+                        <shortLabel>n-terminal range</shortLabel>
+                      </names>
+                      <xref>
+                        <primaryRef id="MI:1040" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+                      </xref>
+                    </startStatus>
+                    <endStatus>
+                      <names>
+                        <shortLabel>n-terminal range</shortLabel>
+                      </names>
+                      <xref>
+                        <primaryRef id="MI:1040" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+                      </xref>
+                    </endStatus>
+                  </featureRange>
+                </featureRangeList>
+              </feature>
+            </featureList>
+            <hostOrganismList>
+              <hostOrganism ncbiTaxId="9606">
+                <names>
+                  <shortLabel>man</shortLabel>
+                  <fullName>Homo sapiens</fullName>
+                </names>
+                <cellType>
+                  <names>
+                    <shortLabel>cabri:ICLC HTL04001</shortLabel>
+                  </names>
+                </cellType>
+              </hostOrganism>
+            </hostOrganismList>
+            <attributeList>
+              <attribute name="comment" nameAc="MI:0612">Stoichiometry: 1</attribute>
+              <attribute name="comment2" nameAc="MI:0612">other: 3</attribute>
+
+
+            </attributeList>
+          </participant>
+          <participant id="7">
+            <names>
+              <shortLabel>g3bp1_human</shortLabel>
+            </names>
+            <interactor id="6">
+              <names>
+                <shortLabel>g3bp1_human</shortLabel>
+                <fullName>Ras GTPase-activating protein-binding protein 1</fullName>
+              </names>
+              <xref>
+                <primaryRef id="Q13283" db="uniprotkb" dbAc="MI:0486" refType="identity" refTypeAc="MI:0356"/>
+              </xref>
+              <interactorType>
+                <names>
+                  <shortLabel>protein</shortLabel>
+                </names>
+                <xref>
+                  <primaryRef id="MI:0326" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+                </xref>
+              </interactorType>
+              <organism ncbiTaxId="9606">
+                <names>
+                  <shortLabel>man</shortLabel>
+                  <fullName>Homo sapiens</fullName>
+                </names>
+              </organism>
+            </interactor>
+            <participantIdentificationMethodList>
+              <participantIdentificationMethod>
+                <names>
+                  <shortLabel>immunocytochemistry</shortLabel>
+                </names>
+                <xref>
+                  <primaryRef id="MI:1200" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+                </xref>
+              </participantIdentificationMethod>
+            </participantIdentificationMethodList>
+            <biologicalRole>
+              <names>
+                <shortLabel>unspecified role</shortLabel>
+              </names>
+              <xref>
+                <primaryRef id="MI:0499" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+              </xref>
+            </biologicalRole>
+            <experimentalRoleList>
+              <experimentalRole>
+                <names>
+                  <shortLabel>neutral component</shortLabel>
+                </names>
+                <xref>
+                  <primaryRef id="MI:0497" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+                </xref>
+              </experimentalRole>
+            </experimentalRoleList>
+            <hostOrganismList>
+              <hostOrganism ncbiTaxId="9606">
+                <names>
+                  <shortLabel>man</shortLabel>
+                  <fullName>Homo sapiens</fullName>
+                </names>
+                <cellType>
+                  <names>
+                    <shortLabel>293T</shortLabel>
+                  </names>
+                  <xref>
+                    <primaryRef id="ICLC HTL04001" db="cabri" dbAc="MI:0246" refType="identity" refTypeAc="MI:0356"/>
+                  </xref>
+                </cellType>
+              </hostOrganism>
+            </hostOrganismList>
+            <attributeList>
+              <attribute name="comment" nameAc="MI:0612">Stoichiometry: 1.5</attribute>
+            </attributeList>
+          </participant>
+        </participantList>
+        <interactionType>
+          <names>
+            <shortLabel>colocalization</shortLabel>
+          </names>
+          <xref>
+            <primaryRef id="MI:0403" db="psi-mi" dbAc="MI:0488" refType="identity" refTypeAc="MI:0356"/>
+          </xref>
+        </interactionType>
+      </interaction>
+    </interactionList>
+  </entry>
+</entrySet>

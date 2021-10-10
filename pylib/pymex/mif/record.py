@@ -7,11 +7,12 @@ Created on Wed Aug 19 02:05:33 2020
 
 import os
 import pymex
+from lxml import etree as ET
 from pymex import xmlrecord, mif
 
 class Record(xmlrecord.XmlRecord):
     """MIF record representation. Inherits XML parsing and serialization from xml.XmlRecord"""
-    
+
     def __init__(self, root=None):
 
         myDir = os.path.dirname( os.path.realpath(__file__))
@@ -29,7 +30,7 @@ class Record(xmlrecord.XmlRecord):
                 
     def parseMif(self, filename, ver="mif254", debug=False):
         return self.parseXml( filename, ver=ver )
-   
+
     def toMif( self, ver='mif254' ):
         """Builds MIF elementTree from a Record object."""
         
@@ -137,84 +138,70 @@ class Record(xmlrecord.XmlRecord):
                             pass
                             #p.pop("stoichiometryRange", None)
                             
+
     @property
     def entry(self):
-        """Returns the first (default) entry of the record"""        
+        """Returns the first (default) entry of the record"""
         return mif.Entry( self.root['entrySet']['entry'][0] )
-    
+
     @property
     def entryCount(self):
         return len( self.root['entrySet']['entry'])
-    
+
     def getEntry( self, n = 0 ):
         "Returns i-th entry of the record."""
         if n < len( self.root['entrySet']['entry'] ):
             return mif.Entry( self.root['entrySet']['entry'][n] )
         else:
             return None
-    
-    @property          
+
+    @property
     def interactions(self):
-        """Returns interactions of the first (default) entry of the record."""                        
+        """Returns interactions of the first (default) entry of the record."""
         return mif.Entry( self.root['entrySet']['entry'][0] ).interactions
-    
+
     @property
     def interactionCount(self):
-        return len( self.root['entrySet']['entry'][0]["interaction"]) 
-    
+        return len( self.root['entrySet']['entry'][0]["interaction"])
+
     def getInteraction( self, n ):
         return mif.Interaction( self.root['entrySet']['entry'][0], n )
-    
-       
+
+
 class Entry():
     """MIF Entry representation."""
-    def __init__( self, entry ):        
-        self._entry = entry    
-    
+    def __init__( self, entry ):
+        self._entry = entry
+
     @property
     def interactions( self ):
-        ret = []        
-        for i in range( 0, len( self._entry["interaction" ]) ):        
-            ret.append( mif.Interaction( self._entry, n=i ) )        
+        ret = []
+        for i in range( 0, len( self._entry["interaction" ]) ):
+            ret.append( mif.Interaction( self._entry, n=i ) )
         return ret
-    
-    @property    
+
+    @property
     def interactionCount( self ):
         return len( self._entry[ "interaction" ] )
-    
+
     def getInteraction( self, n ):
         return mif.Interaction( self._entry , n )
-  
+
     @property
     def abstIinteractions( self ):
-        ret = []        
-        for i in range( 0, len( self._entry["abstInteraction" ]) ):        
-            ret.append( mif.AbstInteraction( self._entry, n=i ) )        
+        ret = []
+        for i in range( 0, len( self._entry["abstInteraction" ]) ):
+            ret.append( mif.AbstInteraction( self._entry, n=i ) )
         return ret
-    
-    @property    
+
+    @property
     def abstInteractionCount( self ):
         return len( self._entry[ "abstInteraction" ] )
-    
+
     def getAbstInteraction( self, n ):
         return mif.AbstInteraction( self._entry , n )
-    
-    
+
+
     @property
     def source(self):
         return mif.Source(self._entry["source"])
-
-       
-
-
-
-
-
-
-
-
-        
-        
-        
-        
-

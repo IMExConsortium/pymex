@@ -29,7 +29,7 @@
  "purified":"MI:0350",
  "partially-purified":"MI:0352",
  "cell lysate":"MI:0344",
- "physiological":"MI:0222",
+ "pysiological":"MI:0222",
  "over-expressed":"MI:0506",
  "identity":"MI:0356",
  "inferred-from":"MI:1351",

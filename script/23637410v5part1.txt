@@ -1,0 +1,21 @@
+source	DIP				
+pmid	23637410				
+					
+					
+interaction	MI:0403(colocalization)	MI:0663(confocal microscopy)	9606		
+					
+%EGFP-N					
+molecule	MI:0326(protein)	uprot:P69596	1	9606	cabri:ICLC HTL04001
+exprole	neutral				
+exprep	MI:0505(over expressed)				
+biorole	MI:0499(unspecified)				
+idmethod	MI:1201(anti-tag immunocytochemistry)	MI:0396(predetermined)			
+feature	MI:0734(EGFP tag)	egfp tag			
+range	n	n			
+%G3BP					
+molecule	MI:0326(protein)	uprot:Q13283	1	9606	293T
+exprole	neutral				
+exprep	physiological				
+biorole	MI:0499(unspecified)				
+idmethod	MI:1200( immunocytochemistry)				
+					

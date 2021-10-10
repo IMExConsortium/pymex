@@ -1,0 +1,381 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<entrySet xmlns="http://psi.hupo.org/mi/mif300" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://psi.hupo.org/mi/mif300 https://raw.githubusercontent.com/HUPO-PSI/miXML/master/3.0/src/MIF300.xsd" level="3" version="0" minorVersion="0">
+  <entry>
+    <source releaseDate="2020-07-07">
+      <names>
+        <shortLabel>IntAct</shortLabel>
+        <fullName>European Bioinformatics Institute</fullName>
+        <alias type="synonym" typeAc="MI:1041">IntAct</alias>
+        <alias type="synonym" typeAc="MI:1041">intact</alias>
+      </names>
+      <bibref>
+        <xref>
+          <primaryRef db="pubmed" dbAc="MI:0446" id="14681455" refType="primary-reference" refTypeAc="MI:0358"/>
+        </xref>
+      </bibref>
+      <xref>
+        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0469" refType="identity" refTypeAc="MI:0356"/>
+        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-10" refType="identity" refTypeAc="MI:0356"/>
+        <secondaryRef db="pubmed" dbAc="MI:0446" id="14681455" refType="primary-reference" refTypeAc="MI:0358"/>
+        <secondaryRef db="pubmed" dbAc="MI:0446" id="22121220" refType="method reference" refTypeAc="MI:0357"/>
+        <secondaryRef db="pubmed" dbAc="MI:0446" id="19850723" refType="method reference" refTypeAc="MI:0357"/>
+      </xref>
+      <attributeList>
+        <attribute name="url" nameAc="MI:0614">http://www.ebi.ac.uk/</attribute>
+        <attribute name="search-url" nameAc="MI:0615">http://www.ebi.ac.uk/intact/query/${ac}</attribute>
+        <attribute name="id-validation-regexp" nameAc="MI:0628">EBI-[0-9]+|IA:[0-9]+</attribute>
+        <attribute name="definition">INTerAction database (IntAct) provides an open source database and toolkit for the storage, presentation and analysis of molecular interactions.</attribute>
+        <attribute name="url" nameAc="MI:0614">http://www.ebi.ac.uk/intact</attribute>
+        <attribute name="postaladdress">European Bioinformatics Institute; Wellcome Trust Genome Campus; Hinxton, Cambridge; CB10 1SD; United Kingdom</attribute>
+        <attribute name="url" nameAc="MI:0614">http://www.ebi.ac.uk/intact/</attribute>
+      </attributeList>
+    </source>
+    <experimentList>
+      <experimentDescription id="1">
+        <names>
+          <fullName>Structure of the native (unligated) mannose-specific bulb lectin from Scilla campanulata (bluebell) at 1.7 A resolution.</fullName>
+        </names>
+        <bibref>
+          <xref>
+            <primaryRef db="pubmed" dbAc="MI:0446" id="10393293" refType="primary-reference" refTypeAc="MI:0358"/>
+            <secondaryRef db="intact" dbAc="MI:0469" id="EBI-25642756" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="imex" dbAc="MI:0670" id="IM-28091" refType="imex-primary" refTypeAc="MI:0662"/>
+          </xref>
+          <attributeList>
+            <attribute name="publication title" nameAc="MI:1091">Structure of the native (unligated) mannose-specific bulb lectin from Scilla campanulata (bluebell) at 1.7 A resolution.</attribute>
+            <attribute name="journal" nameAc="MI:0885">Acta crystallographica. Section D, Biological crystallography</attribute>
+            <attribute name="publication year" nameAc="MI:0886">1999</attribute>
+            <attribute name="curation depth" nameAc="MI:0955">imex curation</attribute>
+            <attribute name="imex curation" nameAc="MI:0959"/>
+            <attribute name="author-list" nameAc="MI:0636">Wood SD., Wright LM., Reynolds CD., Rizkallah PJ., Allen AK., Peumans WJ., Van Damme EJ.</attribute>
+            <attribute name="contact-email" nameAc="MI:0634">bmscreyn@livjm.ac.uk</attribute>
+            <attribute name="full coverage" nameAc="MI:0957">Only protein-protein interactions</attribute>
+            <attribute name="imex curation" nameAc="MI:0959">imex curation</attribute>
+          </attributeList>
+        </bibref>
+        <xref>
+          <primaryRef db="imex" dbAc="MI:0670" id="IM-28091" refType="imex-primary" refTypeAc="MI:0662"/>
+          <secondaryRef db="pubmed" dbAc="MI:0446" id="10393293" refType="primary-reference" refTypeAc="MI:0358"/>
+        </xref>
+        <hostOrganismList>
+          <hostOrganism ncbiTaxId="-1">
+            <names>
+              <shortLabel>in vitro</shortLabel>
+              <fullName>In vitro</fullName>
+            </names>
+          </hostOrganism>
+        </hostOrganismList>
+        <interactionDetectionMethod>
+          <names>
+            <shortLabel>x-ray diffraction</shortLabel>
+            <fullName>x-ray crystallography</fullName>
+            <alias type="go synonym" typeAc="MI:0303">X-ray</alias>
+            <alias type="synonym" typeAc="MI:1041">X-ray</alias>
+            <alias type="synonym" typeAc="MI:1041">x-ray diffraction</alias>
+          </names>
+          <xref>
+            <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0114" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="intact" dbAc="MI:0469" id="EBI-1272" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+          </xref>
+        </interactionDetectionMethod>
+        <participantIdentificationMethod>
+          <names>
+            <shortLabel>predetermined</shortLabel>
+            <fullName>predetermined participant</fullName>
+            <alias type="synonym" typeAc="MI:1041">predetermined</alias>
+          </names>
+          <xref>
+            <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0396" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="intact" dbAc="MI:0469" id="EBI-1465" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+          </xref>
+        </participantIdentificationMethod>
+        <attributeList>
+          <attribute name="author-list" nameAc="MI:0636">Wood SD., Wright LM., Reynolds CD., Rizkallah PJ., Allen AK., Peumans WJ., Van Damme EJ.</attribute>
+          <attribute name="contact-email" nameAc="MI:0634">bmscreyn@livjm.ac.uk</attribute>
+          <attribute name="accepted">Accepted 2020-JUN-17 AT 15:55 BST AT 15:55 BST by PPORRAS</attribute>
+          <attribute name="journal" nameAc="MI:0885">Acta crystallographica. Section D, Biological crystallography</attribute>
+          <attribute name="publication year" nameAc="MI:0886">1999</attribute>
+          <attribute name="full coverage" nameAc="MI:0957">Only protein-protein interactions</attribute>
+          <attribute name="imex curation" nameAc="MI:0959">imex curation</attribute>
+          <attribute name="curation depth" nameAc="MI:0955">imex curation</attribute>
+        </attributeList>
+      </experimentDescription>
+    </experimentList>
+    <interactorList>
+      <interactor id="2">
+        <names>
+          <shortLabel>q9zp49_hyahi</shortLabel>
+        </names>
+        <xref>
+          <primaryRef db="uniprotkb" dbAc="MI:0486" id="Q9ZP49" refType="identity" refTypeAc="MI:0356"/>
+          <secondaryRef db="intact" dbAc="MI:0469" id="EBI-25642775" refType="identity" refTypeAc="MI:0356"/>
+          <secondaryRef db="rcsb pdb" dbAc="MI:0460" id="1B2P"/>
+          <secondaryRef db="interpro" dbAc="MI:0449" id="IPR001480"/>
+          <secondaryRef db="interpro" dbAc="MI:0449" id="IPR036426"/>
+        </xref>
+        <interactorType>
+          <names>
+            <shortLabel>protein</shortLabel>
+            <fullName>protein</fullName>
+          </names>
+          <xref>
+            <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0326" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="intact" dbAc="MI:0469" id="EBI-619654" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+            <secondaryRef db="so" dbAc="MI:0601" id="SO:0000358" refType="see-also" refTypeAc="MI:0361"/>
+          </xref>
+        </interactorType>
+        <organism ncbiTaxId="81759">
+          <names>
+            <shortLabel>hyahi</shortLabel>
+            <fullName>Hyacinthoides hispanica (Spanish bluebell) (Scilla hispanica)</fullName>
+            <alias type="synonym" typeAc="MI:1041">Scilla hispanica</alias>
+          </names>
+        </organism>
+        <sequence>CILSLIVIFGILTQLSLICNANNIIFSKQPDDNHPQILHATESLEILYGTHVYRFIMQTDCNLVLYDNNNPIWATNTGGLGNGCRAVLQPDGVLVVITNENVTVWQSPVAGKAGHYVLVLQPDRNVVIYGDALWATQTVRGGSGVMPLLKTRQIE</sequence>
+        <attributeList>
+          <attribute name="crc64">6854B191D9AEA590</attribute>
+        </attributeList>
+      </interactor>
+    </interactorList>
+    <interactionList>
+      <interaction id="3" imexId="IM-28091-1">
+        <names>
+          <shortLabel>q9zp49_hyahi-q9zp49_hyahi-1</shortLabel>
+        </names>
+        <xref>
+          <primaryRef db="pdbe" dbAc="MI:0472" id="1b2p" refType="identity" refTypeAc="MI:0356"/>
+          <secondaryRef db="intact" dbAc="MI:0469" id="EBI-25642781" refType="identity" refTypeAc="MI:0356"/>
+          <secondaryRef db="imex" dbAc="MI:0670" id="IM-28091-1" refType="imex-primary" refTypeAc="MI:0662"/>
+        </xref>
+        <experimentList>
+          <experimentRef>1</experimentRef>
+        </experimentList>
+        <participantList>
+          <participant id="4">
+            <interactorRef>2</interactorRef>
+            <biologicalRole>
+              <names>
+                <shortLabel>unspecified role</shortLabel>
+                <fullName>unspecified role</fullName>
+              </names>
+              <xref>
+                <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0499" refType="identity" refTypeAc="MI:0356"/>
+                <secondaryRef db="intact" dbAc="MI:0469" id="EBI-77781" refType="identity" refTypeAc="MI:0356"/>
+                <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+              </xref>
+            </biologicalRole>
+            <experimentalRoleList>
+              <experimentalRole>
+                <names>
+                  <shortLabel>neutral component</shortLabel>
+                  <fullName>neutral component</fullName>
+                </names>
+                <xref>
+                  <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0497" refType="identity" refTypeAc="MI:0356"/>
+                  <secondaryRef db="intact" dbAc="MI:0469" id="EBI-55" refType="identity" refTypeAc="MI:0356"/>
+                  <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                </xref>
+              </experimentalRole>
+            </experimentalRoleList>
+            <experimentalPreparationList>
+              <experimentalPreparation>
+                <names>
+                  <shortLabel>purified</shortLabel>
+                  <fullName>purified</fullName>
+                </names>
+                <xref>
+                  <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0350" refType="identity" refTypeAc="MI:0356"/>
+                  <secondaryRef db="intact" dbAc="MI:0469" id="EBI-1537811" refType="identity" refTypeAc="MI:0356"/>
+                  <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                </xref>
+              </experimentalPreparation>
+            </experimentalPreparationList>
+            <featureList>
+              <feature id="5">
+                <names>
+                  <shortLabel>Bulb-type lectin domain</shortLabel>
+                </names>
+                <xref>
+                  <primaryRef db="intact" dbAc="MI:0469" id="EBI-25642788" refType="identity" refTypeAc="MI:0356"/>
+                </xref>
+                <featureType>
+                  <names>
+                    <shortLabel>sufficient to bind</shortLabel>
+                    <fullName>sufficient binding region</fullName>
+                    <alias type="synonym" typeAc="MI:1041">sufficient to bind</alias>
+                  </names>
+                  <xref>
+                    <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0442" refType="identity" refTypeAc="MI:0356"/>
+                    <secondaryRef db="intact" dbAc="MI:0469" id="EBI-608899" refType="identity" refTypeAc="MI:0356"/>
+                    <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                  </xref>
+                </featureType>
+                <featureRangeList>
+                  <featureRange>
+                    <startStatus>
+                      <names>
+                        <shortLabel>certain</shortLabel>
+                        <fullName>certain sequence position</fullName>
+                        <alias type="synonym" typeAc="MI:1041">certain</alias>
+                      </names>
+                      <xref>
+                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0335" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-540564" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                      </xref>
+                    </startStatus>
+                    <begin position="22"/>
+                    <endStatus>
+                      <names>
+                        <shortLabel>certain</shortLabel>
+                        <fullName>certain sequence position</fullName>
+                        <alias type="synonym" typeAc="MI:1041">certain</alias>
+                      </names>
+                      <xref>
+                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0335" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-540564" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                      </xref>
+                    </endStatus>
+                    <end position="140"/>
+                  </featureRange>
+                </featureRangeList>
+              </feature>
+            </featureList>
+            <hostOrganismList>
+              <hostOrganism ncbiTaxId="81759">
+                <names>
+                  <shortLabel>hyahi</shortLabel>
+                  <fullName>Hyacinthoides hispanica (Spanish bluebell) (Scilla hispanica)</fullName>
+                  <alias type="synonym" typeAc="MI:1041">Scilla hispanica</alias>
+                </names>
+              </hostOrganism>
+            </hostOrganismList>
+            <stoichiometry value="1"/>
+          </participant>
+          <participant id="6">
+            <interactorRef>2</interactorRef>
+            <biologicalRole>
+              <names>
+                <shortLabel>unspecified role</shortLabel>
+                <fullName>unspecified role</fullName>
+              </names>
+              <xref>
+                <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0499" refType="identity" refTypeAc="MI:0356"/>
+                <secondaryRef db="intact" dbAc="MI:0469" id="EBI-77781" refType="identity" refTypeAc="MI:0356"/>
+                <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+              </xref>
+            </biologicalRole>
+            <experimentalRoleList>
+              <experimentalRole>
+                <names>
+                  <shortLabel>neutral component</shortLabel>
+                  <fullName>neutral component</fullName>
+                </names>
+                <xref>
+                  <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0497" refType="identity" refTypeAc="MI:0356"/>
+                  <secondaryRef db="intact" dbAc="MI:0469" id="EBI-55" refType="identity" refTypeAc="MI:0356"/>
+                  <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                </xref>
+              </experimentalRole>
+            </experimentalRoleList>
+            <experimentalPreparationList>
+              <experimentalPreparation>
+                <names>
+                  <shortLabel>purified</shortLabel>
+                  <fullName>purified</fullName>
+                </names>
+                <xref>
+                  <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0350" refType="identity" refTypeAc="MI:0356"/>
+                  <secondaryRef db="intact" dbAc="MI:0469" id="EBI-1537811" refType="identity" refTypeAc="MI:0356"/>
+                  <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                </xref>
+              </experimentalPreparation>
+            </experimentalPreparationList>
+            <featureList>
+              <feature id="7">
+                <names>
+                  <shortLabel>Bulb-type lectin domain</shortLabel>
+                </names>
+                <xref>
+                  <primaryRef db="intact" dbAc="MI:0469" id="EBI-25642785" refType="identity" refTypeAc="MI:0356"/>
+                </xref>
+                <featureType>
+                  <names>
+                    <shortLabel>sufficient to bind</shortLabel>
+                    <fullName>sufficient binding region</fullName>
+                    <alias type="synonym" typeAc="MI:1041">sufficient to bind</alias>
+                  </names>
+                  <xref>
+                    <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0442" refType="identity" refTypeAc="MI:0356"/>
+                    <secondaryRef db="intact" dbAc="MI:0469" id="EBI-608899" refType="identity" refTypeAc="MI:0356"/>
+                    <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                  </xref>
+                </featureType>
+                <featureRangeList>
+                  <featureRange>
+                    <startStatus>
+                      <names>
+                        <shortLabel>certain</shortLabel>
+                        <fullName>certain sequence position</fullName>
+                        <alias type="synonym" typeAc="MI:1041">certain</alias>
+                      </names>
+                      <xref>
+                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0335" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-540564" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                      </xref>
+                    </startStatus>
+                    <begin position="22"/>
+                    <endStatus>
+                      <names>
+                        <shortLabel>certain</shortLabel>
+                        <fullName>certain sequence position</fullName>
+                        <alias type="synonym" typeAc="MI:1041">certain</alias>
+                      </names>
+                      <xref>
+                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0335" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-540564" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                      </xref>
+                    </endStatus>
+                    <end position="140"/>
+                  </featureRange>
+                </featureRangeList>
+              </feature>
+            </featureList>
+            <hostOrganismList>
+              <hostOrganism ncbiTaxId="81759">
+                <names>
+                  <shortLabel>hyahi</shortLabel>
+                  <fullName>Hyacinthoides hispanica (Spanish bluebell) (Scilla hispanica)</fullName>
+                  <alias type="synonym" typeAc="MI:1041">Scilla hispanica</alias>
+                </names>
+              </hostOrganism>
+            </hostOrganismList>
+            <stoichiometry value="1"/>
+          </participant>
+        </participantList>
+        <interactionType>
+          <names>
+            <shortLabel>direct interaction</shortLabel>
+            <fullName>direct interaction</fullName>
+          </names>
+          <xref>
+            <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0407" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="intact" dbAc="MI:0469" id="EBI-608833" refType="identity" refTypeAc="MI:0356"/>
+            <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+          </xref>
+        </interactionType>
+        <attributeList>
+          <attribute name="figure legend" nameAc="MI:0599">Fig. 6</attribute>
+          <attribute name="3d-resolution" nameAc="MI:0632">1.7</attribute>
+          <attribute name="3d-r-factors" nameAc="MI:0631">18.6/20.8</attribute>
+        </attributeList>
+      </interaction>
+    </interactionList>
+  </entry>
+</entrySet>

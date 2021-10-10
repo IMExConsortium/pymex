@@ -1,0 +1,578 @@
+{
+  "entrySet": {
+    "{http://www.w3.org/2001/XMLSchema-instance}schemaLocation": "http://psi.hupo.org/mi/mif https://raw.githubusercontent.com/HUPO-PSI/miXML/master/2.5/src/MIF254.xsd",
+    "level": "2",
+    "version": "5",
+    "minorVersion": "4",
+    "entry": [
+      {
+        "source": {
+          "names": {
+            "shortLabel": "DIP",
+            "fullName": "Database of Interacting Proteins"
+          },
+          "xref": {
+            "xrefInd": {
+              "psi-mi:MI:0465": {
+                "id": "MI:0465",
+                "db": "psi-mi",
+                "dbAc": "MI:0488",
+                "refType": "identity",
+                "refTypeAc": "MI:0356"
+              },
+              "pubmed:14681454": {
+                "id": "14681454",
+                "db": "pubmed",
+                "dbAc": "MI:0446",
+                "refType": "primary-reference",
+                "refTypeAc": "MI:0358"
+              }
+            },
+            "primaryRef": {
+              "id": "MI:0465",
+              "db": "psi-mi",
+              "dbAc": "MI:0488",
+              "refType": "identity",
+              "refTypeAc": "MI:0356"
+            },
+            "secondaryRef": [
+              {
+                "id": "14681454",
+                "db": "pubmed",
+                "dbAc": "MI:0446",
+                "refType": "primary-reference",
+                "refTypeAc": "MI:0358"
+              }
+            ]
+          }
+        },
+        "interaction": [
+          {
+            "id": "8",
+            "names": {
+              "shortLabel": "N/A"
+            },
+            "experiment": [
+              {
+                "id": "2",
+                "names": {
+                  "shortLabel": "N/A"
+                },
+                "bibref": {
+                  "xref": {
+                    "xrefInd": {
+                      "pubmed:23637410": {
+                        "id": "23637410",
+                        "db": "pubmed",
+                        "dbAc": "MI:0446",
+                        "refType": "primary-reference",
+                        "refTypeAc": "MI:0358"
+                      }
+                    },
+                    "primaryRef": {
+                      "id": "23637410",
+                      "db": "pubmed",
+                      "dbAc": "MI:0446",
+                      "refType": "primary-reference",
+                      "refTypeAc": "MI:0358"
+                    }
+                  }
+                },
+                "hostOrganism": [
+                  {
+                    "ncbiTaxId": "9606",
+                    "names": {
+                      "shortLabel": "man",
+                      "fullName": "Homo sapiens"
+                    }
+                  }
+                ],
+                "interactionDetectionMethod": {
+                  "names": {
+                    "shortLabel": "confocal microscopy"
+                  },
+                  "xref": {
+                    "xrefInd": {
+                      "psi-mi:MI:0663": {
+                        "id": "MI:0663",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    },
+                    "primaryRef": {
+                      "id": "MI:0663",
+                      "db": "psi-mi",
+                      "dbAc": "MI:0488",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  }
+                },
+                "participantIdentificationMethod": {
+                  "names": {
+                    "shortLabel": "experimental participant identification"
+                  },
+                  "xref": {
+                    "xrefInd": {
+                      "psi-mi:MI:0661": {
+                        "id": "MI:0661",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    },
+                    "primaryRef": {
+                      "id": "MI:0661",
+                      "db": "psi-mi",
+                      "dbAc": "MI:0488",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  }
+                }
+              }
+            ],
+            "participant": [
+              {
+                "id": "5",
+                "names": {
+                  "shortLabel": "ncap_ibvb"
+                },
+                "interactor": {
+                  "id": "3",
+                  "names": {
+                    "shortLabel": "ncap_ibvb",
+                    "fullName": "Nucleoprotein"
+                  },
+                  "xref": {
+                    "xrefInd": {
+                      "uniprotkb:P69596": {
+                        "id": "P69596",
+                        "db": "uniprotkb",
+                        "dbAc": "MI:0486",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    },
+                    "primaryRef": {
+                      "id": "P69596",
+                      "db": "uniprotkb",
+                      "dbAc": "MI:0486",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  },
+                  "interactorType": {
+                    "names": {
+                      "shortLabel": "protein"
+                    },
+                    "xref": {
+                      "xrefInd": {
+                        "psi-mi:MI:0326": {
+                          "id": "MI:0326",
+                          "db": "psi-mi",
+                          "dbAc": "MI:0488",
+                          "refType": "identity",
+                          "refTypeAc": "MI:0356"
+                        }
+                      },
+                      "primaryRef": {
+                        "id": "MI:0326",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  },
+                  "organism": {
+                    "ncbiTaxId": "11122",
+                    "names": {
+                      "shortLabel": "Avian infectious bronchitis virus (strain Beaudette)",
+                      "fullName": "Avian infectious bronchitis virus (strain Beaudette)"
+                    }
+                  }
+                },
+                "participantIdentificationMethodList": {
+                  "participantIdentificationMethod": {
+                    "names": {
+                      "shortLabel": "predetermined participant"
+                    },
+                    "xref": {
+                      "xrefInd": {
+                        "psi-mi:MI:0396": {
+                          "id": "MI:0396",
+                          "db": "psi-mi",
+                          "dbAc": "MI:0488",
+                          "refType": "identity",
+                          "refTypeAc": "MI:0356"
+                        }
+                      },
+                      "primaryRef": {
+                        "id": "MI:0396",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  }
+                },
+                "biologicalRole": {
+                  "names": {
+                    "shortLabel": "unspecified role"
+                  },
+                  "xref": {
+                    "xrefInd": {
+                      "psi-mi:MI:0499": {
+                        "id": "MI:0499",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    },
+                    "primaryRef": {
+                      "id": "MI:0499",
+                      "db": "psi-mi",
+                      "dbAc": "MI:0488",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  }
+                },
+                "experimentalRole": [
+                  {
+                    "names": {
+                      "shortLabel": "neutral component"
+                    },
+                    "xref": {
+                      "xrefInd": {
+                        "psi-mi:MI:0497": {
+                          "id": "MI:0497",
+                          "db": "psi-mi",
+                          "dbAc": "MI:0488",
+                          "refType": "identity",
+                          "refTypeAc": "MI:0356"
+                        }
+                      },
+                      "primaryRef": {
+                        "id": "MI:0497",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  }
+                ],
+                "feature": [
+                  {
+                    "id": "4",
+                    "names": {
+                      "shortLabel": "egfp tag"
+                    },
+                    "featureType": {
+                      "names": {
+                        "shortLabel": "enhanced green fluorescent protein tag"
+                      },
+                      "xref": {
+                        "xrefInd": {
+                          "psi-mi:MI:0734": {
+                            "id": "MI:0734",
+                            "db": "psi-mi",
+                            "dbAc": "MI:0488",
+                            "refType": "identity",
+                            "refTypeAc": "MI:0356"
+                          }
+                        },
+                        "primaryRef": {
+                          "id": "MI:0734",
+                          "db": "psi-mi",
+                          "dbAc": "MI:0488",
+                          "refType": "identity",
+                          "refTypeAc": "MI:0356"
+                        }
+                      }
+                    },
+                    "featureRange": [
+                      {
+                        "startStatus": {
+                          "names": {
+                            "shortLabel": "n-terminal range"
+                          },
+                          "xref": {
+                            "xrefInd": {
+                              "psi-mi:MI:1040": {
+                                "id": "MI:1040",
+                                "db": "psi-mi",
+                                "dbAc": "MI:0488",
+                                "refType": "identity",
+                                "refTypeAc": "MI:0356"
+                              }
+                            },
+                            "primaryRef": {
+                              "id": "MI:1040",
+                              "db": "psi-mi",
+                              "dbAc": "MI:0488",
+                              "refType": "identity",
+                              "refTypeAc": "MI:0356"
+                            }
+                          }
+                        },
+                        "endStatus": {
+                          "names": {
+                            "shortLabel": "n-terminal range"
+                          },
+                          "xref": {
+                            "xrefInd": {
+                              "psi-mi:MI:1040": {
+                                "id": "MI:1040",
+                                "db": "psi-mi",
+                                "dbAc": "MI:0488",
+                                "refType": "identity",
+                                "refTypeAc": "MI:0356"
+                              }
+                            },
+                            "primaryRef": {
+                              "id": "MI:1040",
+                              "db": "psi-mi",
+                              "dbAc": "MI:0488",
+                              "refType": "identity",
+                              "refTypeAc": "MI:0356"
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                ],
+                "hostOrganism": [
+                  {
+                    "ncbiTaxId": "9606",
+                    "names": {
+                      "shortLabel": "man",
+                      "fullName": "Homo sapiens"
+                    },
+                    "cellType": {
+                      "names": {
+                        "shortLabel": "cabri:ICLC HTL04001"
+                      }
+                    }
+                  }
+                ],
+                "attribute": [
+                  {
+                    "value": "Stoichiometry: 1",
+                    "name": "comment",
+                    "nameAc": "MI:0612"
+                  }
+                ]
+              },
+              {
+                "id": "7",
+                "names": {
+                  "shortLabel": "g3bp1_human"
+                },
+                "interactor": {
+                  "id": "6",
+                  "names": {
+                    "shortLabel": "g3bp1_human",
+                    "fullName": "Ras GTPase-activating protein-binding protein 1"
+                  },
+                  "xref": {
+                    "xrefInd": {
+                      "uniprotkb:Q13283": {
+                        "id": "Q13283",
+                        "db": "uniprotkb",
+                        "dbAc": "MI:0486",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    },
+                    "primaryRef": {
+                      "id": "Q13283",
+                      "db": "uniprotkb",
+                      "dbAc": "MI:0486",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  },
+                  "interactorType": {
+                    "names": {
+                      "shortLabel": "protein"
+                    },
+                    "xref": {
+                      "xrefInd": {
+                        "psi-mi:MI:0326": {
+                          "id": "MI:0326",
+                          "db": "psi-mi",
+                          "dbAc": "MI:0488",
+                          "refType": "identity",
+                          "refTypeAc": "MI:0356"
+                        }
+                      },
+                      "primaryRef": {
+                        "id": "MI:0326",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  },
+                  "organism": {
+                    "ncbiTaxId": "9606",
+                    "names": {
+                      "shortLabel": "man",
+                      "fullName": "Homo sapiens"
+                    }
+                  }
+                },
+                "participantIdentificationMethodList": {
+                  "participantIdentificationMethod": {
+                    "names": {
+                      "shortLabel": "immunocytochemistry"
+                    },
+                    "xref": {
+                      "xrefInd": {
+                        "psi-mi:MI:1200": {
+                          "id": "MI:1200",
+                          "db": "psi-mi",
+                          "dbAc": "MI:0488",
+                          "refType": "identity",
+                          "refTypeAc": "MI:0356"
+                        }
+                      },
+                      "primaryRef": {
+                        "id": "MI:1200",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  }
+                },
+                "biologicalRole": {
+                  "names": {
+                    "shortLabel": "unspecified role"
+                  },
+                  "xref": {
+                    "xrefInd": {
+                      "psi-mi:MI:0499": {
+                        "id": "MI:0499",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    },
+                    "primaryRef": {
+                      "id": "MI:0499",
+                      "db": "psi-mi",
+                      "dbAc": "MI:0488",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  }
+                },
+                "experimentalRole": [
+                  {
+                    "names": {
+                      "shortLabel": "neutral component"
+                    },
+                    "xref": {
+                      "xrefInd": {
+                        "psi-mi:MI:0497": {
+                          "id": "MI:0497",
+                          "db": "psi-mi",
+                          "dbAc": "MI:0488",
+                          "refType": "identity",
+                          "refTypeAc": "MI:0356"
+                        }
+                      },
+                      "primaryRef": {
+                        "id": "MI:0497",
+                        "db": "psi-mi",
+                        "dbAc": "MI:0488",
+                        "refType": "identity",
+                        "refTypeAc": "MI:0356"
+                      }
+                    }
+                  }
+                ],
+                "hostOrganism": [
+                  {
+                    "ncbiTaxId": "9606",
+                    "names": {
+                      "shortLabel": "man",
+                      "fullName": "Homo sapiens"
+                    },
+                    "cellType": {
+                      "names": {
+                        "shortLabel": "293T"
+                      },
+                      "xref": {
+                        "xrefInd": {
+                          "cabri:ICLC HTL04001": {
+                            "id": "ICLC HTL04001",
+                            "db": "cabri",
+                            "dbAc": "MI:0246",
+                            "refType": "identity",
+                            "refTypeAc": "MI:0356"
+                          }
+                        },
+                        "primaryRef": {
+                          "id": "ICLC HTL04001",
+                          "db": "cabri",
+                          "dbAc": "MI:0246",
+                          "refType": "identity",
+                          "refTypeAc": "MI:0356"
+                        }
+                      }
+                    }
+                  }
+                ],
+                "attribute": [
+                  {
+                    "value": "Stoichiometry: 1",
+                    "name": "comment",
+                    "nameAc": "MI:0612"
+                  }
+                ]
+              }
+            ],
+            "interactionType": [
+              {
+                "names": {
+                  "shortLabel": "colocalization"
+                },
+                "xref": {
+                  "xrefInd": {
+                    "psi-mi:MI:0403": {
+                      "id": "MI:0403",
+                      "db": "psi-mi",
+                      "dbAc": "MI:0488",
+                      "refType": "identity",
+                      "refTypeAc": "MI:0356"
+                    }
+                  },
+                  "primaryRef": {
+                    "id": "MI:0403",
+                    "db": "psi-mi",
+                    "dbAc": "MI:0488",
+                    "refType": "identity",
+                    "refTypeAc": "MI:0356"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
