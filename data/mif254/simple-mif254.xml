@@ -238,7 +238,7 @@
             </hostOrganismList>
             <attributeList>
               <attribute name="comment" nameAc="MI:0612">stoichiometry: 6</attribute>
-              <attribute name="comment1" nameAc="MI:0613">another comment attribute</attribute>
+              <attribute name="comment" nameAc="MI:0613">another comment attribute</attribute>
             </attributeList>
           </participant>
         </participantList>

@@ -169,7 +169,7 @@
 		     "wrap":"confidenceList"},		 
 		    {"value":"parameter", "type":"parameter",
 		     "wrap":"parameterList"},
-		    {"value":"stoichiometry", "type":"stoichiometry"},
+		    {"value":"stoichiometry", "type":"$TEXT"},
 		    {"value":"stoichiometryRange", "type":"stoichiometryRange"},
 		    {"value":"attribute", "type":"attribute","name":"attribute",
 		     "wrap":"attributeList"},

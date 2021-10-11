@@ -36,13 +36,9 @@
     "confidenceList":{"*":{"wrapper":true}},
     "confidence":{"*":{"store":"list"} },
     "value":{"*":{"complex":false}},
-    "attributeList": { "*":{"wrapper":true},
-                       "participant":{"wrapper":true,"post":"stConv1","prep":"prep1"}
-                     },
+    "attributeList": { "*":{"wrapper":true} },
 	
-	"attribute": { "*":{ "name":"attribute", "store":"list"},
-                   "participant":{"post":"stConv2","prep":"prep2","store":"list"}
-                 },   
+	"attribute": { "*":{ "name":"attribute", "store":"list"} },   
     "interactorList":{"*":{"wrapper": true} },
 
     "interactor":{ "participant": { "store":"direct"},
@@ -57,7 +53,7 @@
     "interaction":{"*":{"store":"list"}},
 
     "participantList":{"*":{"wrapper": true} },
-    "participant":{"*":{"store":"list"}},
+    "participant":{"*":{"store":"list","postproc":"stoich254"}},
 
     "interactionType":{"interaction":{"store":"list"}},
 

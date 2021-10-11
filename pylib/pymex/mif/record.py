@@ -23,10 +23,9 @@ class Record(xmlrecord.XmlRecord):
         
         super().__init__( root,
                           config = self.mifConfig,
-                          process = { "prep1":self.prep1,
-                                      "prep2":self.prep2,
-                                      "stConv1":self.stConv1,
-                                      "stConv2": self.stConv2} )
+                          postproc = { "stoich254":self._stoich254,
+                                       "stoich254w":self._stoich254w,
+                                       "addstoich254":self._addstoich254} )
                 
     def parseMif(self, filename, ver="mif254", debug=False):
         return self.parseXml( filename, ver=ver )
@@ -34,111 +33,53 @@ class Record(xmlrecord.XmlRecord):
     def toMif( self, ver='mif254' ):
         """Builds MIF elementTree from a Record object."""
         
-        self._stoichiometryConvert( ver )        
+        #self._stoichiometryConvert( ver )        
         
         return self.toXml( ver, "entrySet", "ExpandedEntrySet" )
-
-    def prep1( self, arg1=None, arg2=None, arg3=None ):        
-        print(" prep1 here: arg1=", arg1)
-
-    def prep2( self, arg1=None, arg2=None, arg3=None ):
-        print(" prep2 here: arg1=", arg1)
         
-    def stConv1( self, arg1=None, arg2=None, arg3=None ):
-        for attr in arg2['attribute']:
-            if attr['name'] == "comment" and attr['value'].strip().lower().startswith("stoichiometry:"):                
-                print("STOICHIOMETRY: ",attr)
-                arg2['stoichiometry']=attr['value'].replace("stoichiometry:","").strip()
+    def _stoich254( self, elem=None, rec=None, cval=None ):
+
+        print("ELEM", elem)
+        #print("REC", rec["participant"].keys())
+        print("CCH(pre): ", cval.keys())
+
+        
+        if 'attribute' in cval.keys():
+            datt = None
+            for attr in cval['attribute']:
+                if attr['name'] == "comment":
+                    cav = attr['value'].strip().lower()
+                    if cav.startswith("stoichiometry:"):
+                        print("_stoich254: ", attr )
+                        cav = cav.replace("stoichiometry:","").strip()
+                        cval['stoichiometry']=cav
+                        datt = attr
+            if datt is not None:
+                cval['attribute'].remove(datt)
                 
-              
-    def stConv2( self, arg1=None, arg2=None, arg3=None  ):
-        print(" stconv2 here: arg1", arg1)
-        print(" stconv2 here: arg2=", arg2)
+        print("CCH(post): ", cval.keys())
         
-    def _stoichiometryConvert(self, ver):
-        
-        for e in self.root["entrySet"]["entry"]:
-            for i in e["interaction"]:
-                for p in i["participant"]:
-                    if ver == 'mif254': 
-                        # find mif300 stoichiometry
-                        stset = False
-                        if "stoichiometry" in p:
-                            stval = str( p["stoichiometry"]["value"] )
-                            stset =True
-                        else:
-                            stval = None
-                            
-                        if "stoichiometryRange" in p:
-                            stmin = str( p["stoichiometryRange"]["minValue"] )
-                            stmax = str( p["stoichiometryRange"]["maxValue"] )
-                            stset =True
-                        else:
-                            stmin = None
-                            stmax = None
-                       
-                        if stset:   
-                            # replace/add mif254 stoichiometry
-                            if "attribute" not in p:
-                                p["attribute"]={}
-                            ast = None    
-                            for a in p["attribute"]:
-                                if ("value" in a and 
-                                    a["value"].startswith("Stoichiometry:") ):
-                                    ast = a
-                            if ast is None:        
-                                ast =  {'name': 'comment', 'nameAc': 'MI:0612'}
-                                p["attribute"].append(ast)
-                                 
-                            if stval is not None:        
-                                ast["value"] = "Stoichiometry: " + stval
-                                                 
-                            elif stmin is not None and stmax is not None:
-                                strng = stmin + " : " + stmax
-                                ast["value"] = "StoichiometryRange: " + strng
-                                        
-                    elif ver == 'mif300':
-                    
-                        # find mif254 stoichiometry
-                        stval = None
-                        stmin = None
-                        stmax = None
-                        if "attribute" in p:
-                            for a in p["attribute"]:                                
-                                if ("value" in a and 
-                                    a["value"].startswith("Stoichiometry:") 
-                                    ):
-                                        vcol= a["value"].split(" ")
-                                        stval = vcol[1]
-                                        p["attribute"].remove( a )
-                                        break
-                                                                
-                                if ("value" in a and 
-                                    a["value"].startswith("StoichiometryRange:")
-                                    ):
-                                        vcol= a["value"].split(" ")
-                                        stmin = vcol[1]
-                                        stmax = vcol[3]
-                                        p["attribute"].remove( a )
-                                        break
-                                        
-                        # replace/add mif300 stoichiometry 
-                        if stval is not None:  
-                            st = p.setdefault("stoichiometry",{})
-                            st["value"] =str( stval )
-                            
-                        else:
-                            pass
-                            #p.pop("stoichiometry", None)
-                            
-                        if stmin is not None and stmax is not None:
-                            st["minValue"] = str(stmin)                            
-                            st["maxValue"] = str(stmax)
-                        else:
-                            pass
-                            #p.pop("stoichiometryRange", None)
-                            
+    def _stoich254w( self, arg1=None, arg2=None, arg3=None ):
+        print("_stoich254w: NOOP")
 
+    def _addstoich254( self, cdata=None, celem=None, cwrap=None, debug=False ):
+        if debug:
+            print("_addstoich254: BEGIN")
+            print("cdata -> ", cdata.keys())
+            print("celem -> ", celem)
+            print("cwrap -> ", cwrap)
+
+        if "stoichiometry" in cdata.keys():
+            if debug:
+                print("adding stoichiometry: ", cdata["stoichiometry"])
+                # <attribute name="comment">stoichiometry: #val</attriute>
+            chldElem = ET.Element( "attribute")
+            chldElem.text = "stoichiometry: " + str( cdata["stoichiometry"] )
+            chldElem.set("name","comment")
+            cwrap.append(chldElem)
+        if debug:
+            print("_addstoich254: DONE")
+        
     @property
     def entry(self):
         """Returns the first (default) entry of the record"""

@@ -4,14 +4,14 @@
     "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id",
 		"reference":null, "wrapper": false } },
     "entry":{"*":{"store":"list"}},
-    "accession":{"*":{"store":"list","complex":false, "post":"accession"}},
+    "accession":{"*":{"store":"list","complex":false, "postproc":"accession"}},
     "name":{
         "entry":{"complex":false},
 	    "gene":{"wrapper":false,"store":"list"},
 	    "organism":{"wrapper":false,"store":"list"},
 	    "*":{}},
    
-    "protein":{"*":{"wraper":false, "post":"protName"} },
+    "protein":{"*":{"wraper":false, "postproc":"protName"} },
     "recommendedName":{"protein":{"wrapper":false,"store":"direct","*":{} } },
     "alternativeName":{"protein":{"wrapper":false,"store":"list","*":{} }},
     
@@ -21,7 +21,7 @@
     "shortName":{"recommendedName":{"wrapper":false,"name":"shortName","complex":false,"store":"direct"},
                  "alternativeName":{"wrapper":false,"name":"shortName","complex":false,"store":"direct"}},
     
-    "gene":{"*":{"wrapper":false,"post":"geneName"}},
+    "gene":{"*":{"wrapper":false,"postproc":"geneName"}},
 
     "lineage":{"*":{"wrapper":true}},
    
@@ -33,12 +33,12 @@
     "editorList":{"*":{"wrapper":true}},
     "person":{"citation":{"store":"list","name":"author"}},
     "dbReference":{
-        "entry":{"store":"list","post":"xref"},
+        "entry":{"store":"list","postproc":"xref"},
 		   "citation":{"store":"list"},
 		   "*":{"store":"list"}},
     "scope":{"*":{"complex":false}},
 
-    "comment":{ "entry":{"store":"list","post":"comment"},
+    "comment":{ "entry":{"store":"list","postproc":"comment"},
                "*":{}},
 
     "source":{"entry":{"store":"list"},"*":{}},
@@ -46,6 +46,6 @@
     "isoform":{"*":{"store":"list"}},
     "event":{"*":{"store":"list"}},
     "evidence":{"*":{"store":"list"}},
-    "feature":{"*":{"store":"list", "post":"feature"}}
+    "feature":{"*":{"store":"list", "postproc":"feature"}}
     
 }

@@ -90,7 +90,7 @@
 		    {"value":"hostOrganism", "type":"organism", "wrap":"hostOrganismList"},
 		    {"value":"confidence", "type":"confidence","wrap":"confidenceList"},
 		    {"value":"parameterList", "type":"parameter","wrap":"parameterList"},
-		    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList", "postprocess":"getStoich"},
+		    {"value":"attribute", "type":"attribute","name":"attribute","wrap":"attributeList", "postproc":"addstoich254"},
 		    {"value":"$UID", "type":"$TEXT", "name":"@id"}
 		  ],
 

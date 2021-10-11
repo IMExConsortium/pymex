@@ -14,7 +14,7 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         self.url="https://www.uniprot.org/uniprot/%%ACC%%.xml"
     
         super().__init__(root, config=self.uniConfig,
-                         process = { "geneName": self._geneName,
+                         postproc = { "geneName": self._geneName,
                                      "protName": self._protName,
                                      "accession": self._accession,
                                      "comment": self._comment,
@@ -33,7 +33,7 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         self.record = res
         return( res )
     
-    def _protName( self, elem, rec ):
+    def _protName( self, elem, rec, cval ):
         if self.debug:
             print("protName: elem=", elem)
             print("protName: rec.keys=",list(rec.keys()))        
@@ -63,7 +63,7 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
                             calt["short"] = altname["shortName"]
                         rec["_protein"]["name"]["alt"].append( calt ) 
                                                
-    def _geneName( self, elem, rec ):
+    def _geneName( self, elem, rec, cval ):
         if self.debug:
             print("geneName: elem=", elem)
             print("geneName: rec.keys=",list(rec.keys()))        
@@ -84,7 +84,7 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
                 if ctype != "primary":
                     rec["_gene"]["name"][ctype].append(cval)                    
 
-    def _accession( self, elem, rec ):
+    def _accession( self, elem, rec, cval ):
         if "_accession" not in rec:
             rec["_accession"]={"primary":None}
             
@@ -95,21 +95,21 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
                 rec["_accession"]["secondary"] = []
             rec["_accession"]["secondary"].append(rec["accession"][-1])
                 
-    def _comment( self, elem, rec ):
+    def _comment( self, elem, rec, cval ):
         if self.debug:
             print("TYPE:",rec["comment"][-1]["type"])
         ccom = rec.setdefault("_comment",{})
         ctp = ccom.setdefault(rec["comment"][-1]["type"],[])
         ctp.append( rec["comment"][-1] )    
             
-    def _xref( self, elem, rec ):
+    def _xref( self, elem, rec, cval ):
         if self.debug:
             print("XREF TYPE:",rec["dbReference"][-1]["type"])
         ccom = rec.setdefault("_xref",{})
         ctp = ccom.setdefault(rec["dbReference"][-1]["type"],[])
         ctp.append( rec["dbReference"][-1] )    
 
-    def _feature( self, elem, rec ):
+    def _feature( self, elem, rec, cval ):
         if self.debug:
             print("FEATURE TYPE:",rec["feature"][-1]["type"])
         ccom = rec.setdefault("_feature",{})
