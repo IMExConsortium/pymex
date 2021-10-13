@@ -1,1 +1,1 @@
-include pylib/pymex/*.xsd pylib/pymex/VERSION
+include pylib/pymex/*.xsd pylib/pymex/VERSION pylib/pymex/mif/*json  pylib/pymex/uprot/*.json  
