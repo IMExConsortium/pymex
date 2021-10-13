@@ -83,7 +83,7 @@ class Record(xmlrecord.XmlRecord):
     @property
     def entry(self):
         """Returns the first (default) entry of the record"""
-        return mif.Entry( self.root['entrySet']['entry'][0] )
+        return pymex.Entry( self.root['entrySet']['entry'][0] )
 
     @property
     def entryCount(self):
@@ -99,7 +99,7 @@ class Record(xmlrecord.XmlRecord):
     @property
     def interactions(self):
         """Returns interactions of the first (default) entry of the record."""
-        return mif.Entry( self.root['entrySet']['entry'][0] ).interactions
+        return pymex.Entry( self.root['entrySet']['entry'][0] ).interactions
 
     @property
     def interactionCount(self):

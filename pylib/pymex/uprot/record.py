@@ -3,7 +3,7 @@ import os
 from urllib.request import urlopen
 import pymex
 
-class UniRecord( pymex.xmlrecord.XmlRecord ):
+class Record( pymex.xmlrecord.XmlRecord ):
     def __init__(self, root=None):
         myDir = os.path.dirname( os.path.realpath(__file__))
         self.uniConfig = { "uni_v001": {"IN": os.path.join( myDir, "defUniParse_v001.json"),
@@ -42,8 +42,7 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
  
         if "protein" in rec:
             protein = rec["protein"]
-            rec["_protein"] = {"names":{},"XX":"XX"}
-            print("XXX",rec.keys())
+            rec["_protein"] = {"names":{}}    
             for cname in protein:
                 if "recommendedName" == cname:                     
                     rec["_protein"]["names"]["rec"]={}
@@ -54,7 +53,6 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
                         rec["_protein"]["names"]["rec"]["short"] =  protein[cname]["shortName"]
                         rec["_protein"]["names"]["shortLabel"] =  protein[cname]["shortName"]
                 elif "alternativeName" == cname:
-
                     for altname in protein[cname]:                        
                         if "alt" not in rec["_protein"]["names"]:
                             rec["_protein"]["names"]["alt"]=[]
@@ -152,8 +150,8 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         
         if self._pdef is not None:
             return pymex.Protein(self._pdef)
-
-        print("building util.sProtein...")
+        if self.debug:
+            print("building rec.protein")
         
         self._pdef = { "names":{"alias":[]},
                        "xref": [],
@@ -162,9 +160,36 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
                                            "_xref":{"primaryRef":{ "db":"psi-mi", "ac":"MI:0326" } } },
                        "organism": {"_names":{} },
                        "sequence": self.root["uniprot"]["entry"][0]["sequence"]["value"] }
- 
-        # names
+
         entry = self.root['uniprot']['entry'][0]
+                
+        #organism/host
+        #-------------
+
+        sciName=""
+        comName=""
+        taxid = ""
+        for nme in entry["organism"]["name"]:
+            if nme["type"]=="scientific":
+                sciName=nme["value"]
+            elif len(comName) == 0 and nme["type"]=="common":
+                comName=nme["value"]
+
+        if len(comName) == 0:
+            comName=sciName
+
+        for dbr in entry["organism"]["dbReference"]:
+            if dbr["type"] == "NCBI Taxonomy":
+                taxid=dbr["id"]
+            
+        org = {"_names":{"shortLabel":comName,
+                         "fullName":sciName},
+               "ncbiTaxId":entry["organism"]["dbReference"][0]["id"] }
+        self._pdef["organism"]=org
+        
+        # names
+        #------        
+
         prt = self.root['uniprot']['entry'][0]['_protein']
         names = prt['names']
 
@@ -174,7 +199,6 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
             entry_name = names["sub"]
 
         name = entry_name["full"]
-               
         if "short" in entry_name.keys(): 
             label = entry_name["short"]
         elif "_gene" in entry:
@@ -182,20 +206,12 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         else:
             label = self.root['uniprot']['entry'][0]["name"]
         
-        prt_alias = []
-        
-        #for key in prt["names"]:
-        #    pass
-        
         alias = []
         if "gene" in prt.keys():
             for key in prt["gene"]["name"]:
                 if "primary" != key:
                     for alias in  prt["gene"]["name"][key]:
                         print(alias)
-        print("KK",entry["gene"])
-        print("KK",entry["_gene"])
-        print("XX",prt["names"])
 
         #protein name aliases
         if "names" in prt:
@@ -205,7 +221,6 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
                         alias.append({"value":p["full"],"type":"protein name synonym"})
                     if "short" in p:
                         alias.append({"value":p["short"],"type":"protein name synonym"})
-
         
         # gene name aliases
         if "gene" in entry:
@@ -218,9 +233,7 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         self._pdef["names"]["shortLabel"]=label
         self._pdef["names"]["fullName"]=name
         self._pdef["names"]["alias"]=alias
-        
-            
-        #return pymex.Protein(self.root["uniprot"]["entry"][0]["_protein"])
+
         return pymex.Protein(self._pdef)
 
     @property

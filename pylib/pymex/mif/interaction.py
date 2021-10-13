@@ -15,7 +15,7 @@ from copy import deepcopy
 import pymex
 from pymex import mif
 
-class Interaction(mif.Names, mif.Xref):
+class Interaction(pymex.Names, pymex.Xref):
     """MIF Interaction representation."""
     
     physical = {"names": {
@@ -155,7 +155,7 @@ class Interaction(mif.Names, mif.Xref):
     def participants(self):
         ret = []        
         for i in self._participant: 
-            ret.append( mif.Participant( i,  self._interaction ) )        
+            ret.append( pymex.Participant( i,  self._interaction ) )        
         return ret
         
     @property 
@@ -164,7 +164,7 @@ class Interaction(mif.Names, mif.Xref):
 
     def getParticipant( self, n = 0 ):
         if n < len( self._participant ):            
-            return mif.Participant( self._participant[ n ] ) 
+            return pymex.Participant( self._participant[ n ] ) 
         else:    
             return None
         
@@ -172,9 +172,9 @@ class Interaction(mif.Names, mif.Xref):
     def type(self):
         if "interactionType" in self._interaction:
             if isinstance(self._interaction["interactionType"], list):            
-                return mif.CvTerm(self._interaction[ "interactionType" ][0])
+                return pymex.CvTerm(self._interaction[ "interactionType" ][0])
             if isinstance(self._interaction["interactionType"], dict):            
-                return mif.CvTerm(self._interaction[ "interactionType" ])
+                return pymex.CvTerm(self._interaction[ "interactionType" ])
         return None
     
     @property
@@ -183,19 +183,19 @@ class Interaction(mif.Names, mif.Xref):
             if isinstance(self._interaction["interactionType"], list):
                 ret = []
                 for t in self._interaction["interactionType"]:
-                    ret.append( mif.CvTerm(t) )
+                    ret.append( pymex.CvTerm(t) )
                 return ret
         return None
 
     @property
     def source(self):
-        return mif.Source( self._source )
+        return pymex.Source( self._source )
 
     @property
     def experiments(self):
         ret = []
         for i in self._experiment:
-            ret.append( mif.Experiment( i ) )
+            ret.append( pymex.Experiment( i ) )
         return ret
         
     @property
@@ -211,13 +211,13 @@ class Interaction(mif.Names, mif.Xref):
     @property
     def experiment(self):
         if len( self._experiment ) == 1:
-            return mif.Experiment( self._experiment[0] )
+            return pymex.Experiment( self._experiment[0] )
         else:
             return None
     
     def getExperiment( self, n = 0 ):
         if n < len( self._experiment ):            
-            return mif.Experiment( self._experiment[ n ] ) 
+            return pymex.Experiment( self._experiment[ n ] ) 
         else:    
             return None
                 
@@ -225,13 +225,13 @@ class Interaction(mif.Names, mif.Xref):
     def attribs(self):    
         if self._attribute is None:
             return None
-        return mif.Attribs( self._attribute )
+        return pymex.Attribs( self._attribute )
 
     @property
     def params(self):    
         if self._param is None:
             return None
-        return mif.Params( self._param )
+        return pymex.Params( self._param )
        
     @property
     def confidence(self):
@@ -257,7 +257,7 @@ class Interaction(mif.Names, mif.Xref):
         return False
     
 
-class AbstInteraction(mif.Names, mif.Xref):
+class AbstInteraction(pymex.Names, pymex.Xref):
     """MIF AbstractInteraction representation."""
     def __init__( self, entry, n ):    
         self._entry = entry
@@ -273,7 +273,7 @@ class AbstInteraction(mif.Names, mif.Xref):
     def participants(self):
         ret = []        
         for i in self._participant: 
-            ret.append( mif.Participant( i,  self._interaction ) )        
+            ret.append( pymex.Participant( i,  self._interaction ) )        
         return ret
         
     @property 
@@ -282,7 +282,7 @@ class AbstInteraction(mif.Names, mif.Xref):
 
     def getParticipant( self, n = 0 ):
         if n < len( self._participant ):            
-            return mif.Participant( self._participant[ n ] ) 
+            return pymex.Participant( self._participant[ n ] ) 
         else:    
             return None
         
@@ -290,44 +290,44 @@ class AbstInteraction(mif.Names, mif.Xref):
     def type(self):
         if "interactionType" in self._interaction:            
             if isinstance(self._interaction["interactionType"], dict):            
-                return mif.CvTerm(self._interaction[ "interactionType" ])
+                return pymex.CvTerm(self._interaction[ "interactionType" ])
         return None
 
     @property
     def interactorType(self):
         if "interactorType" in self._interaction:            
             if isinstance(self._interaction["interactorType"], dict):            
-                return mif.CvTerm(self._interaction[ "interactorType" ])
+                return pymex.CvTerm(self._interaction[ "interactorType" ])
         return None
     
     @property
     def evidenceType(self):
         if "evidenceType" in self._interaction:            
             if isinstance(self._interaction["evidenceType"], dict):            
-                return mif.CvTerm(self._interaction[ "evidenceType" ])
+                return pymex.CvTerm(self._interaction[ "evidenceType" ])
         return None
 
     @property
     def organism(self):
         if "organism" in self._interaction:                                  
-            return mif.Host( self._interaction["organism"] )
+            return pymex.Host( self._interaction["organism"] )
         return None 
 
     @property
     def source(self):
-        return mif.Source( self._source )
+        return pymex.Source( self._source )
 
     @property
     def attribs(self):    
         if self._attribute is not None:
-            return mif.Attribs( self._attribute )
+            return pymex.Attribs( self._attribute )
         return None
     
     @property
     def params(self):    
         if self._param is None:
             return None
-        return mif.Params( self._param )
+        return pymex.Params( self._param )
        
 
 

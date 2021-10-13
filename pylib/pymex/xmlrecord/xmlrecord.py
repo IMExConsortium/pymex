@@ -65,7 +65,6 @@ class XmlRecord():
                     self.config[ver]["OUT"]["@NS"][None] = defns
 
     def parseXml(self, filename, ver, debug=False):
-
         template = self.config[ver]["IN"]
         self.version = ver
 
