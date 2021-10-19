@@ -39,7 +39,7 @@ if '-i' in sys.argv:
 
 args = parser.parse_args()
 
-ucl = pymex.up.UniRecord()
+ucl = pymex.uprot.Record()
 ucr = ucl.getRecord(args.upr)
 
 tmp = ucr.root["uniprot"]["entry"][0]

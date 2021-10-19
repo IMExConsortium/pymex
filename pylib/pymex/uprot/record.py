@@ -126,7 +126,10 @@ class Record( pymex.xmlrecord.XmlRecord ):
             
         ctp = ccom.setdefault(ntp,[])
         ctp.append( rec["feature"][-1] )    
-            
+        
+        if "evidence" in cval:
+            cval["evidence"]=cval["evidence"].split()
+        
     @property
     def entry( self ): 
          return self.root["uniprot"]["entry"][0]
