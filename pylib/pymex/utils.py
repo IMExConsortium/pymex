@@ -691,9 +691,13 @@ class CvTerm( Names, Xref ):
 class Host( Names ):
     """Host representation. Optional cell line/compartment/tissue information."""
     def __init__(self, host):
-        self._host = host        
-        self._names = host["_names"]
-        
+    
+        self._host = host
+        if "_names" in host.keys():
+            self._names = host["_names"]
+        else:
+            self._names = host["names"]
+            
     def __repr__(self):
         return json.dumps(self._host)
 

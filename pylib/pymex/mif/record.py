@@ -106,7 +106,7 @@ class Record(xmlrecord.XmlRecord):
         return len( self.root['entrySet']['entry'][0]["interaction"])
 
     def getInteraction( self, n ):
-        return mif.Interaction( self.root['entrySet']['entry'][0], n )
+        return pymex.Interaction( self.root['entrySet']['entry'][0], n )
 
 
 class Entry():
