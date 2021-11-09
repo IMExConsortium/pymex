@@ -210,8 +210,19 @@ class XmlRecord():
             """
             lastmatch = rpath[i-2][stgt[i-1]]
             if cstore == "list":
+                print("rec:", list(rec.keys()),"last",list(lastmatch.keys()),"ckey:", ckey,"stgt:",stgt[i],elem.text)
                 if ckey not in rec:
                     rec[ckey] = []
+                    print("!!!")
+                    
+                ####  missing referenced value - create a placeholder
+                if stgt[i] not in lastmatch:
+                    lastmatch[stgt[i]]={}
+                if elem.text not in lastmatch[stgt[i]]:
+                    lastmatch[stgt[i]][elem.text] = {}
+                #####
+
+                
                 rec[ckey].append( lastmatch[stgt[i]][elem.text] )
             elif cstore == "direct":
                 rec[ckey] = lastmatch[stgt[i]][elem.text]
@@ -236,7 +247,7 @@ class XmlRecord():
             elif cstore == "index":
                 if ckey not in rec:
                     rec[ckey] = {}
-
+                    
                 if "ikey" in ctempl and ctempl["ikey"] is not None:
                     ikey = ctempl["ikey"]
                 else:
@@ -248,8 +259,13 @@ class XmlRecord():
                     ikeyval = elem.get(iattr)
 
                     if ikeyval is not None:
-                        rec[ckey][ikeyval] = cvalue
-
+                        if  ikeyval not in rec[ckey]:
+                            # new index value
+                            rec[ckey][ikeyval] = cvalue   
+                        else:
+                            # referred to (but empty) value
+                            cvalue = rec[ckey][ikeyval]   
+                                                                                                            
             if "index" in ctempl and ctempl["index"] is not None:
                 ckeyRefInd = ctempl["index"]["name"]
                 rec[ckey][ckeyRefInd] = {}

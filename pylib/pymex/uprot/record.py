@@ -137,6 +137,15 @@ class Record( pymex.xmlrecord.XmlRecord ):
     @property
     def accession(self):
         return self.root["uniprot"]["entry"][0]["_accession"]
+
+    @property
+    def acc(self):
+        return pymex.Name( self.accession["primary"],
+                           self.accession["secondary"] )
+
+    @property
+    def version(self):
+        return self.root["uniprot"]["entry"][0]["version"]
      
     #@property
     #def name( self ):
@@ -258,4 +267,20 @@ class Record( pymex.xmlrecord.XmlRecord ):
     @property
     def comment( self ):
         return self.root["uniprot"]["entry"][0]["_comment"]
+     
+    @property
+    def comm( self ):
+
+        entry = self.root["uniprot"]["entry"][0]
+        if "_comment" not in entry:
+            return {}
+
+        comm = {}
+            
+        for key in entry["_comment"]:            
+            comm[key] = []
+            for cc in entry["_comment"][key]:
+                comm[key].append(pymex.Comment( self.root, cc) )
+        
+        return comm
      

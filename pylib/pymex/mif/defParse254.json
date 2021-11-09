@@ -19,12 +19,12 @@
 			     "*":{"store":"list","name":"experiment"}},
 
     "xref":{ "*": {"index":{"name":"xrefInd",
-			    "entry":{ "primaryRef":{"key":["@db","@id"]},
-				      "secondaryRef":{"key":["@db","@id"]}
-				    }
-			   }
-		  }
-	   },
+			                "entry":{ "primaryRef":{"key":["@db","@id"]},
+				                      "secondaryRef":{"key":["@db","@id"]}
+				           }
+			      }
+		   }
+	},
 
     "experimentRef":{"interaction":{"reference":"/entrySet/entry/experimentList",
 				    "store":"list",

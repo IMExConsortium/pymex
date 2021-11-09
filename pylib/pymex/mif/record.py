@@ -39,9 +39,9 @@ class Record(xmlrecord.XmlRecord):
         
     def _stoich254( self, elem=None, rec=None, cval=None ):
 
-        print("ELEM", elem)
+        #print("ELEM", elem)
         #print("REC", rec["participant"].keys())
-        print("CCH(pre): ", cval.keys())
+        #print("CCH(pre): ", cval.keys())
 
         
         if 'attribute' in cval.keys():

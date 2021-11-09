@@ -31,77 +31,6 @@
                 <attribute name="url">http://www.ebi.ac.uk/</attribute>
             </attributeList>
         </source>
-        <experimentList>
-            <experimentDescription id="3561197">
-                <names>
-                    <shortLabel>subauste-2004-1</shortLabel>
-                </names>
-                <bibref>
-                    <xref>
-                        <primaryRef db="pubmed" dbAc="MI:0446" id="15138291" refType="primary-reference" refTypeAc="MI:0358"/>
-                    </xref>
-                </bibref>
-                <xref>
-                    <primaryRef db="intact" dbAc="MI:0469" id="EBI-21016907" refType="identity" refTypeAc="MI:0356"/>
-                    <secondaryRef db="imex" dbAc="MI:0670" id="IM-26865" refType="imex-primary" refTypeAc="MI:0662"/>
-                </xref>
-                <hostOrganismList>
-                    <hostOrganism ncbiTaxId="10090">
-                        <names>
-                            <shortLabel>mouse-f9</shortLabel>
-                            <fullName>Mus musculus</fullName>
-                        </names>
-                        <cellType>
-                            <names>
-                                <shortLabel>f9</shortLabel>
-                                <fullName>Mouse F9 129 embryo teratocarcinoma</fullName>
-                            </names>
-                            <xref>
-                                <primaryRef db="mint" dbAc="MI:0471" id="MINT-4084213" refType="identity" refTypeAc="MI:0356"/>
-                                <secondaryRef db="cabri" dbAc="MI:0246" id="ECACC 85061803" refType="primary-reference" refTypeAc="MI:0358"/>
-                                <secondaryRef db="intact" dbAc="MI:0469" id="IA:0674" refType="identity" refTypeAc="MI:0356"/>
-                                <secondaryRef db="intact" dbAc="MI:0469" id="EBI-1391896" refType="identity" refTypeAc="MI:0356"/>
-                            </xref>
-                        </cellType>
-                    </hostOrganism>
-                </hostOrganismList>
-                <interactionDetectionMethod>
-                    <names>
-                        <shortLabel>anti bait coip</shortLabel>
-                        <fullName>anti bait coimmunoprecipitation</fullName>
-                        <alias typeAc="MI:1041" type="synonym">anti bait coip</alias>
-                    </names>
-                    <xref>
-                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0006" refType="identity" refTypeAc="MI:0356"/>
-                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-976" refType="identity" refTypeAc="MI:0356"/>
-                        <secondaryRef db="pubmed" dbAc="MI:0446" id="7708014" refType="primary-reference" refTypeAc="MI:0358"/>
-                    </xref>
-                </interactionDetectionMethod>
-                <participantIdentificationMethod>
-                    <names>
-                        <shortLabel>western blot</shortLabel>
-                        <fullName>western blot</fullName>
-                        <alias typeAc="MI:0303" type="go synonym">Immuno blot</alias>
-                        <alias typeAc="MI:1041" type="synonym">Immuno blot</alias>
-                    </names>
-                    <xref>
-                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0113" refType="identity" refTypeAc="MI:0356"/>
-                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-973" refType="identity" refTypeAc="MI:0356"/>
-                        <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
-                    </xref>
-                </participantIdentificationMethod>
-                <attributeList>
-                    <attribute name="author-list" nameAc="MI:0636">Subauste MC., Pertz O., Adamson ED., Turner CE., Junger S., Hahn KM.</attribute>
-                    <attribute name="exp-modification" nameAc="MI:0627">vin-/- cells</attribute>
-                    <attribute name="contact-email" nameAc="MI:0634">khahn@med.unc.edu</attribute>
-                    <attribute name="journal" nameAc="MI:0885">The Journal of Cell Biology</attribute>
-                    <attribute name="publication year" nameAc="MI:0886">2004</attribute>
-                    <attribute name="curation depth" nameAc="MI:0955">imex curation</attribute>
-                    <attribute name="full coverage" nameAc="MI:0957">Only protein-protein interactions</attribute>
-                    <attribute name="imex curation" nameAc="MI:0959">imex curation</attribute>
-                </attributeList>
-            </experimentDescription>
-        </experimentList>
         <interactorList>
             <interactor id="3561198">
                 <names>
@@ -119,6 +48,9 @@
                     <secondaryRef db="go" dbAc="MI:0448" id="GO:0004715"/>
                     <secondaryRef db="rcsb pdb" dbAc="MI:0460" id="6BZ3"/>
                     <secondaryRef db="go" dbAc="MI:0448" id="GO:0016604"/>
+                    <secondaryRef db="ensembl" dbAc="MI:0476" id="ENSMUST00000110036"/>
+                    <secondaryRef db="interpro" dbAc="MI:0449" id="IPR005189"/>
+                    <secondaryRef db="interpro" dbAc="MI:0449" id="IPR011009"/>
                 </xref>
                 <interactorType>
                     <names>
@@ -154,6 +86,7 @@
                     <secondaryRef db="go" dbAc="MI:0448" id="GO:0046872"/>
                     <secondaryRef db="go" dbAc="MI:0448" id="GO:0007229"/>
                     <secondaryRef db="ensembl" dbAc="MI:0476" id="ENSMUSP00000069624"/>
+                    <secondaryRef db="mint" dbAc="MI:0471" id="Q8VI36"/>
                 </xref>
                 <interactorType>
                     <names>
@@ -486,6 +419,79 @@
                     <attribute name="comment" nameAc="MI:0612">Paxillin-FAK interaction was enhanced relative to WT F9 cells in vin-/- and vinY822F cells. In contrast, paxillin-FAK binding is at wild-type levels in F9 vin-/- hinge-tail and rescue cells (Fig. 6, A and B).</attribute>
                 </attributeList>
             </interaction>
-        </interactionList>
+          </interactionList>
+          
+          <experimentList>
+            <experimentDescription id="3561197">
+                <names>
+                    <shortLabel>subauste-2004-1</shortLabel>
+                </names>
+                <bibref>
+                    <xref>
+                        <primaryRef db="pubmed" dbAc="MI:0446" id="15138291" refType="primary-reference" refTypeAc="MI:0358"/>
+                    </xref>
+                </bibref>
+                <xref>
+                    <primaryRef db="intact" dbAc="MI:0469" id="EBI-21016907" refType="identity" refTypeAc="MI:0356"/>
+                    <secondaryRef db="imex" dbAc="MI:0670" id="IM-26865" refType="imex-primary" refTypeAc="MI:0662"/>
+                </xref>
+                <hostOrganismList>
+                    <hostOrganism ncbiTaxId="10090">
+                        <names>
+                            <shortLabel>mouse-f9</shortLabel>
+                            <fullName>Mus musculus</fullName>
+                        </names>
+                        <cellType>
+                            <names>
+                                <shortLabel>f9</shortLabel>
+                                <fullName>Mouse F9 129 embryo teratocarcinoma</fullName>
+                            </names>
+                            <xref>
+                                <primaryRef db="mint" dbAc="MI:0471" id="MINT-4084213" refType="identity" refTypeAc="MI:0356"/>
+                                <secondaryRef db="cabri" dbAc="MI:0246" id="ECACC 85061803" refType="primary-reference" refTypeAc="MI:0358"/>
+                                <secondaryRef db="intact" dbAc="MI:0469" id="IA:0674" refType="identity" refTypeAc="MI:0356"/>
+                                <secondaryRef db="intact" dbAc="MI:0469" id="EBI-1391896" refType="identity" refTypeAc="MI:0356"/>
+                            </xref>
+                        </cellType>
+                    </hostOrganism>
+                </hostOrganismList>
+                <interactionDetectionMethod>
+                    <names>
+                        <shortLabel>anti bait coip</shortLabel>
+                        <fullName>anti bait coimmunoprecipitation</fullName>
+                        <alias typeAc="MI:1041" type="synonym">anti bait coip</alias>
+                    </names>
+                    <xref>
+                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0006" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-976" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="pubmed" dbAc="MI:0446" id="7708014" refType="primary-reference" refTypeAc="MI:0358"/>
+                    </xref>
+                </interactionDetectionMethod>
+                <participantIdentificationMethod>
+                    <names>
+                        <shortLabel>western blot</shortLabel>
+                        <fullName>western blot</fullName>
+                        <alias typeAc="MI:0303" type="go synonym">Immuno blot</alias>
+                        <alias typeAc="MI:1041" type="synonym">Immuno blot</alias>
+                    </names>
+                    <xref>
+                        <primaryRef db="psi-mi" dbAc="MI:0488" id="MI:0113" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="intact" dbAc="MI:0469" id="EBI-973" refType="identity" refTypeAc="MI:0356"/>
+                        <secondaryRef db="pubmed" dbAc="MI:0446" id="14755292" refType="primary-reference" refTypeAc="MI:0358"/>
+                    </xref>
+                </participantIdentificationMethod>
+                <attributeList>
+                    <attribute name="author-list" nameAc="MI:0636">Subauste MC., Pertz O., Adamson ED., Turner CE., Junger S., Hahn KM.</attribute>
+                    <attribute name="exp-modification" nameAc="MI:0627">vin-/- cells</attribute>
+                    <attribute name="contact-email" nameAc="MI:0634">khahn@med.unc.edu</attribute>
+                    <attribute name="journal" nameAc="MI:0885">The Journal of Cell Biology</attribute>
+                    <attribute name="publication year" nameAc="MI:0886">2004</attribute>
+                    <attribute name="curation depth" nameAc="MI:0955">imex curation</attribute>
+                    <attribute name="full coverage" nameAc="MI:0957">Only protein-protein interactions</attribute>
+                    <attribute name="imex curation" nameAc="MI:0959">imex curation</attribute>
+                </attributeList>
+            </experimentDescription>
+        </experimentList>
+          
     </entry>
 </entrySet>

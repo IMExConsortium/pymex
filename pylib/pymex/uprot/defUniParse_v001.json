@@ -9,11 +9,11 @@
         "entry":{"complex":false},
 	    "gene":{"wrapper":false,"store":"list"},
 	    "organism":{"wrapper":false,"store":"list"},
-	    "*":{}},
+	    "*":{"wrapper":false,"store":"list"}},
    
     "protein":{"*":{"wraper":false, "postproc":"protName"} },
-    "recommendedName":{"protein":{"wrapper":false,"store":"direct","*":{} } },
-    "alternativeName":{"protein":{"wrapper":false,"store":"list","*":{} }},
+    "recommendedName":{"protein":{"wrapper":false,"store":"direct"}, "*":{"wrapper":false,"store":"list"}  },
+    "alternativeName":{"protein":{"wrapper":false,"store":"list"}, "*":{"wrapper":false,"store":"list"} },
     
     "fullName":{
         "recommendedName":{"wrapper":false,"name":"fullName","complex":false,"store":"direct"},

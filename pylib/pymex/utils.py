@@ -65,6 +65,25 @@ class Names():
                 if a["type"] == "gene name":
                     return a["value"]
         return None
+
+
+class Name():
+    def __init__( self, primary=None, secondary=None ):
+        if primary is not None:
+            self._primary = primary
+        if secondary is not None:
+            self._secondary = secondary
+        else:
+            self._secondary = []
+            
+    @property
+    def primary(self):
+        return self._primary
+
+    @property
+    def secondary(self):
+        return self._secondary
+
     
 class Xref():
     """Xref representation."""
@@ -736,3 +755,27 @@ class Confidence:
     def value(self):
         return str(self._conf["value"])
     
+class Comment:
+    """UniprotKB comment representation. """
+    def __init__(self, root, comment):
+        self._root = root
+        self._comment = comment
+
+        
+    @property
+    def type(self):
+        return self._comment["type"]
+
+    @property
+    def text(self):
+        if "text" in self._comment:
+            return self._comment["text"]["value"]
+        else:
+            return None
+    
+    @property
+    def molecule(self):
+        if "molecule" in self._comment:
+            return self._comment["molecule"]["value"]
+        else:
+            return None
