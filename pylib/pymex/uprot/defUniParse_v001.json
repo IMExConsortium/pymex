@@ -38,7 +38,7 @@
 		   "*":{"store":"list"}},
     "scope":{"*":{"complex":false}},
 
-    "comment":{ "entry":{"store":"list","postproc":"comment"},
+    "comment":{ "entry":{"store":"list","postproc":"comment","atrname":"evidence","atrpath":"/uniprot/entry/evidence"},
                "*":{}},
 
     "source":{"entry":{"store":"list"},"*":{}},

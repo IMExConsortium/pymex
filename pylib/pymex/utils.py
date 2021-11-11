@@ -648,6 +648,17 @@ class Feature(Names, Xref):
             return Attribs( self._attribute )
         return None
 
+    @property
+    def evidence(self):
+        if "_evidence" in self._feature:
+            el = []
+            for e in self._feature["_evidence"]:
+                el.append(Evidence( self._root, e ) )
+            return el
+        else:
+            return None
+
+
 class Range():
     def __init__(self, rng):
         self._rng = rng    
@@ -779,3 +790,34 @@ class Comment:
             return self._comment["molecule"]["value"]
         else:
             return None
+
+    @property
+    def evidence(self):
+        if "_evidence" in self._comment:
+            el = []
+            for e in self._comment["_evidence"]:
+                el.append(Evidence( self._root, e ) )
+            return el
+        else:
+            return None
+
+
+class Evidence:
+    """UniprotKB evidence representation. """
+    def __init__(self, root, evidence):
+        self._root = root
+        self._evidence = evidence
+        
+    @property
+    def type(self):
+        return self._evidence["type"]
+
+    @property
+    def source(self):        
+        return {"ns": self._evidence["source"]["dbReference"][0]["type"],
+                "ac": self._evidence["source"]["dbReference"][0]["id"] }
+
+    
+    
+
+

@@ -103,7 +103,25 @@ class Record( pymex.xmlrecord.XmlRecord ):
             print("TYPE:",rec["comment"][-1]["type"])
         ccom = rec.setdefault("_comment",{})
         ctp = ccom.setdefault(rec["comment"][-1]["type"],[])
-        ctp.append( rec["comment"][-1] )    
+        ctp.append( rec["comment"][-1] )
+
+        #print("_comment: cval", cval)
+        if "evidence" in cval:
+            #print( "_comment: evidence", cval["evidence"].split() )
+
+            cevid =rec["comment"][-1].setdefault("_evidence",[])
+            
+            print( self.root["uniprot"]["entry"][0].keys())
+            if "evidence" not in self.root["uniprot"]["entry"][0]:
+                self.root["uniprot"]["entry"][0]["evidence"]={}
+                
+            for eid in cval["evidence"].split():
+                if eid not in self.root["uniprot"]["entry"][0]["evidence"]:
+                    self.root["uniprot"]["entry"][0]["evidence"][eid]= {}
+                    rec["comment"][-1]["_evidence"].append(self.root["uniprot"]["entry"][0]["evidence"][eid])
+             
+             
+                    
             
     def _xref( self, elem, rec, cval ):
         if self.debug:
@@ -127,9 +145,18 @@ class Record( pymex.xmlrecord.XmlRecord ):
         ctp = ccom.setdefault(ntp,[])
         ctp.append( rec["feature"][-1] )    
         
-        if "evidence" in cval:
-            cval["evidence"]=cval["evidence"].split()
-        
+        if "evidence" in cval:            
+            cevid =rec["feature"][-1].setdefault("_evidence",[])
+            
+            print( self.root["uniprot"]["entry"][0].keys())
+            if "evidence" not in self.root["uniprot"]["entry"][0]:
+                self.root["uniprot"]["entry"][0]["evidence"]={}
+                
+            for eid in cval["evidence"].split():
+                if eid not in self.root["uniprot"]["entry"][0]["evidence"]:
+                    self.root["uniprot"]["entry"][0]["evidence"][eid]= {}
+                    rec["feature"][-1]["_evidence"].append(self.root["uniprot"]["entry"][0]["evidence"][eid])
+                         
     @property
     def entry( self ): 
          return self.root["uniprot"]["entry"][0]

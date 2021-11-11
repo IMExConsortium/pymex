@@ -24,7 +24,7 @@ class XmlRecord():
 
     def __init__(self, root=None, config=None, preproc=None, postproc=None):
 
-        self.version = None 
+        self.fversion = None 
         
         if root is None:
             self.root = {}
@@ -44,7 +44,7 @@ class XmlRecord():
         self.config = {}
             
         self.recordTree = None
-        self.version = None
+        
         if config is not None:
 
             for ver in config.keys():
@@ -66,7 +66,7 @@ class XmlRecord():
 
     def parseXml(self, filename, ver, debug=False):
         template = self.config[ver]["IN"]
-        self.version = ver
+        self.fversion = ver
 
         self.recordTree = ET.parse( filename )
         if debug:
@@ -81,7 +81,7 @@ class XmlRecord():
     
     def parseXml2(self, ver, debug=False):
         template = self.config[ver]["IN"]
-        self.version = ver
+        self.fversion = ver
         
         rootElem = self.recordTree.getroot()
         self.genericParse( template, ver, self.root, [], rootElem, debug )
@@ -302,7 +302,11 @@ class XmlRecord():
                         dbkey = ':'.join(kval)
                         rec[ckey][ckeyRefInd][dbkey] = cvalue[cchldTag][0] if type(cvalue[cchldTag]) is list else cvalue[cchldTag]
 
-            if( "postproc" in ctempl ):
+            if "atrname" in ctempl:                
+                #print(ctempl["atrname"],ctempl["atrpath"] )  #,cvalue[ctempl["atrname"]])
+                pass
+                
+            if "postproc" in ctempl:
                 if debug:
                     print( "\nUNWRAPPED:", ctempl["post"], self.postproc[ ctempl["postproc"] ] )
                     print(tag, elem, list(rec.keys()) ,sep = " || ")
