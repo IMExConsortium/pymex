@@ -115,7 +115,7 @@ class Record( pymex.xmlrecord.XmlRecord ):
             if "evidence" not in self.root["uniprot"]["entry"][0]:
                 self.root["uniprot"]["entry"][0]["evidence"]={}
                 
-            for eid in cval["evidence"].split():
+            for eid in cval["evidence"].split(" "):
                 if eid not in self.root["uniprot"]["entry"][0]["evidence"]:
                     self.root["uniprot"]["entry"][0]["evidence"][eid]= {}
                     rec["comment"][-1]["_evidence"].append(self.root["uniprot"]["entry"][0]["evidence"][eid])
@@ -167,9 +167,12 @@ class Record( pymex.xmlrecord.XmlRecord ):
 
     @property
     def acc(self):
-        return pymex.Name( self.accession["primary"],
-                           self.accession["secondary"] )
-
+        if "secondary" in self.accession:
+            return pymex.Name( self.accession["primary"],
+                               self.accession["secondary"] )
+        else:
+            return pymex.Name( self.accession["primary"],
+                               None )
     @property
     def version(self):
         return self.root["uniprot"]["entry"][0]["version"]
