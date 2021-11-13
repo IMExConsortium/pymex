@@ -210,10 +210,10 @@ class XmlRecord():
             """
             lastmatch = rpath[i-2][stgt[i-1]]
             if cstore == "list":
-                print("rec:", list(rec.keys()),"last",list(lastmatch.keys()),"ckey:", ckey,"stgt:",stgt[i],elem.text)
+                #print("rec:", list(rec.keys()),"last",list(lastmatch.keys()),"ckey:", ckey,"stgt:",stgt[i],elem.text)
                 if ckey not in rec:
                     rec[ckey] = []
-                    print("!!!")
+                    #print("!!!")
                     
                 ####  missing referenced value - create a placeholder
                 if stgt[i] not in lastmatch:

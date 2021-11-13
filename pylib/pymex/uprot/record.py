@@ -111,7 +111,7 @@ class Record( pymex.xmlrecord.XmlRecord ):
 
             cevid =rec["comment"][-1].setdefault("_evidence",[])
             
-            print( self.root["uniprot"]["entry"][0].keys())
+            #print( self.root["uniprot"]["entry"][0].keys())
             if "evidence" not in self.root["uniprot"]["entry"][0]:
                 self.root["uniprot"]["entry"][0]["evidence"]={}
                 
@@ -148,7 +148,7 @@ class Record( pymex.xmlrecord.XmlRecord ):
         if "evidence" in cval:            
             cevid =rec["feature"][-1].setdefault("_evidence",[])
             
-            print( self.root["uniprot"]["entry"][0].keys())
+            #print( self.root["uniprot"]["entry"][0].keys())
             if "evidence" not in self.root["uniprot"]["entry"][0]:
                 self.root["uniprot"]["entry"][0]["evidence"]={}
                 
@@ -253,7 +253,8 @@ class Record( pymex.xmlrecord.XmlRecord ):
             for key in prt["gene"]["name"]:
                 if "primary" != key:
                     for alias in  prt["gene"]["name"][key]:
-                        print(alias)
+                        pass
+                        #print(alias)
 
         #protein name aliases
         if "names" in prt:
