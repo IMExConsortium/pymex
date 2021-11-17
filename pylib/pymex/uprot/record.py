@@ -255,10 +255,10 @@ class Record( pymex.xmlrecord.XmlRecord ):
         name = entry_name["full"]
         if "short" in entry_name.keys(): 
             label = entry_name["short"]
-        elif "_gene" in entry:
+        elif "_gene" in entry and "name" in entry["_gene"] and "primary" in entry["_gene"]["name"]:
             label = entry["_gene"]["name"]["primary"]
         else:
-            label = self.root['uniprot']['entry'][0]["name"]
+            label = self.root['uniprot']['entry'][0]["name"]            
         
         alias = []
         if "gene" in prt.keys():
