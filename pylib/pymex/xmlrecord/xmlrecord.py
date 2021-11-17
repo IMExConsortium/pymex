@@ -121,6 +121,7 @@ class XmlRecord():
             if debug:
                 print("PAR:  ROOT ELEM !!!")
 
+        
         if parentTag is not None and parentTag in ttempl:
             ctempl = ttempl[parentTag]
         else:

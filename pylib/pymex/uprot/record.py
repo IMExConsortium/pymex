@@ -64,7 +64,19 @@ class Record( pymex.xmlrecord.XmlRecord ):
                         if "shortName" in altname:
                             calt["short"] = altname["shortName"]
                             rec["_protein"]["names"].setdefault("alias",[]).append(altname["shortName"])
-                        rec["_protein"]["names"]["alt"].append( calt ) 
+                        rec["_protein"]["names"]["alt"].append( calt )
+                elif "submittedName" == cname:
+                    rec["_protein"]["names"]["sub"]={}
+                        
+                    if "fullName" in protein[cname] :
+                        rec["_protein"]["names"]["sub"]["full"] =  protein[cname]["fullName"]
+                        #rec["_protein"]["names"]["fullName"] =protein[cname]["fullName"]
+                            
+                    if "shortName" in protein[cname]:
+                        rec["_protein"]["names"]["sub"]["short"] =  protein[cname]["shortName"]
+                        #rec["_protein"]["names"]["shortLabel"] =  protein[cname]["shortName"]    
+                                                
+                   
                                                
     def _geneName( self, elem, rec, cval ):
         if self.debug:
