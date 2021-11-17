@@ -293,23 +293,34 @@ class Record( pymex.xmlrecord.XmlRecord ):
 
     @property
     def gene( self ):
-        return self.root["uniprot"]["entry"][0]["_gene"]
-
+        if "_gene" in self.root["uniprot"]["entry"][0]:
+            return self.root["uniprot"]["entry"][0]["_gene"]
+        return None
+    
     @property
     def taxon( self ):
         return self.root["uniprot"]["entry"][0]["organism"]
 
     @property
     def xref( self ):
-        return self.root["uniprot"]["entry"][0]["_xref"]
+        if "_xref" in self.root["uniprot"]["entry"][0]:
+            return self.root["uniprot"]["entry"][0]["_xref"]
+        else:
+             return None
 
     @property
     def feature( self ):
-        return self.root["uniprot"]["entry"][0]["_feature"]
+        if "_feature" in self.root["uniprot"]["entry"][0]:
+            return self.root["uniprot"]["entry"][0]["_feature"]
+        else:
+            return None
      
     @property
     def comment( self ):
-        return self.root["uniprot"]["entry"][0]["_comment"]
+        if "_comment" in elf.root["uniprot"]["entry"][0]:
+            return self.root["uniprot"]["entry"][0]["_comment"]
+        else:
+            return None
      
     @property
     def comm( self ):
