@@ -317,7 +317,7 @@ class Record( pymex.xmlrecord.XmlRecord ):
      
     @property
     def comment( self ):
-        if "_comment" in elf.root["uniprot"]["entry"][0]:
+        if "_comment" in self.root["uniprot"]["entry"][0]:
             return self.root["uniprot"]["entry"][0]["_comment"]
         else:
             return None
