@@ -117,8 +117,9 @@ class Record( pymex.xmlrecord.XmlRecord ):
         ctp = ccom.setdefault(rec["comment"][-1]["type"],[])
         ctp.append( rec["comment"][-1] )
 
-        #print("_comment: cval", cval)
-        if "evidence" in cval:
+        #print("_comment: cval !!! ", cval.keys())
+        if "text" in cval and "evidence" in cval["text"]:
+            #print("!!!")
             #print( "_comment: evidence", cval["evidence"].split() )
 
             cevid =rec["comment"][-1].setdefault("_evidence",[])
@@ -127,12 +128,13 @@ class Record( pymex.xmlrecord.XmlRecord ):
             if "evidence" not in self.root["uniprot"]["entry"][0]:
                 self.root["uniprot"]["entry"][0]["evidence"]={}
                 
-            for eid in cval["evidence"].split(" "):
+            for eid in cval["text"]["evidence"].split(" "):
                 if eid not in self.root["uniprot"]["entry"][0]["evidence"]:
                     self.root["uniprot"]["entry"][0]["evidence"][eid]= {}
-                    rec["comment"][-1]["_evidence"].append(self.root["uniprot"]["entry"][0]["evidence"][eid])
+                rec["comment"][-1]["_evidence"].append(self.root["uniprot"]["entry"][0]["evidence"][eid])
              
-             
+        #print("_comment: cval", cval,"\n")
+         
                     
             
     def _xref( self, elem, rec, cval ):
@@ -147,6 +149,8 @@ class Record( pymex.xmlrecord.XmlRecord ):
             print("FEATURE TYPE:",rec["feature"][-1]["type"])
         ccom = rec.setdefault("_feature",{})
 
+        #print(" LEN FEATURE:", len(rec["feature"]) )
+        
         if rec["feature"][-1]["type"] == "sequence variant":
             ntp = "variant"
         elif rec["feature"][-1]["type"] == "mutagenesis site":
@@ -157,7 +161,8 @@ class Record( pymex.xmlrecord.XmlRecord ):
         ctp = ccom.setdefault(ntp,[])
         ctp.append( rec["feature"][-1] )    
         
-        if "evidence" in cval:            
+        if "evidence" in cval:
+            #print("evidence",cval["evidence"], cval)
             cevid =rec["feature"][-1].setdefault("_evidence",[])
             
             #print( self.root["uniprot"]["entry"][0].keys())
@@ -165,10 +170,33 @@ class Record( pymex.xmlrecord.XmlRecord ):
                 self.root["uniprot"]["entry"][0]["evidence"]={}
                 
             for eid in cval["evidence"].split():
+                #print("eid", eid)
                 if eid not in self.root["uniprot"]["entry"][0]["evidence"]:
                     self.root["uniprot"]["entry"][0]["evidence"][eid]= {}
-                    rec["feature"][-1]["_evidence"].append(self.root["uniprot"]["entry"][0]["evidence"][eid])
-                         
+                rec["feature"][-1]["_evidence"].append(self.root["uniprot"]["entry"][0]["evidence"][eid])
+            #print("eid", eid, rec["feature"][-1]["_evidence"],"\n")
+          
+        #print("variation")
+        if "variation" in rec["feature"][-1] and len(rec["feature"][-1]["variation"]) > 1:
+            #print( "  must clone ", rec["feature"][-1])
+            # multiple sequence variation: must clone 
+            multivar = list(rec["feature"][-1]["variation"])
+
+            rec["feature"][-1]["variation"] = list(multivar[0])
+
+            for i in range(1, len(multivar)):
+                #print( " ", multivar[i] )
+                nvar = {}
+                for key in rec["feature"][-1].keys():
+                    nvar[key]=rec["feature"][-1][key]
+                nvar["variation"]=multivar[i]
+                rec["feature"].append(nvar)
+                ctp.append(nvar) 
+            
+        #print(" LEN FEATURE:", len(rec["feature"]),"\n")
+
+
+              
     @property
     def entry( self ): 
          return self.root["uniprot"]["entry"][0]
@@ -314,6 +342,26 @@ class Record( pymex.xmlrecord.XmlRecord ):
             return self.root["uniprot"]["entry"][0]["_feature"]
         else:
             return None
+
+    @property
+    def feat( self ):
+
+        entry = self.root["uniprot"]["entry"][0]
+        if "_feature" not in entry:
+            return {}            
+
+        feat = {}
+        
+        for key in entry["_feature"]:
+            feat[key] = []
+            for ff in entry["_feature"][key]:
+                feat[key].append(pymex.Feature( ff) )
+        return feat
+           
+        #if "_feature" in self.root["uniprot"]["entry"][0]:
+        #    return self.root["uniprot"]["entry"][0]["_feature"]
+        #else:
+        #    return None
      
     @property
     def comment( self ):

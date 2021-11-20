@@ -53,7 +53,7 @@ class Names():
         ret = []
         if "alias" in self._names:
             for a in self._names["alias"]:
-                ret.append( Alias( a ) )
+               ret.append( Alias( a ) )
         return ret    
 
     @property
@@ -607,13 +607,50 @@ class Interactor(Names, Xref):
       
 
 class Feature(Names, Xref):
-    """MIF Feature representation."""
-    def __init__( self, feature ):    
+    """MIF/UniprotKB Feature representation."""
+    def __init__( self, feature ):
+        #print(feature.keys())
         self._feature = feature
-        self._names= feature["names"]
-        self._xref = feature["xref"]
-        self._range =  feature["featureRange"]       
         
+        if "names" in feature:
+            self._names= feature["names"]        
+        else:
+            self._names = { "shortLabel":"",
+                            "fullName":"" }
+        self._attribute = []
+
+        if "description" in feature: 
+            self._attribute.append({ "value": feature["description"],
+                                     "name": "description",
+                                     "nameAc": "dxf:0089"} )
+        
+        if "xref" in feature:
+            self._xref = feature["xref"]
+        else:
+            self._xref = None
+
+        if "featureRange" in feature:            
+            self._range =  feature["featureRange"]       
+        elif "location" in feature:
+            loc = feature["location"]
+            #print(feature.keys())
+            if "begin" in loc and "end" in loc:
+                self._range = [{"begin":{"position":loc["begin"]["position"]},
+                                "end":{"position":loc["end"]["position"]}}]
+                #print("cbe",self._range)
+            elif "position" in loc:
+                self._range = [{"begin":{"position":loc["position"]["position"]},
+                                "end":{"position":loc["position"]["position"]}}]
+                
+            #print("fkeys",type(feature))
+            #print("fkeys",feature.keys())
+            if "variation" in feature:
+                
+                #print(self._range[-1], feature["variation"][0])
+                self._range[-1]["newSequence"]=feature["variation"][0]
+                #print(self._range[-1])
+                #sys.exit()
+            
         self._meth = None
         if "featureDetectionMethod" in feature:
             self._meth = feature["featureDetectionMethod"]
@@ -621,6 +658,12 @@ class Feature(Names, Xref):
         if "attribute" in feature:
             self._attribute = feature["attribute"]
 
+    def __str__(self):
+        return str((self._range))
+
+    def __repr__(self):
+        return str((self._range,self._feature))
+            
     @property
     def type(self):
         return CvTerm(self._feature["featureType"])
@@ -633,32 +676,40 @@ class Feature(Names, Xref):
                 ret.append( CvTerm( m ) )
             return ret    
         return None
-      
-    
+          
     @property
     def ranges(self):         
         ret = []
-        for r in self._range:
+        for r in self._range:            
             ret.append( Range(r) )
         return ret
     
     @property
-    def attribs(self):    
-        if self._attribute is not None:
+    def attrs(self):    
+        if len(self._attribute) > 0:
             return Attribs( self._attribute )
         return None
 
     @property
     def evidence(self):
+        #print(dir(self))
         if "_evidence" in self._feature:
             el = []
             for e in self._feature["_evidence"]:
-                el.append(Evidence( self._root, e ) )
+                el.append(Evidence( e ) )
             return el
+        else:
+            return []
+
+    @property
+    def molecule(self):
+        if "molecule" in self._feature:
+            return self._feature["molecule"]["value"]
         else:
             return None
 
 
+        
 class Range():
     def __init__(self, rng):
         self._rng = rng    
@@ -669,9 +720,10 @@ class Range():
 
     @property
     def begPosition(self):
+        #print(self._rng)
         if "begin" in self._rng:
-            if "value" in self._rng["begin"]:
-                pos = self._rng["begin"]["value"]
+            if "position" in self._rng["begin"]:
+                pos = self._rng["begin"]["position"]
                 return (int(pos),int(pos))
             if ("begin" in self._rng["begin"]  and 
                         "end" in self._rng["begin"]):
@@ -687,8 +739,8 @@ class Range():
     @property
     def endPosition(self):
         if "begin" in self._rng:
-            if "value" in self._rng["begin"]:
-                pos = self._rng["begin"]["value"]
+            if "position" in self._rng["begin"]:
+                pos = self._rng["begin"]["position"]
                 return ( int(pos), int(pos) )
             if ("begin" in self._rng["begin"]  and 
                 "end" in self._rng["begin"]):
@@ -696,7 +748,22 @@ class Range():
                 pose = self._rng["begin"]["end"] 
                 return ( int(posb), int(pose) )    
         return None
-       
+
+    @property
+    def oldSequence(self):
+        if "oldSequence" in self._rng:
+            return self._rng["oldSequence"]
+        else:
+            return None
+
+    @property
+    def newSequence(self):
+        if "newSequence" in self._rng:
+            return self._rng["newSequence"]
+        else:
+            return None
+
+    
  
 class Availability():
     """MIF Availability representation."""
@@ -771,7 +838,7 @@ class Comment:
     def __init__(self, root, comment):
         self._root = root
         self._comment = comment
-
+        #print(comment)
         
     @property
     def type(self):
@@ -796,7 +863,7 @@ class Comment:
         if "_evidence" in self._comment:
             el = []
             for e in self._comment["_evidence"]:
-                el.append(Evidence( self._root, e ) )
+                el.append(Evidence( e ) )
             return el
         else:
             return None
@@ -804,8 +871,8 @@ class Comment:
 
 class Evidence:
     """UniprotKB evidence representation. """
-    def __init__(self, root, evidence):
-        self._root = root
+    def __init__(self, evidence):
+        #self._root = root
         self._evidence = evidence
         
     @property
@@ -816,8 +883,3 @@ class Evidence:
     def source(self):        
         return {"ns": self._evidence["source"]["dbReference"][0]["type"],
                 "ac": self._evidence["source"]["dbReference"][0]["id"] }
-
-    
-    
-
-
