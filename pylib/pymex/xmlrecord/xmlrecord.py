@@ -68,7 +68,12 @@ class XmlRecord():
         template = self.config[ver]["IN"]
         self.fversion = ver
 
-        self.recordTree = ET.parse( filename )
+        try:
+            self.recordTree = ET.parse( filename )
+            #lxml.etree.XMLSyntaxError
+        except ET.XMLSyntaxError:
+            return None
+
         if debug:
             print(ver)
             

@@ -162,7 +162,7 @@ class Record( pymex.xmlrecord.XmlRecord ):
         ctp.append( rec["feature"][-1] )    
         
         if "evidence" in cval:
-            #print("evidence",cval["evidence"], cval)
+            #print("evidence",cval["evidence"]) # cval)
             cevid =rec["feature"][-1].setdefault("_evidence",[])
             
             #print( self.root["uniprot"]["entry"][0].keys())
@@ -353,8 +353,10 @@ class Record( pymex.xmlrecord.XmlRecord ):
         feat = {}
         
         for key in entry["_feature"]:
+            #print("key", key)
             feat[key] = []
             for ff in entry["_feature"][key]:
+                #print( " ",ff)
                 feat[key].append(pymex.Feature( ff) )
         return feat
            

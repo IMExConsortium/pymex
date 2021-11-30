@@ -1,0 +1,17 @@
+{
+    "@NS":"http://uniprot.org/uniparc",
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id",
+		        "reference":null, "wrapper": false } },
+
+    "entry":{"*":{"store":"list"}},
+    "dbReference":{"*":{"store":"list"}},
+    "signatureSequenceMatch":{"*":{"store":"list"}},
+    
+    "accession":{"*":{"store":"direct","complex":false}},
+    "copyright":{"*":{"store":"direct","complex":false}},
+    
+    "sequence":{"entry":{"store":"direct"},"*":{}},
+    "property":{"dbReference":{"store":"list"},"*":{}}
+    
+}

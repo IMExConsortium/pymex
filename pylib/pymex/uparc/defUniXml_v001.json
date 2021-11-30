@@ -1,0 +1,6 @@
+{
+    "@ROOT": { "name":"uniprot","attribute":{ "xsi:schemaLocation":"http://uniprot.org/uniprot http://www.uniprot.org/support/docs/uniprot.xsd"
+					    }},
+    "@NS":{ "*":"http://uniprot.org/uniprot",
+           "xsi":"http://www.w3.org/2001/XMLSchema-instance"}
+}
