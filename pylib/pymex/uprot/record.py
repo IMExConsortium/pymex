@@ -1,7 +1,9 @@
 import os
+import re
 
 from urllib.request import urlopen
 import pymex
+import json
 
 class Record( pymex.xmlrecord.XmlRecord ):
     def __init__(self, root=None):
@@ -160,25 +162,33 @@ class Record( pymex.xmlrecord.XmlRecord ):
             
         ctp = ccom.setdefault(ntp,[])
         ctp.append( rec["feature"][-1] )    
+
+        if "id" in rec["feature"][-1]:
+
+            xreflist = rec["feature"][-1].setdefault("xref", [] )
+            xreflist.append({"type":"uprv","id":rec["feature"][-1]["id"]})
+            
         
-        if "evidence" in cval:
-            #print("evidence",cval["evidence"]) # cval)
+        if "description" in rec["feature"][-1] and "dbSNP:rs" in rec["feature"][-1]["description"]:
+            rs = re.sub(".*dbSNP:","", rec["feature"][-1]["description"])
+            rs = re.sub( "\..*","",rs)
+            
+            xreflist = rec["feature"][-1].setdefault("xref", [] )
+            xreflist.append( {"type":"dbSNP","id":rs} )
+        
+        if "evidence" in cval:            
             cevid =rec["feature"][-1].setdefault("_evidence",[])
             
-            #print( self.root["uniprot"]["entry"][0].keys())
             if "evidence" not in self.root["uniprot"]["entry"][0]:
                 self.root["uniprot"]["entry"][0]["evidence"]={}
                 
             for eid in cval["evidence"].split():
-                #print("eid", eid)
                 if eid not in self.root["uniprot"]["entry"][0]["evidence"]:
                     self.root["uniprot"]["entry"][0]["evidence"][eid]= {}
                 rec["feature"][-1]["_evidence"].append(self.root["uniprot"]["entry"][0]["evidence"][eid])
-            #print("eid", eid, rec["feature"][-1]["_evidence"],"\n")
           
-        #print("variation")
         if "variation" in rec["feature"][-1] and len(rec["feature"][-1]["variation"]) > 1:
-            #print( "  must clone ", rec["feature"][-1])
+            # print( "  must clone ", rec["feature"][-1])
             # multiple sequence variation: must clone 
             multivar = list(rec["feature"][-1]["variation"])
 
@@ -194,9 +204,9 @@ class Record( pymex.xmlrecord.XmlRecord ):
                 ctp.append(nvar) 
             
         #print(" LEN FEATURE:", len(rec["feature"]),"\n")
-
-
-              
+        # dbSNP references
+        
+                      
     @property
     def entry( self ): 
          return self.root["uniprot"]["entry"][0]

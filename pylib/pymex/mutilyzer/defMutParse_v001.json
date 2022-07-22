@@ -1,0 +1,29 @@
+{
+    "@NS":"http://mutalyzer.nl/2.0/services",
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id",
+		"reference":null, "wrapper": false } },
+
+    "endoffset":{"*":{"complex":false}},
+
+    "mappingInfoResponse":{"*":{"complex":true, "name": "response", "store":"direct", "ikey":"@id",
+ 		                        "reference":null, "wrapper": false }},
+    
+    "mappingInfoResult":{"*":{"complex":true, "name": "result", "store":"direct", "ikey":"@id",
+ 		                      "reference":null, "wrapper": false }},
+
+    "mapTranscriptToChromosomesResponse":{"*":{"complex":true, "name": "response", "store":"direct", "ikey":"@id",
+ 		                                       "reference":null, "wrapper": false }},
+    
+    "mapTranscriptToChromosomesResult":{"*":{"complex":true, "name": "result", "store":"direct", "ikey":"@id",
+ 		                                    "reference":null, "wrapper": false }},
+    
+    "start_g": {"*":{"complex":false}},
+    "startoffset": {"*":{"complex":false}},
+    "mutationType":{"*":{"complex":false}},
+    "end_g": {"*":{"complex":false}},
+    "startmain":{"*":{"complex":false}},
+    "endmain": {"*":{"complex":false}},
+    "transcript": {"*":{"complex":false}},
+    "chromosome": {"*":{"complex":false}}    
+}

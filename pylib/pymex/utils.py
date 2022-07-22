@@ -122,6 +122,7 @@ class Xref():
         if self._xref is None:
             return None
         ret = []
+    
         ret.append( Reference(self._xref["primaryRef"]) )
         
         if  "secondaryRef" in self._xref:
@@ -914,8 +915,7 @@ class Evidence:
 
     @property
     def source(self):
-        print(self._evidence)
-
+        
         if "source" not in self._evidence:            
             return None
         

@@ -1,0 +1,110 @@
+{
+    "@NS":"",
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id",
+		        "reference":null, "wrapper": false, "drop":false } },    
+
+    "Entrezgene-Set":{"*":{"wrapper":true}},
+    "Entrezgene":{"*":{"store":"direct","name":"egene"}},
+
+    "Entrezgene_track-info":{"*":{"wrapper":true}},
+    "Gene-track":{"*":{"wrapper":true}},
+    "Gene-track_geneid":{"*":{"complex":false,"name":"geneid"}},
+    "Gene-track_status":{"*":{"drop":true}},
+    "Entrezgene_type":{"*":{"drop":true}},
+    
+    "Gene-track_create-date":{"*":{"drop":true}},
+    "Gene-track_update-date":{"*":{"drop":true}},
+    
+    "Entrezgene_source":{"*":{"wrapper":true}},
+    "BioSource":{"*":{"wrapper":true}},
+
+    "BioSource_genome":{"*":{"drop":true}},
+    "BioSource_origin":{"*":{"drop":true}},
+    "BioSource_org":{"*":{"wrapper":true}},
+
+    "Org-ref":{"*":{"wrapper":true}},
+    "Org-ref_taxname":{"*":{"store":"direct","complex":false,"name":"taxon"}},
+    "Org-ref_common":{"*":{"store":"direct","complex":false,"name":"common"}},
+
+    "Org-ref_db":{"*":{"wrapper":true}},
+    "Dbtag":{"Org-ref_db":{"wrapper":true},"*":{"wrapper":false,"name":"xref","store":"list"}},
+    "Dbtag_db":{"*":{"name":"ns", "complex":false}},
+    "Dbtag_tag":{"*":{"wrapper":true}},
+    "Object-id":{"*":{"wrapper":true}},
+    "Object-id_id":{"*":{"store":"direct","complex":false, "name":"ac"}},
+    "Object-id_str":{"*":{"store":"direct","complex":false, "name":"ac"}},
+    "Org-ref_orgname":{"*":{"drop":true}},    
+    "BioSource_subtype":{"*":{"drop":true}},
+
+    
+    "Entrezgene_gene":{"*":{"name":"gene"}},
+    "Gene-ref":{"*":{"wrapper":true}},
+    "Gene-ref_locus":{"*":{"name":"locus","complex":false}},
+    "Gene-ref_desc":{"*":{"name":"description","complex":false}},
+    "Gene-ref_maploc":{"*":{"name":"maploc","complex":false}},    
+    "Gene-ref_db":{"*":{"wrapper":true}},
+
+    "Gene-ref_syn":{"*":{"wrapper":true}},
+    "Gene-ref_syn_E":{"*":{"name":"synonym","complex":false,"store":"list"}},
+
+    "Entrezgene_prot":{"*":{"name":"protein"}},
+    "Prot-ref":{"*":{"wrapper":true}},
+    "Prot-ref_name":{"*":{"wrapper":true}}, 
+    "Prot-ref_name_E":{"*":{"name":"name","complex":false,"store":"list"}},
+    "Prot-ref_desc":{"*":{"name":"description","complex":false}},
+
+    "Entrezgene_summary":{"*":{"name":"summary","complex":false}}, 
+
+    "Entrezgene_location":{"*":{"wrapper":true}},
+    "Maps":{"*":{"wrapper":true}},
+    "Maps_display-str":{"*":{"name":"location","complex":false}}, 
+    "Maps_method":{"*":{"drop":true}},
+    
+    "Entrezgene_gene-source":{"*":{"drop":true}},
+
+    "Entrezgene_locus":{"*":{"name":"locus"}},
+
+    "Gene-commentary":{ "Gene-commentary_products":{"name":"products","store":"list"},
+                        "Entrezgene_comments":{"name":"comments","store":"list"},
+                        "*":{"wrapper":true} },
+
+    "Gene-commentary_heading":{"*":{"name":"heading","complex":false}},
+    "Gene-commentary_label":{"*":{"name":"label","complex":false}},
+    "Gene-commentary_accession":{"*":{"name":"accession","complex":false}},
+    "Gene-commentary_version":{"*":{"name":"version","complex":false}},
+        
+    "Gene-commentary_seqs":{"*":{"name":"segment"}},
+    
+    "Seq-loc":{"*":{"name":"sqloc","drop":false},
+               "Gene-commentary_seqs":{"wrapper":true}},
+    "Seq-loc_int":{"Gene-commentary_seqs":{"wrapper":true},"*":{}},
+    "Seq-interval":{"Seq-loc_int":{"wrapper":true},"*":{}},
+    
+    "Seq-interval_from":{"Seq-loc_int":{"name":"from", "complex":false},"*":{}},
+    "Seq-interval_to":{"Seq-loc_int":{"name":"to", "complex":false},"*":{}},
+    "Seq-interval_strand":{"*":{"wrapper":true}},
+    "Na-strand":{"Seq-interval_strand":{"name":"strand","complex":true,"postproc":"strand"},"*":{}},
+
+    "Seq-interval_id":{"*":{"drop":true}},
+    
+    "Gene-commentary_genomic-coords":{"*":{"drop":true}},
+
+    "Gene-commentary_products":{"*":{"store":"list", "wrapper":true}},
+
+    "Entrezgene_properties":{"*":{"drop":true}},
+    "Entrezgene_comments":{"*":{"drop":true}},
+    
+
+    "Gene-commentary_create-date":{"*":{"drop":true}},
+    "Gene-commentary_update-date":{"*":{"drop":true}},
+    "Gene-commentary_source":{"*":{"drop":true}},
+    "Entrezgene_unique-keys":{"*":{"wrapper":true}},
+    
+    
+    "Entrezgene_xtra-index-terms":{"*":{"drop":true}},
+    "Entrezgene_xtra-properties":{"*":{"drop":true}},
+
+    
+    "":{"*":{"wrapper":true}}
+ }

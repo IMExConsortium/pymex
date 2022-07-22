@@ -11,15 +11,20 @@ import os
 class XmlRecord():
     """XML-based record representation."""
 
-    def modifyTag(self,item,ver):
+    def modifyTag( self, item, ver ):
         """ Modifies tag of an item if necessary."""
-        tag = item.tag[self.config[ver]["NSL"]:]
-        return tag
 
-    def toNsString(self,ns, prefix=None):
+        if self.config[ver]["NSL"] >2:
+            return item.tag[self.config[ver]["NSL"]:]
+        else:
+            return item.tag[:]
+
+    def toNsString( self, ns, prefix=None ):
         """Converts namespace to string prefix for element tags."""
+        
         mif_ns = ns[prefix]
         mifstr = "{%s}" % mif_ns
+        print(prefix,ns[prefix], mifstr)
         return mifstr
 
     def __init__(self, root=None, config=None, preproc=None, postproc=None):
@@ -64,6 +69,43 @@ class XmlRecord():
                     self.config[ver]["OUT"]["@NS"].pop("*", None)
                     self.config[ver]["OUT"]["@NS"][None] = defns
 
+
+    def parseXmlTree(self, xmltree, ver, debug=False):
+        template = self.config[ver]["IN"]
+        self.fversion = ver
+        self.recordTree = xmltree
+        
+        if debug:
+            print(ver)
+        
+        rootElem = self.recordTree  #.getroot()        
+        self.genericParse( template, ver, self.root, [], rootElem, debug )
+        
+        print(json.dumps(self.root, indent=2))
+        return self
+
+    def parseXmlStr(self, xmlstr, ver, debug=False):
+        template = self.config[ver]["IN"]
+        self.fversion = ver
+
+        try:
+            self.recordTree = ET.fromstring( xmlstr )
+            #lxml.etree.XMLSyntaxError
+        except ET.XMLSyntaxError:
+            return None
+
+        if debug:
+            print(ver)
+
+        print("XMLREC:", ET.tostring( self.recordTree, pretty_print=True).decode() )
+    
+        print(self.recordTree)
+        rootElem = self.recordTree  #.getroot()        
+        self.genericParse( template, ver, self.root, [], rootElem, debug )
+        
+        print(json.dumps(self.root, indent=2))
+        return self
+
     def parseXml(self, filename, ver, debug=False):
         template = self.config[ver]["IN"]
         self.fversion = ver
@@ -93,7 +135,7 @@ class XmlRecord():
         return self
 
     def genericParse( self, template, ver, rec, rpath, elem,
-                      wrapped=False, debug=False):
+                      wrapped=False, dropped=False, debug=False):
 
         tag = self.modifyTag( elem, ver )
 
@@ -102,7 +144,7 @@ class XmlRecord():
         else:
             ttempl = template["*"]
 
-        if debug:
+        if  debug:
             print("\nTAG", tag, wrapped, len(rpath) )
             print(" TTEM", ttempl)
 
@@ -126,14 +168,37 @@ class XmlRecord():
             if debug:
                 print("PAR:  ROOT ELEM !!!")
 
-        
+        ctempl = None
+                
         if parentTag is not None and parentTag in ttempl:
             ctempl = ttempl[parentTag]
-        else:
+
+        if ctempl is None and wrapped:
+            wrParentElem = elem.getparent()
+            wrParentTag = None
+            if wrParentElem is not None:
+                wrParentTag = self.modifyTag( wrParentElem, ver )
+
+            if wrParentTag is not None and wrParentTag in ttempl:
+                ctempl = ttempl[wrParentTag]
+
+        if ctempl is None:
             ctempl = ttempl["*"]
+            
         if debug:
             print("  CTEMPL", ctempl )
 
+        
+        if "drop" in ctempl and ctempl["drop"] is not None: 
+            cdrop = ctempl["drop"]
+        else:
+            if  "drop" in template["*"]["*"]:
+                cdrop = template["*"]["*"]["drop"]
+            else:
+                cdrop = False
+
+        
+        
         if "wrapper" in ctempl and ctempl["wrapper"] is not None:
             cwrap = ctempl["wrapper"]
         else:
@@ -148,12 +213,15 @@ class XmlRecord():
                 print( tag, elem, list(rec.keys() ), sep=" || " )
             self.preproc[ ctempl["preproc"] ]()
 
+        if cdrop:
+            return
+            
         if cwrap:
             for cchld in elem:
                 if debug:
                     print("  CHLD",cchld.tag);
 
-                self.genericParse( template, ver, rec, rpath, cchld, wrapped =True)
+                self.genericParse( template, ver, rec, rpath, cchld, wrapped=True)
                 if debug:
                     print( json.dumps(self.root, indent=2) )
 

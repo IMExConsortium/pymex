@@ -6,3 +6,6 @@ from pymex.pypsic import *
 from pymex.uniprot import *
 from pymex.uprot import *
 from pymex.uparc import *
+from pymex.mutilyzer import *
+from pymex.clinvar import *
+from pymex.egene import *

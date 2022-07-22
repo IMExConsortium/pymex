@@ -1,0 +1,55 @@
+{
+    "@NS":"",
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id",
+		"reference":null, "wrapper": false } },
+
+    "endoffset":{"*":{"complex":false}},
+
+    "GeneList":{"*":{"wrapper": true } },  
+    "Gene":{ "GeneList":{"store":"list" },
+             "*":{"store":"list" } },
+
+    "HGVSlist":{"*":{"wrapper": true } },  
+    "HGVS":{"HGVSlist":{"store":"list" },
+           "*":{"store":"list" } },
+
+    "SequenceLocation":{"Location":{"store":"list" },
+                       "*":{"store":"list" }},
+
+    "CanonicalSPDI": {"*":{"complex":false, "name":"cspdi"}},
+    
+    "Interpretations":{ "*":{"wrapper": true } },
+    "Interpretation":{ "*":{"store":"list"}},
+    "Description":{ "Interpretation":{"store":"direct", "complex":false},
+                  "*":{"store":"direct"}},
+
+    "ProteinChange":{"*":{"store":"list","complex":false}},
+    
+    "XRefList":{"*":{"wrapper": true } },  
+    "XRef":{"XRefList":{"store":"list" },
+            "*":{"store":"list" }},
+
+    "AlleleFrequencyList":{"*":{"wrapper": true } },  
+    "AlleleFrequency":{"AlleleFrequencyList":{"store":"list" },
+                       "*":{"store":"list" } },
+    
+    "RCVList":{"*":{"wrapper": true } },  
+    "RCVAccession":{"RCVList":{"store":"list" },
+                    "*":{"store":"list" }},
+        
+    "TraitMappingList":{"*":{"wrapper": true } },
+    "TraitMapping":{"TraitMappingList":{"store":"list" },
+                    "*":{"store":"list" }},
+
+    "SubmissionNameList":{"*":{"wrapper": true } },
+    "SubmissionName":{"SubmissionNameList":{"store":"list" },
+                    "*":{"store":"list" }},
+    
+    "Name":{ "Trait":{"store":"list" },
+             "*":{"store":"list" }},
+    
+    "Symbol":{ "Trait":{"store":"list" },
+               "*":{"store":"list" }}
+    
+}
