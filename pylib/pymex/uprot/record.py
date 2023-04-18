@@ -14,6 +14,8 @@ class Record( pymex.xmlrecord.XmlRecord ):
 
         self.debug = False
         self.url="https://www.uniprot.org/uniprot/%%ACC%%.xml"
+        self.sequrl = "https://rest.uniprot.org/uniprotkb/%%ACC%%.fasta"
+
 
         self._pdef = None
         
@@ -36,6 +38,16 @@ class Record( pymex.xmlrecord.XmlRecord ):
         res = self.parseXml( urlopen(upUrl ))
         self.record = res
         return( res )
+
+    def getSequence( self, ac = None ):
+        if ac is not None:
+            curl = self.sequrl.replace("%%ACC%%",ac)            
+            data = urlopen( curl )
+            cseq = ""
+            for ln in data:
+                if not ln.decode().strip().startswith('>'):
+                    cseq = cseq + ln.decode().strip()            
+            return cseq
     
     def _protName( self, elem, rec, cval ):
         if self.debug:
@@ -103,7 +115,7 @@ class Record( pymex.xmlrecord.XmlRecord ):
 
     def _accession( self, elem, rec, cval ):
         if "_accession" not in rec:
-            rec["_accession"]={"primary":None}
+            rec["_accession"]={ "primary":None, "canonical":None }
             
         if rec["_accession"]["primary"] is None:
             rec["_accession"]["primary"] = rec["accession"][-1]
@@ -136,9 +148,18 @@ class Record( pymex.xmlrecord.XmlRecord ):
                 rec["comment"][-1]["_evidence"].append(self.root["uniprot"]["entry"][0]["evidence"][eid])
              
         #print("_comment: cval", cval,"\n")
-         
-                    
-            
+
+        if "type" in cval and cval['type'] == 'alternative products': 
+            if "isoform" in cval:
+                for iso in cval["isoform"]:
+                    if 'sequence' in iso and 'type' in iso['sequence']:
+                        if iso['sequence']['type'] =='displayed':
+                            # create canon
+
+                            if "_accession" not in rec:
+                                rec["_accession"]={"primary":None, "canonical":None}
+                            rec["_accession"]["canonical"]=iso['id']['value']
+                                                                   
     def _xref( self, elem, rec, cval ):
         if self.debug:
             print("XREF TYPE:",rec["dbReference"][-1]["type"])
@@ -149,14 +170,24 @@ class Record( pymex.xmlrecord.XmlRecord ):
     def _feature( self, elem, rec, cval ):
         if self.debug:
             print("FEATURE TYPE:",rec["feature"][-1]["type"])
+            print(" LEN FEATURE:", len(rec["feature"]) )
+            print(json.dumps(rec["feature"],indent = 4))
+
         ccom = rec.setdefault("_feature",{})
 
-        #print(" LEN FEATURE:", len(rec["feature"]) )
-        
         if rec["feature"][-1]["type"] == "sequence variant":
             ntp = "variant"
         elif rec["feature"][-1]["type"] == "mutagenesis site":
             ntp = "mutation"
+        elif rec["feature"][-1]["type"] == "topological domain":
+            ntp = "topology-feature"
+        elif rec["feature"][-1]["type"] == "compositionally biased region":
+            ntp = "sequence-feature"
+        elif rec["feature"][-1]["type"] == "region of interest":
+            if rec["feature"][-1]["description"] == 'Disordered':
+                ntp = "structure-feature"
+            else:
+                ntp =rec["feature"][-1]["type"]
         else:
             ntp = rec["feature"][-1]["type"]
             
@@ -213,6 +244,11 @@ class Record( pymex.xmlrecord.XmlRecord ):
      
     @property
     def accession(self):
+
+        ctest = self.root["uniprot"]["entry"][0]["_accession"]           
+        if ctest["canonical"] == None:
+            self.root["uniprot"]["entry"][0]["_accession"]["canonical"] = ctest["primary"]
+            
         return self.root["uniprot"]["entry"][0]["_accession"]
 
     @property
@@ -327,6 +363,10 @@ class Record( pymex.xmlrecord.XmlRecord ):
         self._pdef["names"]["fullName"]=name
         self._pdef["names"]["alias"]=alias
 
+        # canonical sequence set here ?
+
+        print("ACC:", self.accession)
+        #xxx        
         return pymex.Protein(self._pdef)
 
     @property

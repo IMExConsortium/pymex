@@ -44,7 +44,7 @@ rb = pymex.mif.RecordBuilder( args.cvpath )
 #input is the file name being passed in.
 #output is the root datastructure; dictionary
 record = rb.build( args.source)
-print("oooooooff", args.cvpath)
+#print("oooooooff", args.cvpath)
 
 if args.ofile == 'STDOUT':
     if args.oformat == 'mif254':

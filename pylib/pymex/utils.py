@@ -752,6 +752,8 @@ class Range():
         if "begin" in self._rng:
             if "position" in self._rng["begin"]:
                 pos = self._rng["begin"]["position"]
+                if pos == '?':
+                    pos = 0
                 return (int(pos),int(pos))
             if ("begin" in self._rng["begin"]  and 
                         "end" in self._rng["begin"]):
@@ -766,14 +768,16 @@ class Range():
 
     @property
     def endPosition(self):
-        if "begin" in self._rng:
-            if "position" in self._rng["begin"]:
-                pos = self._rng["begin"]["position"]
+        if "end" in self._rng:
+            if "position" in self._rng["end"]:
+                pos = self._rng["end"]["position"]
+                if pos == '?':
+                    pos = 0
                 return ( int(pos), int(pos) )
-            if ("begin" in self._rng["begin"]  and 
-                "end" in self._rng["begin"]):
-                posb = self._rng["begin"]["begin"]
-                pose = self._rng["begin"]["end"] 
+            if ("begin" in self._rng["end"]  and 
+                "end" in self._rng["end"]):
+                posb = self._rng["end"]["begin"]
+                pose = self._rng["end"]["end"] 
                 return ( int(posb), int(pose) )    
         return None
 

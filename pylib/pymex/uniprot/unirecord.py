@@ -20,16 +20,17 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
 
     def parseXml(self, filename, ver="uni001", debug=False):
 
-
-
         self.recordTree = ET.parse(filename)
         self.preprocessComments(ver)
-
 
         res =  super().parseXml2(ver=ver )
         #print(res)
 
+               
         #change to Record class function - postprocess()
+
+        self.postprocess = []
+        
         for x in self.postprocess:
 
             #finding all evidence elements
@@ -59,8 +60,7 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         #res2 = super().parseXml2(ver=ver)
 
         print(res)
-
-
+        
         return res
 
 

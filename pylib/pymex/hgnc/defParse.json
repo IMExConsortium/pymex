@@ -1,0 +1,14 @@
+{
+    "@NS":"",
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct",
+                "ikey":"@id", "reference":null, "wrapper": false,
+                "postprocess": null } },
+    
+    "arr": { "*":{ "wrapper":true } },
+    
+    "str": { "*": { "complex":false, "name": "@name" },
+             "arr":{ "complex":false, "store":"list", "name": "../@name" }},
+
+    "date": { "*": { "complex":false, "name": "@name" } }
+}

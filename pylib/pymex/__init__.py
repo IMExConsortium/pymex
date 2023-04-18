@@ -9,3 +9,5 @@ from pymex.uparc import *
 from pymex.mutilyzer import *
 from pymex.clinvar import *
 from pymex.egene import *
+from pymex.interpro import *
+from pymex.hgnc import *

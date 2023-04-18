@@ -57,17 +57,18 @@ class XmlRecord():
 
                 self.config[ver]["IN"] = json.load( open( config[ver]["IN"] ) )
                 self.config[ver]["NSL"] = len(self.config[ver]["IN"]["@NS"])+2
-                self.config[ver]["OUT"] = json.load( open( config[ver]["OUT"] ) )
+                if "OUT" in self.config[ver]:
+                    self.config[ver]["OUT"] = json.load( open( config[ver]["OUT"] ) )
 
-                # re-key  default ("*") namespace
+                    # re-key  default ("*") namespace
 
-                defns = None
-                for nk in self.config[ver]["OUT"]["@NS"]:
-                    if nk == "*":
-                        defns = self.config[ver]["OUT"]["@NS"]["*"]
-                if defns is not None:
-                    self.config[ver]["OUT"]["@NS"].pop("*", None)
-                    self.config[ver]["OUT"]["@NS"][None] = defns
+                    defns = None
+                    for nk in self.config[ver]["OUT"]["@NS"]:
+                        if nk == "*":
+                            defns = self.config[ver]["OUT"]["@NS"]["*"]
+                    if defns is not None:
+                        self.config[ver]["OUT"]["@NS"].pop("*", None)
+                        self.config[ver]["OUT"]["@NS"][None] = defns
 
 
     def parseXmlTree(self, xmltree, ver, debug=False):
@@ -235,7 +236,12 @@ class XmlRecord():
             return 
     
         if "name" in ctempl and ctempl["name"] is not None:
-            ckey = ctempl["name"]
+            if "@" in ctempl["name"]:                
+                nlst = elem.xpath(ctempl["name"])
+                if len(nlst) == 1:
+                    ckey = nlst[0]
+            else:
+                ckey = ctempl["name"]
         else:
             ckey = tag
 

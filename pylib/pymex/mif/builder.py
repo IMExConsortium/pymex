@@ -60,14 +60,19 @@ class RecordBuilder():
             term = {"label" : cvlabel }
             return term
 
-        if isinstance(cvid, str):
+        if isinstance(cvid, str):            
+            if cvid == 'MI:2411':
+                term = {'label':"MAC Tag", 'def':"MAC Tag", 'id':"MI:2411", "dbac":"MI:0488", "db":"psi-mi"}
+                self.cvtrec[ term['id'] ] = term
+                
             if cvid not in self.cvtrec:
-                print("s")
+                                
                 #fetch term from OLS
 
                 cvc = cvid.split(":")
-
+                
                 cvurl = self.oboUrl.replace("%CVT%",cvc[0].lower()) + cvid.replace(':','_')
+                
                 jcv = json.load( urlopen( cvurl ) )
 
                 term = {}
@@ -170,11 +175,15 @@ class RecordBuilder():
         return self.taxrec[ taxid ]
 
     def uniprot(self, acc):
-        if acc not in self.unirec:
+
+        qacc = acc.split('_')[0]
+        qacc = qacc.split('-')[0]
+        
+        if qacc not in self.unirec:
             uprot = {}
+            uniurl = self.uniUrl + qacc +".xml"
 
-            uniurl = self.uniUrl + acc +".xml"
-
+            print(uniurl)
             accpath = "/up:uniprot/up:entry/up:accession/text()"
             verpath = "/up:uniprot/up:entry/@version"
             snamepath = "/up:uniprot/up:entry/up:name/text()"
@@ -184,7 +193,7 @@ class RecordBuilder():
 
             uacc = record.xpath( accpath, namespaces = self.uniNs )
             if uacc:
-                uprot["acc"] = str( uacc[0] )
+                uprot["acc"] = acc  # str( uacc[0] )
 
             version = record.xpath( verpath, namespaces = self.uniNs )
             if version:
@@ -247,7 +256,7 @@ class RecordBuilder():
             for ln in sf:
                 ln = ln.strip()
                 col = [s.strip() for s in ln.strip().split("\t")]
-
+                print(ln)
                 if ln.startswith("source"):
                     self.feature = False
 
@@ -364,6 +373,7 @@ class RecordBuilder():
 
                     xtgt = interaction
                 elif ln.startswith("molecule"):
+                    
                     self.feature = False
                     participant = {}
                     interaction.setdefault( "participant",[] ).append( participant )
@@ -463,11 +473,12 @@ class RecordBuilder():
                     for role in col[1:]:
                         participant["experimentalRole"].append( self.buildCvTerm( role ) )
 
-                elif ln.startswith("expprep"):
+                elif ln.startswith("expprep"):                    
                     self.feature = False
                     participant.setdefault("experimentalPreparation",[])
                     for prep in col[1:]:
                         participant["experimentalPreparation"].append( self.buildCvTerm( prep ) )
+
                 elif ln.startswith("biorole"):
                     self.feature = False
                     participant.setdefault("biologicalRole",[])
@@ -488,6 +499,7 @@ class RecordBuilder():
                 elif ln.startswith("feature"):
                     self.feature = True
                     feature = {}
+                    
                     participant.setdefault("feature",[]).append( feature )
 
                     feature["featureType"] = self.buildCvTerm( col[1] )

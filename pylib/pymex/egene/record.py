@@ -32,10 +32,10 @@ class Record( pymex.xmlrecord.XmlRecord ):
 
 
     def _strand( self, elem=None, rec=None, cval=None ):
-
-        print("ELEM", elem)
-        print("REC", rec["strand"] )
-        print("CCH(pre): ", cval.keys())
+        if self._debug :
+            print("ELEM", elem)
+            print("REC", rec["strand"] )
+            print("CCH(pre): ", cval.keys())
         if 'strand' in rec and "value" in rec["strand"]:
             rec["strand"] = rec["strand"]["value"]
                          

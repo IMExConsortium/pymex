@@ -1,0 +1,85 @@
+{
+    "@NS":"",
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct",
+                "ikey":"@id", "reference":null, "wrapper": false,
+                "postprocess": null } },
+
+    "entry":{"*":{"store":"list"}},
+
+    "shortLabel":{"*":{"complex":false}},
+    "fullName":{"*":{"complex":false}},
+
+    "alias":{"*":{"store":"list"}},
+    "secondaryRef": {"*": {"store":"list"}},
+
+    "availabilityList":{"*":{"wrapper":true}},
+    "availability":{"entry":{"store":"index","ikey":"@id","name":"availabilityList"}},
+    "availabilityRef":{"*":{"reference":"/entrySet/entry/availabilityList","name":"availability"}},
+
+    "experimentList":{"*":{"wrapper":true}},
+    "experimentDescription":{"entry":{"store":"index","ikey":"@id","name":"experimentList"},
+			     "*":{"store":"list","name":"experiment"}},
+
+    "xref":{ "*": {"index":{"name":"xrefInd",
+			                "entry":{ "primaryRef":{"key":["@db","@id"]},
+				                      "secondaryRef":{"key":["@db","@id"]}
+				           }
+			      }
+		   }
+	},
+
+    "experimentRef":{"interaction":{"reference":"/entrySet/entry/experimentList",
+				    "store":"list",
+				    "name":"experiment"},
+		     "parameter":{"reference":"/entrySet/entry/experimentList",
+				  "store":"list",
+				  "name":"experiment"}},
+
+    "confidenceList":{"*":{"wrapper":true}},
+    "confidence":{"*":{"store":"list"} },
+    "value":{"*":{"complex":false}},
+    "attributeList": { "*":{"wrapper":true} },
+	
+	"attribute": { "*":{ "name":"attribute", "store":"list"} },   
+    "interactorList":{"*":{"wrapper": true} },
+
+    "interactor":{ "participant": { "store":"direct"},
+		   "*":{"store":"index", "ikey":"@id", "name":"interactorList"}},
+
+    "interactorRef":{"*":{"reference": "/entrySet/entry/interactorList", "name":"interactor"} },
+    "interactorType":{"*":{"store":"direct"}},
+
+    "sequence":{"*":{"complex":false}},
+
+    "interactionList":{"*":{"wrapper": true} },
+    "interaction":{"*":{"store":"list"}},
+
+    "participantList":{"*":{"wrapper": true} },
+    "participant":{"*":{"store":"list","postproc":"stoich254"}},
+
+    "interactionType":{"interaction":{"store":"list"}},
+
+    "modelled":{"*":{"complex":false}},
+    "intraMolecular":{"*":{"complex":false}},
+    "negative":{"*":{"complex":false}},
+
+    "parameterList":{"*":{"wrapper":true}},
+
+    "hostOrganismList":{"*":{"wrapper":true}},
+    "hostOrganism":{"*":{"store":"list"}},
+
+    "experimentalRoleList":{"*":{"wrapper":true}},
+    "experimentalRole":{"*":{"store":"list"}},
+
+    "experimentalPreparationList":{"*":{"wrapper":true}},
+    "experimentalPreparation":{"*":{"store":"list"}},
+
+    "featureList":{"*":{"wrapper":true}},
+    "feature":{"*":{"store":"list"}},
+
+    "isLink":{"*":{"complex":false}},
+
+    "featureRangeList":{"*":{"wrapper":true}},
+    "featureRange":{"*":{"store":"list"}}
+}
