@@ -63,8 +63,11 @@ class HgncRecord(xmlrecord.XmlRecord):
 
     @property
     def record(self):
-        return self.root['response']['result']['doc']
-    
+        if 'doc' in self.root['response']['result']:
+            return self.root['response']['result']['doc']
+        else:
+            return None
+        
     @property
     def symbol(self):
         """Returns record (gene) symbol"""        
@@ -74,7 +77,7 @@ class HgncRecord(xmlrecord.XmlRecord):
     def uprAc(self):
         """Returns the first UniprotKB accession of the record"""
 
-        if 'uniprot_ids' in self.record:
+        if self.record != None and 'uniprot_ids' in self.record:
             return self.record['uniprot_ids'][0]
         else:
             return None

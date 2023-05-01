@@ -3,7 +3,7 @@ from pymex.xmlrecord import *
 from pymex.mif import *
 from pymex.up import *
 from pymex.pypsic import *
-from pymex.uniprot import *
+#from pymex.uniprot import *
 from pymex.uprot import *
 from pymex.uparc import *
 from pymex.mutilyzer import *
@@ -11,3 +11,4 @@ from pymex.clinvar import *
 from pymex.egene import *
 from pymex.interpro import *
 from pymex.hgnc import *
+from pymex.refseq import *

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct 11 10:00:00 2021
+Created on Wed Aug 19 02:05:33 2020
 
-@author: lukasz
+@author: andrei
 """
 
 import json
@@ -53,37 +53,9 @@ class Names():
         ret = []
         if "alias" in self._names:
             for a in self._names["alias"]:
-               ret.append( Alias( a ) )
+                ret.append( Alias( a ) )
         return ret    
-
-    @property
-    def gene(self):
-        if "gene" in self._names:
-            return self._names["gene"]
-        else:
-            for a in self._names["alias"]:
-                if a["type"] == "gene name":
-                    return a["value"]
-        return None
-
-
-class Name():
-    def __init__( self, primary=None, secondary=None ):
-        if primary is not None:
-            self._primary = primary
-        if secondary is not None:
-            self._secondary = secondary
-        else:
-            self._secondary = []
-            
-    @property
-    def primary(self):
-        return self._primary
-
-    @property
-    def secondary(self):
-        return self._secondary
-
+    
     
 class Xref():
     """Xref representation."""
@@ -122,7 +94,6 @@ class Xref():
         if self._xref is None:
             return None
         ret = []
-    
         ret.append( Reference(self._xref["primaryRef"]) )
         
         if  "secondaryRef" in self._xref:
@@ -339,25 +310,20 @@ class Participant( Names,Xref ):
     """MIF Participant representation."""
     def __init__(self, participant, interaction ):    
         self._participant = participant
-        self._interactor = self._participant.setdefault("interactor",None)
+        self._interactor = self._participant.getdefault("interactor",None)
         self._interaction = interaction
         
         if "names" in  self._participant:            
             self._names = self._participant["names"]
-        elif self._interactor is not None and "names" in self._interactor:
-            self._names = self._interactor["names"]
         else:
-            self._names = None
-            
+            self._names = self._interactor["names"]
                 
         self._xref = self._participant["xref"] if "xref" in self._participant else None
             
         if "hostOrganism" in self._participant:
             self._host = self._participant["hostOrganism"]
-        elif self._interactor is not None and "organism" in self._interactor:
-            self._host =  [ self._interactor["organism"] ]
         else:
-            self._host = None
+            self._host =  [ self._interactor["organism"] ]
             
         self._meth = None
         if "participantIdentificationMethod" in participant:
@@ -560,54 +526,19 @@ class Experiment(Names, Xref):
         if self._attribute is not None:
             return Attribs( self._attribute )
         return None
- 
-class Protein(Names, Xref):
-    """MIF Interactor representation."""
-    def __init__( self, protein ):
-        self._protein = protein
-        self._names = protein["names"]
-        self._xref = protein["xref"]
-        self._type = protein["interactorType"]
-        self._host = protein["organism"]
-        
-        self._sequence = None
-        if "sequence" in protein:
-            self._sequence = protein["sequence"]
 
-    @property
-    def type( self ):        
-        return CvTerm(self._type)      
-
-    @property
-    def host( self ):        
-        return Host( self._host )
-    
-    @property
-    def sequence( self ):        
-        return self._sequence
-      
 class Interactor(Names, Xref):
     """MIF Interactor representation."""
     def __init__( self, interactor ):
-        
         self._interactor = interactor
-        self._sequence = None
+        self._names = interactor["names"]
+        self._xref = interactor["xref"]
+        self._type = interactor["interactorType"]
+        self._host = interactor["organism"]
         
-        if interactor is not None:
-            self._names = interactor["names"]
-            self._xref = interactor["xref"]
-            self._type = interactor["interactorType"]
-            self._host = interactor["organism"][0]
-
-            if "sequence" in interactor:
-                self._sequence = interactor["sequence"]
-                
-        else:
-            self._names = None
-            self._xref = None
-            self._type = None
-            self._host = None
-            
+        self._sequence = None
+        if "sequence" in interactor:
+            self._sequence = interactor["sequence"]
 
     @property
     def type( self ):        
@@ -623,88 +554,20 @@ class Interactor(Names, Xref):
       
 
 class Feature(Names, Xref):
-    """MIF/UniprotKB Feature representation."""
-
-    def __init__( self, feature ):
-        #print("  Feature:init",feature.keys())
+    """MIF Feature representation."""
+    def __init__( self, feature ):    
         self._feature = feature
-        #if "_evidence" in self._feature.keys():
-        #    print("   F-EV",self._feature["_evidence"])
+        self._names= feature["names"]
+        self._xref = feature["xref"]
+        self._range =  feature["featureRange"]       
         
-        if "names" in feature:
-            self._names= feature["names"]        
-        else:
-            self._names = { "shortLabel":"",
-                            "fullName":"" }
-        self._attribute = []
-
-        if "description" in feature: 
-            self._attribute.append({ "value": feature["description"],
-                                     "name": "description",
-                                     "nameAc": "dxf:0089"} )
-        
-        if "xref" in feature:
-            self._xref = feature["xref"]
-        else:
-            self._xref = None
-
-        if "featureRange" in feature:            
-            self._range =  feature["featureRange"]       
-        elif "location" in feature:
-
-            loc = feature["location"]
-            
-            if type(loc) is list:
-                loc = loc[0]
-            
-            if "begin" in loc and "end" in loc:
-                if type(loc["begin"]) is str and type(loc["begin"] is str):
-                    bpos = {"position":loc["begin"]}
-                    epos = {"position":loc["end"]}
-                    self._range = [{ "begin":bpos, "end":epos}]
-                else:
-                    if "position" in loc["begin"]:
-                        bpos = {"position":loc["begin"]["position"]}
-                    elif "status" in loc["begin"]:
-                        if "unknown" == loc["begin"]["status"]:
-                            bpos = {"position": "?"}
-                        else:
-                            bpos = {"position": "?"}
-                        bpos["status"]=loc["begin"]["status"]
-                                        
-
-                    if "position" in loc["end"]:
-                        epos = {"position":loc["end"]["position"]}
-                    elif "status" in loc["end"]:
-                        if "unknown" == loc["end"]["status"]:
-                            epos = {"position": "?"}
-                        else:
-                            epos = {"position": "?"}
-                        epos["status"]=loc["end"]["status"]
-                        
-                    self._range = [{ "begin":bpos, "end":epos}]
-                    
-            elif "position" in loc:
-                self._range = [{"begin":{"position":loc["position"]["position"]},
-                                "end":{"position":loc["position"]["position"]}}]
-                
-            if "variation" in feature:                      
-                self._range[-1]["newSequence"]=feature["variation"][0]
-            
         self._meth = None
         if "featureDetectionMethod" in feature:
             self._meth = feature["featureDetectionMethod"]
 
         if "attribute" in feature:
             self._attribute = feature["attribute"]
-        
-            
-    def __str__(self):
-        return str((self._range))
 
-    def __repr__(self):
-        return str((self._range,self._feature))
-            
     @property
     def type(self):
         return CvTerm(self._feature["featureType"])
@@ -717,37 +580,21 @@ class Feature(Names, Xref):
                 ret.append( CvTerm( m ) )
             return ret    
         return None
-          
+      
+    
     @property
     def ranges(self):         
         ret = []
-        for r in self._range:            
+        for r in self._range:
             ret.append( Range(r) )
         return ret
     
     @property
-    def attrs(self):    
-        if len(self._attribute) > 0:
+    def attribs(self):    
+        if self._attribute is not None:
             return Attribs( self._attribute )
-        return []
+        return None
 
-    @property
-    def evidence( self ):
-        if "_evidence" in self._feature:
-            el = []
-            for e in self._feature["_evidence"]:
-                el.append(Evidence( e ) )
-            return el
-        else:
-            return []
-
-    @property
-    def molecule(self):
-        if "molecule" in self._feature:
-            return self._feature["molecule"]["value"]
-        else:
-            return None
-        
 class Range():
     def __init__(self, rng):
         self._rng = rng    
@@ -758,12 +605,9 @@ class Range():
 
     @property
     def begPosition(self):
-        #print(self._rng)
         if "begin" in self._rng:
-            if "position" in self._rng["begin"]:
-                pos = self._rng["begin"]["position"]
-                if pos == '?':
-                    pos = 0
+            if "value" in self._rng["begin"]:
+                pos = self._rng["begin"]["value"]
                 return (int(pos),int(pos))
             if ("begin" in self._rng["begin"]  and 
                         "end" in self._rng["begin"]):
@@ -778,34 +622,17 @@ class Range():
 
     @property
     def endPosition(self):
-        if "end" in self._rng:
-            if "position" in self._rng["end"]:
-                pos = self._rng["end"]["position"]
-                if pos == '?':
-                    pos = 0
+        if "begin" in self._rng:
+            if "value" in self._rng["begin"]:
+                pos = self._rng["begin"]["value"]
                 return ( int(pos), int(pos) )
-            if ("begin" in self._rng["end"]  and 
-                "end" in self._rng["end"]):
-                posb = self._rng["end"]["begin"]
-                pose = self._rng["end"]["end"] 
+            if ("begin" in self._rng["begin"]  and 
+                "end" in self._rng["begin"]):
+                posb = self._rng["begin"]["begin"]
+                pose = self._rng["begin"]["end"] 
                 return ( int(posb), int(pose) )    
         return None
-
-    @property
-    def oldSequence(self):
-        if "oldSequence" in self._rng:
-            return self._rng["oldSequence"]
-        else:
-            return None
-
-    @property
-    def newSequence(self):
-        if "newSequence" in self._rng:
-            return self._rng["newSequence"]
-        else:
-            return None
-
-    
+       
  
 class Availability():
     """MIF Availability representation."""
@@ -828,27 +655,17 @@ class CvTerm( Names, Xref ):
 
 
 class Host( Names ):
-    """Host representation. Optional cell line/compartment/tissue information."""
+    """MIF Host representation. Optional cell line/compartment/tissue information."""
     def __init__(self, host):
-    
         self._host = host
-        if host is not None:
-            if "_names" in host.keys():
-                self._names = host["_names"]
-            else:
-                self._names = host["names"]
-        else:
-            self._names = None
-            
+        self._names = host["names"]
+        
     def __repr__(self):
         return json.dumps(self._host)
 
     @property
     def taxid(self):
-        if self._host is not None:
-            return str(self._host["ncbiTaxId"])
-        else:
-            return None
+        return str(self._host["ncbiTaxId"])
     
     @property
     def cellType(self):
@@ -881,64 +698,3 @@ class Confidence:
     def value(self):
         return str(self._conf["value"])
     
-class Comment:
-    """UniprotKB comment representation. """
-    def __init__(self, root, comment):
-        self._root = root
-        self._comment = comment
-        #print(comment)
-        
-    @property
-    def type(self):
-        return self._comment["type"]
-
-    @property
-    def text(self):
-        if "text" in self._comment:
-            return self._comment["text"]["value"]
-        else:
-            return None
-    
-    @property
-    def molecule(self):
-        if "molecule" in self._comment:
-            return self._comment["molecule"]["value"]
-        else:
-            return None
-
-    @property
-    def evidence(self):
-        if "_evidence" in self._comment:
-            el = []
-            for e in self._comment["_evidence"]:
-                el.append(Evidence( e ) )
-            return el
-        else:
-            return []
-
-
-class Evidence:
-    """UniprotKB evidence representation. """
-    def __init__(self, evidence):
-        #self._root = root
-        self._evidence = evidence
-        
-    @property
-    def type(self):
-        return self._evidence["type"]
-
-    @property
-    def source(self):
-        
-        if "source" not in self._evidence:            
-            return None
-        
-        if "dbReference" in self._evidence["source"]:
-            r = self._evidence["source"]["dbReference"][0]
-            src = {"ns": r["type"], "ac": r["id"] }
-            return src
-        #elif "ref" in self._evidence["source"]:
-        #    print("    ev src ref=",self._evidence["source"]["ref"])
-
-        return None
-        

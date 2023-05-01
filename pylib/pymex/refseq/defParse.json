@@ -1,0 +1,110 @@
+{
+    "@NS":"",
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct",
+                "ikey":"@id", "reference":null, "wrapper": false,
+                "postprocess": null } },
+    
+    "GBSet":{"*":{"store":"list"}},
+
+    "GBSeq_locus": {"*":{"name":"locus", "complex":false}},
+    "GBSeq_strandedness": {"*":{"name":"strandedness", "complex":false}},
+    "GBSeq_moltype": {"*":{"name":"moltype", "complex":false}},
+    "GBSeq_topology": {"*":{"name":"topology", "complex":false}},
+    "GBSeq_division": {"*":{"name":"division", "complex":false}},
+    "GBSeq_update-date": {"*":{"name":"update-date", "complex":false}},
+    "GBSeq_create-date": {"*":{"name":"create-date", "complex":false}},
+    "GBSeq_definition": {"*":{"name":"definition", "complex":false}},
+    "GBSeq_primary-accession": {"*":{"name":"accession-primary", "complex":false}},
+    "GBSeq_accession-version": {"*":{"name":"accession-version", "complex":false}},
+    "GBSeq_other-seqids": {"*":{"wrapper":true}},
+    "GBSeqid": {"*":{"name":"seqid", "store":"list"},
+                "GBSeq_other-seqids":{"name":"accession-secondary",
+                                      "store":"list",
+                                      "complex":false}
+               },
+    
+    "GBSeq_source": {"*":{"name":"source", "complex":false}},
+    
+    "GBSeq_organism": {"*":{"name":"organism", "complex":false}},
+    "GBSeq_taxonomy": {"*":{"name":"taxonomy", "complex":false}},
+
+    "GBSeq_keywords": {"*":{"wrapper":true}},
+    "GBKeyword": {"*":{"name":"keyword"},
+                  "GBSeq_keywords":{ "name":"keyword",
+                                     "complex":false,
+                                     "store":"list"}
+                 },
+    
+    "GBSeq_references": {"*":{"wrapper":true}},
+
+    "GBReference": {"*":{"name":"reference"},
+                    "GBSeq_references":{ "name":"reference",
+                                         "complex":true,
+                                         "store":"list"}
+                   },
+
+    "GBReference_reference": {"*":{"name":"id", "complex":false}},
+    "GBReference_position": {"*":{"name":"position", "complex":false}},
+
+    "GBReference_authors": {"*":{"wrapper":true}},    
+    "GBAuthor": {"*":{"name":"", "complex":false,"store":"list"},
+                 "GBReference_authors":{"name":"author",
+                                        "complex":false,
+                                        "store":"list"}
+                },
+
+    "GBReference_title": {"*":{"name":"title", "complex":false}},
+    
+    "GBReference_xref": {"*":{"wrapper":true}},
+
+    "GBXref": {"*":{"name":"xref", "complex":false,"store":"list"},
+               "GBReference_xref":{"name":"xref",
+                                   "complex":true,
+                                   "store":"list"}
+              },
+
+    "GBXref_dbname": {"*":{"name":"ns", "complex":false}},
+    "GBXref_id": {"*":{"name":"ac", "complex":false}},
+    
+    "GBReference_journal": {"*":{"name":"journal", "complex":false}},               
+    "GBReference_pubmed": {"*":{"name":"pubmed", "complex":false}},
+    "GBReference_remark": {"*":{"name":"remark", "complex":false}},
+
+    "GBSeq_comment": {"*":{"name":"comment", "complex":false}},
+    "GBSeq_primary": {"*":{"name":"primary", "complex":false}},
+    
+    "GBSeq_feature-table": {"*":{"wrapper":true}},
+    
+    "GBFeature": {"*":{"name":"GBFeature", "complex":true},
+                  "GBSeq_feature-table":{"name":"feature",
+                                         "complex":true,
+                                         "store":"list"}
+                 },
+    
+    "GBFeature_key": {"*":{"name":"key", "complex":false}},
+    "GBFeature_location": {"*":{"name":"_location", "complex":false}},
+
+    "GBFeature_intervals": {"*":{"wrapper":true}},
+    "GBInterval": {"*":{"name":"location", "complex":true,"store":"list"}},
+    "GBInterval_from": {"*":{"name":"begin", "complex":false}},
+    "GBInterval_to": {"*":{"name":"end", "complex":false}},
+    "GBInterval_accession": {"*":{"name":"ac", "complex":false}},
+
+
+    "GBFeature_quals": {"*":{"wrapper":true}},
+    "GBQualifier": {"*":{"name":"attribute", "complex":true, "store":"list"}},
+    "GBQualifier_name": {"*":{"name":"name", "complex":false}},
+    "GBQualifier_value": {"*":{"name":"value", "complex":false}},
+    "GBSeq_sequence": {"*":{"name":"sequence", "complex":false}},
+    
+    "c": {"*":{"name":"", "complex":false}},
+
+    
+    "arr": { "*":{ "wrapper":true } },
+    
+    "str": { "*": { "complex":false, "name": "@name" },
+             "arr":{ "complex":false, "store":"list", "name": "../@name" }},
+
+    "date": { "*": { "complex":false, "name": "@name" } }
+}
