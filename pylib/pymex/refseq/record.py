@@ -15,35 +15,46 @@ from pymex import xmlrecord
 class Record(xmlrecord.XmlRecord):
     """RefSeq record representation. Inherits XML parsing and serialization from xml.XmlRecord"""
 
-    def __init__(self, root=None):
+    def __init__(self, root=None, debug=False):
         
         myDir = os.path.dirname( os.path.realpath(__file__))
         self.rfscConfig = { "rfsc": { "IN": os.path.join( myDir, "defParse.json") } }
-
-        self.url="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=%%ACC%%&rettype=xml&retmode=text"
+        
+        self.url="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=%%DB%%&id=%%ACC%%&rettype=xml&retmode=text"
 
         super().__init__( root,
                           config = self.rfscConfig,
-                          postproc = {"_global": self.globpost } )
+                          postproc = {"_global": self.globpost },
+                          debug = debug )
 
-    def getRecord(self, ac="NM_019353.2"):
-        curl = self.url.replace( "%%ACC%%", ac )
-        #print(curl)
+    def getRecord(self, ac="NM_019353.2",db="nuccore"):
+        curl = self.url.replace( "%%ACC%%", ac ).replace("%%DB%%",db)
+        print(curl)
+        if self.debug:
+            print("DEBUG: Record.getRecord: url->", curl)
 
         headers = { 'Accept': 'text/xml' }
         method = 'GET'
         body =''
         
         req = Request(curl)        
-        res = self.parseXml( urlopen( req ))
+        res = self.parseXml( urlopen( req ), debug=self.debug)
             
         return( res )
 
 
     def parseXml(self, filename, ver="rfsc", debug=False):
+
+        if self.debug:
+            print("DEBUG: Record.parseXml: called")
         
         self.recordTree = ET.parse(filename)
-        res =  super().parseXml2( ver=ver )        
+        print(ET.tostring(self.recordTree,pretty_print=True).decode())
+        if self.debug:
+            print("DEBUG: Record.parseXmlrecordTree:", self.recordTree)
+        
+        
+        res =  super().parseXml2( ver=ver, debug=self.debug )        
         if '_global' in self.postproc:
             self.postproc['_global']()
         
@@ -57,8 +68,12 @@ class Record(xmlrecord.XmlRecord):
         return None
 
     def globpost(self):
-        print("globpost: called")
+        if self.debug:
+            print("DEBUG: Record.globpost: called")
         # build feature key map
+        if self.record == None:
+            return
+        
         if 'feature' in self.record and self.record['feature'] != None:
             fbk = {}
             self.record["_feature_by_key"] = fbk

@@ -12,14 +12,20 @@
 	    "*":{}},
    
     "protein":{"*":{"wraper":false, "postproc":"protName"} },
-    "recommendedName":{"protein":{"wrapper":false,"store":"direct","*":{} } },
-    "alternativeName":{"protein":{"wrapper":false,"store":"list","*":{} }},
+    "recommendedName":{"protein":{"wrapper":false,"store":"direct"},
+                       "*":{}  },
+    "alternativeName":{"protein":{"wrapper":false,"store":"list"},
+                       "*":{} },
     
     "fullName":{
         "recommendedName":{"wrapper":false,"name":"fullName","complex":false,"store":"direct"},
-        "alternativeName":{"wrapper":false,"name":"fullName","complex":false,"store":"direct"}},
+        "alternativeName":{"wrapper":false,"name":"fullName","complex":false,"store":"direct"},
+        "*":{}
+    },
     "shortName":{"recommendedName":{"wrapper":false,"name":"shortName","complex":false,"store":"direct"},
-                 "alternativeName":{"wrapper":false,"name":"shortName","complex":false,"store":"direct"}},
+                 "alternativeName":{"wrapper":false,"name":"shortName","complex":false,"store":"direct"},
+                 "*":{}
+                },
     
     "gene":{"*":{"wrapper":false,"postproc":"geneName"}},
 

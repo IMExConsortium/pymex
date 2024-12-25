@@ -7,21 +7,31 @@ import json
 
 class Record( pymex.xmlrecord.XmlRecord ):
  
-    def __init__( self, root=None, mode='dev', debug=False ):
+    def __init__( self, root=None, mode='dev', debug=False, mirror = None ):
 
         myDir = os.path.dirname( os.path.realpath(__file__))
-        self.uniConfig = { "eg001": {"IN": os.path.join( myDir, "iproParse001.json"),
+        self.iproConfig = { "eg001": {"IN": os.path.join( myDir, "iproParse001.json"),
                                       "OUT": os.path.join( myDir, "iproXml001.json" ) }
         }
+
             
-        super().__init__(root, config=None )
+        super().__init__(root, config=self.iproConfig )
         
         self.mode = mode
         self._debug = debug    
+        
 
-        self._mirror = '/mnt/mirrors/interpro/records'
+        self._mirror = '/mirrors/interpro/records'
+
+        if mirror is not None:
+            self._mirror = mirror
+
+        
         self._url = 'https://www.ebi.ac.uk/interpro/api/entry/InterPro/protein/reviewed/%%ACC%%'
-            
+        self._srcFileName = None
+
+    
+        
         if self._debug:        
             print("\nDONE: __init__") 
                    
@@ -39,6 +49,19 @@ class Record( pymex.xmlrecord.XmlRecord ):
             rec["strand"] = rec["strand"]["value"]
                          
 
+
+    def setSrcFileName(self,fname):
+        self._srcFileName = fname
+
+    def getSrcFileName(self):
+        return self._srcFileName
+
+
+    def srcParse(self):
+        
+        foo = self.parseXml(self._srcFileName, ver="eg001", debug=False)
+        print(json.dumps(foo.root, indent=1))
+            
     def getfpath( self, eg ):
 
         cdir = self._mirror

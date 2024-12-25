@@ -1,18 +1,34 @@
 import os
 
 from urllib.request import urlopen
+from time import sleep
+from pathlib import Path
+
 import pymex
 
 class UniRecord( pymex.xmlrecord.XmlRecord ):
-    def __init__(self, root=None):
+    def __init__( self, root=None, url=None, mirror_xml=None, mirror_json=None ):
         myDir = os.path.dirname( os.path.realpath(__file__))
         self.uniConfig = { "uni_v001": {"IN": os.path.join( myDir, "defUniParse_v001.json"),
                                         "OUT": os.path.join( myDir, "defUniXml_v001.json" ) }
         }
 
         self.debug = False
-        self.url="https://www.uniprot.org/uniprot/%%ACC%%.xml"
+        self._url="https://www.uniprot.org/uniprot/%%ACC%%.xml"
 
+        self._mirror= { "xml": None,
+                        "json": None}
+        
+        if url is not None:
+            self._url= url
+
+        if mirror_xml is not None:
+            self._mirror['xml'] = mirror_xml
+                        
+        if mirror_json is not None:
+            self._mirror['json'] = mirror_json
+
+        
         self._pdef = None
         
         super().__init__( root, config=self.uniConfig,
@@ -28,12 +44,102 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
                 
         return res
 
-    def getRecord(self, ac="P60010"):
-        upUrl = self.url.replace( "%%ACC%%", ac )                
+    #def getRecord(self, ac="P60010"):
+    #    upUrl = self.url.replace( "%%ACC%%", ac )                
+    #
+    #    res = self.parseXml( urlopen(upUrl ))
+    #    self.record = res
+    #    return( res )
 
-        res = self.parseXml( urlopen(upUrl ))
-        self.record = res
-        return( res )
+
+    def getRecord( self, eg, debug=False, delay=1 ):
+
+        rec = self.getlocal( eg )
+        
+        if rec is None:
+            rec = self.getremote( eg )
+            sleep(delay)
+        return rec
+
+    def getfpath( self, acc ):
+    
+        cdir = ""
+        pfix = self._mirror['xml'] + "/"
+        eg = "0"*15+ str(acc)
+        eg = eg[-15:]
+        for i in range(0,12,3):
+            cdir +=  "/" +eg[i:i+3]
+
+        if self.debug:
+            print("cdir",cdir)    
+        fpath_local = pfix + "local" + cdir + "/" + acc + ".xml"
+        
+        if os.path.isfile( fpath_local ):
+            return fpath_local
+
+        
+        fpath_trembl = pfix + "trembl" +  cdir + "/" + acc + ".xml"
+        if self.debug:
+            print("fpath_trembl",fpath_trembl)
+        
+        if os.path.isfile( fpath_trembl ):
+            return fpath_trembl
+
+        
+        fpath_swp = pfix + "swissprot" + cdir + "/"+ acc + ".xml"
+        if self.debug:
+            print("fpath_swp",fpath_swp)    
+        
+        if os.path.isfile( fpath_swp ):
+            return fpath_swp
+
+        # create local directory
+        
+        Path( pfix + cdir + "/local/" ).mkdir(parents=True, exist_ok=True)
+        if self.debug:
+            print("getfpath(local):", fpath_local)
+                
+        return fpath_local
+
+
+    def getlocal( self, eg ):
+
+        rec = None
+
+        fpath = self.getfpath( eg )
+
+        #print("getlocal->fpath:", fpath)
+        
+        if fpath is None:
+            return rec
+        
+        if os.path.isfile( fpath ):
+            
+            # parse xml
+
+            rec = self.parseXml( fpath ) 
+            
+        return rec
+    
+    def getremote( self, eg ):
+        #print("EntrezGene: get report")
+        url = self._url.replace('%%ACC%%',eg)
+        print(url)
+
+        rec = {}
+        
+        #with open( self.getfpath( eg ), "w" ) as lf:
+        #    for ln in urlopen(url):
+        #        lf.write(ln.decode())
+            
+        
+        # parse xml
+
+        #rec = self.parseXml( self.getfpath( eg ) )
+        rec = self.parseXml( urlopen(url) )
+        
+        return rec
+
     
     def _protName( self, elem, rec, cval ):
         if self.debug:
@@ -42,8 +148,7 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
  
         if "protein" in rec:
             protein = rec["protein"]
-            rec["_protein"] = {"names":{},"XX":"XX"}
-            print("XXX",rec.keys())
+            rec["_protein"] = {"names":{}}        
             for cname in protein:
                 if "recommendedName" == cname:                     
                     rec["_protein"]["names"]["rec"]={}
@@ -221,8 +326,10 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
 
     @property
     def gene( self ):
-        return self.root["uniprot"]["entry"][0]["_gene"]
-
+        if "_gene" in self.root["uniprot"]["entry"][0]:
+            return self.root["uniprot"]["entry"][0]["_gene"]
+        else:
+            return {}
     @property
     def taxon( self ):
         return self.root["uniprot"]["entry"][0]["organism"]

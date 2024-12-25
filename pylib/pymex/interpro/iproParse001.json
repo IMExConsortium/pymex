@@ -1,1 +1,35 @@
-{}
+{
+    "@NS":"",
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct", "ikey":"@id",
+		        "reference":null, "wrapper": false } },
+
+    "interpro":{"*":{"store":"list"}},
+    "dbinfo":{"*":{"store":"list"}},
+    "cite":{"*":{"store":"list"}},
+    
+    "pub_list":{"*":{"wrapper":true}},
+    "publication":{"*":{"store":"list"}},
+
+    "member_list":{"*":{"wrapper":true}},
+    "external_doc_list":{"*":{"wrapper":true}},
+    "structure_db_links":{"*":{"wrapper":true}},
+
+    "db_xref":{"*":{"store":"direct"},
+               "member_list":{"store":"list","name":"member"},
+               "external_doc_list":{"store":"list","name":"external_doc"},
+               "structure_db_list":{"store":"list","name":"structure_db"}
+              },
+
+    
+    "taxonomy_distribution":{"*":{"wrapper":true}},
+    "key_species":{"*":{"wrapper":true}},
+
+    "taxon_data":{"*":{"store":"list","name":"taxonomy_distribution"},
+                  "taxonomy_distribution":{"store":"list","name":"taxonomy_distribution"},
+                  "key_species":{"store":"list","name":"key_species"}
+                 },
+
+    "lcn":{"*":{"store":"list"}}
+   
+}

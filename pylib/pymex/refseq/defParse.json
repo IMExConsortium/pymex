@@ -36,6 +36,8 @@
                                      "store":"list"}
                  },
     
+    "GBSeq_xref": {"*":{"wrapper":true}},
+    
     "GBSeq_references": {"*":{"wrapper":true}},
 
     "GBReference": {"*":{"name":"reference"},
@@ -61,7 +63,11 @@
     "GBXref": {"*":{"name":"xref", "complex":false,"store":"list"},
                "GBReference_xref":{"name":"xref",
                                    "complex":true,
+                                   "store":"list"},
+               "GBSeq_xrefs":{"name":"xref",
+                                   "complex":true,
                                    "store":"list"}
+              
               },
 
     "GBXref_dbname": {"*":{"name":"ns", "complex":false}},

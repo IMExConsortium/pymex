@@ -7,13 +7,27 @@ from lxml import etree as ET
 print("UniRecord: import")
 
 class UniRecord( pymex.xmlrecord.XmlRecord ):
-    def __init__(self, root=None):
+    def __init__(self, root=None, url=None, mirror_xml=None):
         myDir = os.path.dirname( os.path.realpath(__file__))
         self.uniConfig = { "uni001": {"IN": os.path.join( myDir, "defUniParse001.json"),
                                       "OUT": os.path.join( myDir, "defUniParse001.json" ) }
         }
 
         self.url="https://www.uniprot.org/uniprot/%%ACC%%.xml"
+        self._mirror= { "xml": None,
+                        "json": None}
+        
+        if url is not None:
+            self.url= url
+
+        if mirror_xml is not None:
+            self._mirror['xml'] = mirror_xml
+            print("mirror_xml:",mirror_xml)
+            
+        if mirror_json is not None:
+            self._mirror['json'] = mirror_json
+            
+        
         #{evidence key: dbReference element}
         self.evidence = {}
         super().__init__(root, config=self.uniConfig )

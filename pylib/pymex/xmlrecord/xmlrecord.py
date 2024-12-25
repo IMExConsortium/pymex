@@ -27,9 +27,11 @@ class XmlRecord():
         print(prefix,ns[prefix], mifstr)
         return mifstr
 
-    def __init__(self, root=None, config=None, preproc=None, postproc=None):
+    def __init__(self, root=None, config=None, preproc=None, postproc=None, debug=False):
 
         self.fversion = None 
+
+        self.debug = debug
         
         if root is None:
             self.root = {}
@@ -130,14 +132,14 @@ class XmlRecord():
     def parseXml2(self, ver, debug=False):
         template = self.config[ver]["IN"]
         self.fversion = ver
-        
+        print("***", debug,self.debug)
         rootElem = self.recordTree.getroot()
-        self.genericParse( template, ver, self.root, [], rootElem, debug )
+        self.genericParse( template, ver, self.root, [], rootElem, debug=debug )
         return self
 
     def genericParse( self, template, ver, rec, rpath, elem,
                       wrapped=False, dropped=False, debug=False):
-
+    
         tag = self.modifyTag( elem, ver )
 
         if tag in template:
@@ -184,6 +186,7 @@ class XmlRecord():
                 ctempl = ttempl[wrParentTag]
 
         if ctempl is None:
+            #print("ttempl:",ttempl)
             ctempl = ttempl["*"]
             
         if debug:
@@ -368,7 +371,7 @@ class XmlRecord():
                 cchldTag = self.modifyTag(cchld, ver)
                 if debug:
                     print("  CHLD", cchld.tag);
-                self.genericParse( template, ver, cvalue, cpath, cchld)
+                self.genericParse( template, ver, cvalue, cpath, cchld, debug=debug)
 
                 if 'index' in ctempl:
                     if cchldTag in ientry and ientry[cchldTag] is not None:
