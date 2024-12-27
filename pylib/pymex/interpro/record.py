@@ -121,6 +121,10 @@ class Record( pymex.xmlrecord.XmlRecord ):
         res =  super().parseXml( filename, ver=ver )
         return res
 
+    def parseXmlStr(self, xmlstr, ver="eg001", debug=False):
+        res =  super().parseXmlStr( xmlstr, ver=ver )
+        return res
+
     def parseJson(self, filename, ver="eg001", debug=False):
         res =  {}  #super().parseXml( filename, ver=ver )
 

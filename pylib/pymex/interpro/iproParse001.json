@@ -12,6 +12,9 @@
     "publication":{"*":{"store":"list"}},
 
     "member_list":{"*":{"wrapper":true}},
+    "child_list":{"*":{"wrapper":true}},
+    "parent_list":{"*":{"wrapper":true}},
+
     "external_doc_list":{"*":{"wrapper":true}},
     "structure_db_links":{"*":{"wrapper":true}},
 
@@ -21,6 +24,10 @@
                "structure_db_list":{"store":"list","name":"structure_db"}
               },
 
+    "rel_ref":{"*":{"store":"direct"},
+               "child_list":{"store":"list","name":"child"},
+               "parent_list":{"store":"list","name":"parent"}
+              },
     
     "taxonomy_distribution":{"*":{"wrapper":true}},
     "key_species":{"*":{"wrapper":true}},

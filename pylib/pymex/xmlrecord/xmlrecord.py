@@ -99,14 +99,14 @@ class XmlRecord():
 
         if debug:
             print(ver)
-
-        print("XMLREC:", ET.tostring( self.recordTree, pretty_print=True).decode() )
+            
+            print("XMLREC:", ET.tostring( self.recordTree, pretty_print=True).decode() )
     
-        print(self.recordTree)
+        #print(self.recordTree)
         rootElem = self.recordTree  #.getroot()        
         self.genericParse( template, ver, self.root, [], rootElem, debug )
         
-        print(json.dumps(self.root, indent=2))
+        #print(json.dumps(self.root, indent=2))
         return self
 
     def parseXml(self, filename, ver, debug=False):
