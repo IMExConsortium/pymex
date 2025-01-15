@@ -131,8 +131,7 @@ class XmlRecord():
     
     def parseXml2(self, ver, debug=False):
         template = self.config[ver]["IN"]
-        self.fversion = ver
-        print("***", debug,self.debug)
+        self.fversion = ver        
         rootElem = self.recordTree.getroot()
         self.genericParse( template, ver, self.root, [], rootElem, debug=debug )
         return self

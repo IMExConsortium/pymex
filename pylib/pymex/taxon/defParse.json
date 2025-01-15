@@ -1,0 +1,43 @@
+{
+    "@NS":"",
+
+    "*": { "*":{"complex":true, "name": null, "store":"direct",
+                "ikey":"@id", "reference":null, "wrapper": false,
+                "postprocess": null } },
+    
+    "TaxaSet":{"*":{"wrapper":true}},
+    "Taxon":{ "TaxaSet":{"wrapper":true},
+              "LineageEx": {"name":"lineage", "store":"list"}
+            },
+    "TaxId": {"*":{"name":"taxid", "complex":false}},
+    "ParentTaxId": {"*":{"name":"parent-taxid", "complex":false}},
+    "Rank": {"*":{"name":"rank", "complex":false}},
+    "Division": {"*":{"name":"division", "complex":false}},
+    "ScientificName": {"*":{"name":"sci-name", "complex":false}},
+    "OtherNames":{"*":{"wrapper":true}},
+    "Name": {"OtherNames":{"name":"other-name", "store":"list"}},
+    "GenbankCommonName": {"OtherNames":{"name":"common-name", "complex":false}},
+
+
+    "LineageEx":{"*":{"wrapper":true}},
+    "Lineage": {"*":{"name":"lineage-simple", "complex":false}},
+        
+    "ClassCDE": {"*":{"name":"ClassCDE", "complex":false}},
+    "DispName": {"*":{"name":"name", "complex":false}},
+
+    "GCId": {"*":{"name":"gc-id", "complex":false}},
+    "GCName": {"*":{"name":"gc-name", "complex":false}},
+
+    "MGCId": {"*":{"name":"mgc-id", "complex":false}},
+    "MGCName": {"*":{"name":"mgc-name", "complex":false}},
+
+    
+    "arr": { "*":{ "wrapper":true } },
+    
+    "str": { "*": { "complex":false, "name": "@name" },
+             "arr":{ "complex":false, "store":"list", "name": "../@name" }},
+
+    "CreateDate": { "*": { "complex":false, "name": "create-date" } },
+    "UpdateDate": { "*": { "complex":false, "name": "update-date" } },
+    "PubDate": { "*": { "complex":false, "name": "pub-date" } }
+}
