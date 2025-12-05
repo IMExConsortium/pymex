@@ -6,7 +6,7 @@ import pymex
 import json
 
 class Record( pymex.xmlrecord.XmlRecord ):
-    def __init__(self, root=None):
+    def __init__(self, root=None,mirror_xml=None,mirror_json=None):
         myDir = os.path.dirname( os.path.realpath(__file__))
         self.uniConfig = { "uni_v001": {"IN": os.path.join( myDir, "defUniParse_v001.json"),
                                         "OUT": os.path.join( myDir, "defUniXml_v001.json" ) }
@@ -26,19 +26,132 @@ class Record( pymex.xmlrecord.XmlRecord ):
                                        "comment": self._comment,
                                        "xref": self._xref,
                                        "feature": self._feature})
+            
+        self._mirror= { "xml": { "path":'/loop/uniprot/uniprotkb/records', "dlst":['swissprot','tremble'] },
+                        "json": {"path":None,"dlst":[]}
+                       }
+        
+        self._url = 'https://www.uniprot.org/uniprot/%%ACC%%.xml"'
+
+        if mirror_xml != None:
+            self._mirror["xml"]=mirror_xml
+        
+        if mirror_json != None:
+            self._mirror["json"]=mirror_json
+                
         
     def parseXml(self, filename, ver="uni_v001", debug=False):
         res =  super().parseXml( filename, ver=ver )
                 
         return res
 
-    def getRecord(self, ac="P60010"):
-        upUrl = self.url.replace( "%%ACC%%", ac )                
+    def getfpath( self, acc, format="xml", debug=False ):
 
-        res = self.parseXml( urlopen(upUrl ))
-        self.record = res
-        return( res )
+        file = acc +"." + format
 
+        if debug:
+            print("File:", file)
+            print("Mirror:",self._mirror)
+        
+        if self._mirror[format]["path"] == None:
+            return  None
+        
+        for sd in self._mirror[format]["dlst"]:                        
+            cdir = self._mirror[format]["path"]+"/"+sd
+            
+            acc = "0"*12+ str(acc)
+            acc = acc[-15:]
+            for i in range(0,12,3):
+                cdir +=  "/" +acc[i:i+3]
+                if not os.path.isdir(cdir):
+                    os.mkdir(cdir) 
+
+            fpath = cdir + "/" + file
+
+            if debug:
+                print(fpath)
+            if os.path.isfile(fpath):    
+                return fpath
+        return None
+
+
+    def getlocal( self, eg, format="xml", debug=False ):
+
+        rec = None
+
+        fpath = self.getfpath( eg, format, debug=debug )
+        if debug:
+            print(" fpath: ", fpath)
+        
+        if os.path.isfile( fpath ):            
+            if format == "xml":                
+                rec = self.parseXml(fpath) 
+                
+            if format == "json":        
+                rec = self.parseJson(fpath) 
+                
+        return rec
+
+    
+    def getremote( self, acc ):
+        print("UniprotKB: get record:", acc)
+        url = self._url.replace('%%ACC%%',acc)
+        print(url)
+
+        rec = {}
+
+        #with open( self.getfpath( acc ), "w" ) as lf:
+        #    for ln in urlopen(url):
+        #        lf.write(ln.decode())
+            
+        
+        # parse xml
+
+        #rec = self.parseJson( self.getfpath( eg ) )
+        
+        return rec
+
+
+    def getRecord( self, acc, debug=False, format='xml',delay=1 ):
+        rec = self.getlocal( acc, format=format, debug=debug )
+        if debug:
+            print("rec."+format+":", rec)
+            
+        if rec is None and format=='xml':
+            rec = self.getlocal( acc, format="json",debug=debug )
+            if debug:
+                print("rec.json:", rec)
+        else:
+            rec = self.getlocal( acc, format="xml",debug=debug )
+            if debug:
+                print("rec.xml:", rec)
+                
+        if rec is None:    
+            rec = self.getremote( acc )
+            sleep(delay)
+            pass
+        return rec
+
+
+
+    
+    #def getRecord(self, ac="P60010"):
+    #    upUrl = self.url.replace( "%%ACC%%", ac )                
+    #
+    #    res = self.parseXml( urlopen(upUrl ))
+    #    self.record = res
+    #    return( res )
+
+    @property
+    def sequence(self):
+        return self.root["uniprot"]["entry"][0]['sequence']['value']
+    
+    @property
+    def seqCRC64(self):
+        return self.root["uniprot"]["entry"][0]['sequence']['checksum']
+
+
+    
     def getSequence( self, ac = None ):
         if ac is not None:
             curl = self.sequrl.replace("%%ACC%%",ac)            

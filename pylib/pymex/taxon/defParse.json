@@ -14,9 +14,22 @@
     "Rank": {"*":{"name":"rank", "complex":false}},
     "Division": {"*":{"name":"division", "complex":false}},
     "ScientificName": {"*":{"name":"sci-name", "complex":false}},
+    "EquivalentName": {"*":{"name":"equ-name", "complex":false,"store":"list"}},
+
+    "CommonName": {"OtherNames":{"name":"common-name", "complex":false,"store":"list"}},
+    "GenbankCommonName": {"OtherNames":{"name":"gb-common-name", "complex":false,"store":"list"}},
+
+    "Synonym": {"OtherNames":{"name":"syn-name", "complex":false,"store":"list"}},
+    "Acronym": {"OtherNames":{"name":"acr-name", "complex":false,"store":"list"}},
+    "GenbankAcronym": {"OtherNames":{"name":"gb-acr-name", "complex":false,"store":"list"}},   
+    "Inpart": {"*":{"name":"inpart", "complex":false}},
+    
+    "Includes": {"*":{"name":"include", "complex":false}},
+
     "OtherNames":{"*":{"wrapper":true}},
     "Name": {"OtherNames":{"name":"other-name", "store":"list"}},
-    "GenbankCommonName": {"OtherNames":{"name":"common-name", "complex":false}},
+    "Properties":{"*":{"wrapper":true}},
+    "Property": {"Properties":{"name":"property", "store":"list"}},
 
 
     "LineageEx":{"*":{"wrapper":true}},

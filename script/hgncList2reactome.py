@@ -25,7 +25,6 @@ parser.add_argument('--hgncList', dest="hlst", type=str,
 
 args = parser.parse_args()
 
-
 with open( args.hlst ,"r") as hlfh:
     for ln in hlfh:
         print( ln.strip() )
@@ -44,10 +43,10 @@ with open( args.hlst ,"r") as hlfh:
         xref = ucr.xref
 
         for x in xref:
-            if 'Reactome' == x:
+            if "Reactome"  == x:
                 rxrefl = xref[x] 
                 for r in rxrefl:
-                    print("  Reactome:", r)
-
+                    print( "  Reactome:",r )
+            
         sys.stdout.flush()
 

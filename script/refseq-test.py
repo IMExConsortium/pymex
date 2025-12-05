@@ -24,10 +24,18 @@ parser.add_argument('--rfsc', dest="rfsc", type=str,
                     required=False, default='NM_019353.2',
                     help='RefSeq record id.')
 
+parser.add_argument('--db', dest="db", type=str,
+                    required=False, default='nuccore',
+                    help='NLM database (Default: nuccore).')
+
+parser.add_argument('--debug', dest="debug", type=bool,
+                    required=False, default=False,
+                    help='Debug flag (Default: False).')
+
 args = parser.parse_args()
 
-rfsc = pymex.refseq.Record()
-rec = rfsc.getRecord(args.rfsc)
+rfsc = pymex.refseq.Record( debug=args.debug)
+rec = rfsc.getRecord(args.rfsc, db=args.db)
 
 #print(json.dumps(rec.root,indent=1))
 
@@ -38,11 +46,22 @@ print(type(rec))
 print("Sequence:",rec.sequence)
 
 cdsfl =  rec.getFeatureLstByKey('CDS')
+regsl =  rec.getFeatureLstByKey('Region')
 
+for i in range(len(regsl)):
+    print(i, regsl[i]['location'][0]['begin'],regsl[i]['location'][0]['end'], end=" ")
+
+    for a in regsl[i]['attribute']:
+        if a['name'] == 'region_name':
+            print(a['value'])
+
+
+    
 if cdsfl is not None:
     for cds in cdsfl:
-        print("CDS:", cds)
-        alst = cds.attrs    
-        for a in alst:
-            if a.name == 'translation':
-                print("  ","Translation:",a.value)
+        print("CDS:", type(cds),cds)
+
+        #alst = cds.attrs    
+        #for a in alst:
+        #    if a.name == 'translation':
+        #        print("  ","Translation:",a.value)

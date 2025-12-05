@@ -3,7 +3,7 @@ from pymex.xmlrecord import *
 from pymex.mif import *
 from pymex.up import *
 from pymex.pypsic import *
-#from pymex.uniprot import *
+from pymex.uniprot import *
 from pymex.uprot import *
 from pymex.uprot.proteome import *
 from pymex.uparc import *
@@ -15,3 +15,5 @@ from pymex.interpro.upmatch import *
 from pymex.hgnc import *
 from pymex.refseq import *
 from pymex.taxon import *
+
+from pymex.icentral import *

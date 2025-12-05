@@ -6,7 +6,9 @@ Created on Tue Jan 14 09:05:33 2025
 """
 
 import os
+import time 
 import pymex
+
 
 from urllib.request import urlopen, Request
 from lxml import etree as ET
@@ -15,7 +17,7 @@ from pymex import xmlrecord
 class Record(xmlrecord.XmlRecord):
     """NCBI taxon record representation. Inherits XML parsing and serialization from xml.XmlRecord"""
 
-    def __init__(self, root=None, debug=False):
+    def __init__(self, root=None, debug=False, retry=1, key=""):
         
         myDir = os.path.dirname( os.path.realpath(__file__))
         self.taxdbConfig = { "taxdb": { "IN": os.path.join( myDir, "defParse.json") } }
@@ -27,19 +29,36 @@ class Record(xmlrecord.XmlRecord):
                           postproc = {"_global": self.globpost },
                           debug = debug )
 
+    
+        self.key = key
+        self.retry = retry
+
     def getRecord(self, ac="9606"):
         curl = self.url.replace( "%%ACC%%", ac ).replace( "%%DB%%", 'taxonomy' )
-        #print(curl)
+        if len(self.key) > 0:
+            curl+= '&api_key='+self.key
+    
         if self.debug:
             print("DEBUG: Record.getRecord: url->", curl)
 
         headers = { 'Accept': 'text/xml' }
         method = 'GET'
         body =''
+
+        self.root = {}
         
-        req = Request(curl)        
-        res = self.parseXml( urlopen( req ), debug=self.debug)
-            
+        retry = self.retry
+        while retry > 0:
+            try:
+                req = Request(curl)
+                res = self.parseXml( urlopen( req ), debug=self.debug)
+                retry = 0
+            except Exception as err:
+                retry -= 1 
+                print(curl)
+                print(err)
+                time.sleep(5)
+                        
         return( res )
 
 

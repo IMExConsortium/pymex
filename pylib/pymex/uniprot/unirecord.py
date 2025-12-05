@@ -7,7 +7,7 @@ from lxml import etree as ET
 print("UniRecord: import")
 
 class UniRecord( pymex.xmlrecord.XmlRecord ):
-    def __init__(self, root=None, url=None, mirror_xml=None):
+    def __init__(self, root=None, url=None, mirror_xml=None,mirror_json=None):
         myDir = os.path.dirname( os.path.realpath(__file__))
         self.uniConfig = { "uni001": {"IN": os.path.join( myDir, "defUniParse001.json"),
                                       "OUT": os.path.join( myDir, "defUniParse001.json" ) }
@@ -16,7 +16,7 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         self.url="https://www.uniprot.org/uniprot/%%ACC%%.xml"
         self._mirror= { "xml": None,
                         "json": None}
-        
+        print("UniRecord: __init__")
         if url is not None:
             self.url= url
 
@@ -32,7 +32,7 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         self.evidence = {}
         super().__init__(root, config=self.uniConfig )
 
-    def parseXml(self, filename, ver="uni001", debug=False):
+    def parseXml(self, filename, ver="uni001", debug=True):
 
         self.recordTree = ET.parse(filename)
         self.preprocessComments(ver)
@@ -90,6 +90,16 @@ class UniRecord( pymex.xmlrecord.XmlRecord ):
         res = self.parseXml( urlopen(upUrl ))
         return( res )
 
+
+    @property
+    def sequence(self):
+        return self.root["uniprot"]["entry"][0]['sequence']['value']
+    
+    @property
+    def seqCRC64(self):
+        return self.root["uniprot"]["entry"][0]['sequence']['checksum']
+
+    
     def addToFeature(self, featureElem):
         if "evidence" in featureElem.attrib:
             featureEvidence = featureElem.attrib["evidence"]

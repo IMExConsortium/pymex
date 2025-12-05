@@ -118,7 +118,35 @@ class Record( pymex.xmlrecord.XmlRecord ):
             rec = self.getremote( eg )
             #sleep(delay)
         return rec
-        
+
+
+    def matchList(self,dbname=''):
+        if len(dbname) == 0:
+            return self.root['interpromatch']['protein']['match']
+
+        mlst=[]
+        for m in self.root['interpromatch']['protein']['match']:
+            if m['dbname'] == dbname:
+                mlst.append(m)
+        return mlst
+
+    @property
+    def seqCRC64(self):
+        return self.root['interpromatch']['protein']['crc64']
+
+    @property
+    def seqLen(self):
+        return self.root['interpromatch']['protein']['length']
+
+    @property
+    def seqAcc(self):
+        return self.root['interpromatch']['protein']['id']
+
+    @property
+    def taxid(self):
+        return self.root['interpromatch']['protein']['taxid']
+
+    
     def parseXml(self, filename, ver="eg001", debug=False):
         res =  super().parseXml( filename, ver=ver )
         return res

@@ -29,7 +29,7 @@ class Record(xmlrecord.XmlRecord):
 
     def getRecord(self, ac="NM_019353.2",db="nuccore"):
         curl = self.url.replace( "%%ACC%%", ac ).replace("%%DB%%",db)
-        print(curl)
+        
         if self.debug:
             print("DEBUG: Record.getRecord: url->", curl)
 
@@ -49,8 +49,9 @@ class Record(xmlrecord.XmlRecord):
             print("DEBUG: Record.parseXml: called")
         
         self.recordTree = ET.parse(filename)
-        print(ET.tostring(self.recordTree,pretty_print=True).decode())
+        
         if self.debug:
+            #print(ET.tostring(self.recordTree,pretty_print=True).decode())
             print("DEBUG: Record.parseXmlrecordTree:", self.recordTree)
         
         
