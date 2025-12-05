@@ -1,0 +1,92 @@
+
+Prefixes:
+     xsd: http://www.w3.org/2001/XMLSchema
+     ns0: http://imex.mbi.ucla.edu/icentral/ws
+
+Global elements:
+     ns0:ImexCentralFault(faultCode: xsd:int, message: xsd:string)
+     ns0:createPublication(publication: ns0:publication)
+     ns0:createPublicationById(identifier: ns0:identifier)
+     ns0:getPublicationById(identifier: ns0:identifier[])
+     ns0:getPublicationByOwner(owner: xsd:string[])
+     ns0:getPublicationByStatus(status: xsd:string[])
+     ns0:getPublicationImexAccession(identifier: ns0:identifier, create: xsd:boolean)
+     ns0:getServerStatus(depth: xsd:string)
+     ns0:getServerStatusResponse(version: xsd:string, status: xsd:string)
+     ns0:publicationListResponse(publicationList: ns0:publicationList)
+     ns0:publicationResponse(publication: ns0:publication)
+     ns0:updatePublicationAdminGroup(identifier: ns0:identifier, operation: xsd:string, group: xsd:string)
+     ns0:updatePublicationAdminUser(identifier: ns0:identifier, operation: xsd:string, user: xsd:string)
+     ns0:updatePublicationStatus(identifier: ns0:identifier, status: xsd:string, message: xsd:string)
+     
+
+Global types:
+     xsd:anyType
+     ns0:icentral(wsversion: xsd:string)
+     ns0:identifier(ns: xsd:string, ac: xsd:string)
+     ns0:identifierList(identifier: ns0:identifier[])
+     ns0:publication(identifier: ns0:identifier[], author: xsd:string, title: xsd:string, paperAbstract: xsd:string, expectedPublicationDate: xsd:dateTime, publicationDate: xsd:dateTime, releaseDate: xsd:dateTime, creationDate: xsd:dateTime, status: xsd:string, imexAccession: xsd:string, owner: xsd:string)
+     ns0:publicationList(publication: ns0:publication[])
+     xsd:ENTITIES
+     xsd:ENTITY
+     xsd:ID
+     xsd:IDREF
+     xsd:IDREFS
+     xsd:NCName
+     xsd:NMTOKEN
+     xsd:NMTOKENS
+     xsd:NOTATION
+     xsd:Name
+     xsd:QName
+     xsd:anySimpleType
+     xsd:anyURI
+     xsd:base64Binary
+     xsd:boolean
+     xsd:byte
+     xsd:date
+     xsd:dateTime
+     xsd:decimal
+     xsd:double
+     xsd:duration
+     xsd:float
+     xsd:gDay
+     xsd:gMonth
+     xsd:gMonthDay
+     xsd:gYear
+     xsd:gYearMonth
+     xsd:hexBinary
+     xsd:int
+     xsd:integer
+     xsd:language
+     xsd:long
+     xsd:negativeInteger
+     xsd:nonNegativeInteger
+     xsd:nonPositiveInteger
+     xsd:normalizedString
+     xsd:positiveInteger
+     xsd:short
+     xsd:string
+     xsd:time
+     xsd:token
+     xsd:unsignedByte
+     xsd:unsignedInt
+     xsd:unsignedLong
+     xsd:unsignedShort
+
+Bindings:
+     Soap11Binding: {http://imex.mbi.ucla.edu/icentral/ws}ImexCentralPortBinding
+
+Service: ImexCentralService
+     Port: ImexCentralPort (Soap11Binding: {http://imex.mbi.ucla.edu/icentral/ws}ImexCentralPortBinding)
+         Operations:
+            createPublication(publication: ns0:publication) -> publication: ns0:publication
+            createPublicationById(identifier: ns0:identifier) -> publication: ns0:publication
+            getPublicationById(identifier: ns0:identifier[]) -> publicationList: ns0:publicationList
+            getPublicationByOwner(owner: xsd:string[]) -> publicationList: ns0:publicationList
+            getPublicationByStatus(status: xsd:string[]) -> publicationList: ns0:publicationList
+            getPublicationImexAccession(identifier: ns0:identifier, create: xsd:boolean) -> publication: ns0:publication
+            getServerStatus(depth: xsd:string) -> version: xsd:string, status: xsd:string
+            updatePublicationAdminGroup(identifier: ns0:identifier, operation: xsd:string, group: xsd:string) -> publication: ns0:publication
+            updatePublicationAdminUser(identifier: ns0:identifier, operation: xsd:string, user: xsd:string) -> publication: ns0:publication
+            updatePublicationStatus(identifier: ns0:identifier, status: xsd:string, message: xsd:string) -> publication: ns0:publication
+

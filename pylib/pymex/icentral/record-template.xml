@@ -1,0 +1,17 @@
+  <Link>
+    <LinkId>%%LINK_ID%%</LinkId>
+    <ProviderId>10198</ProviderId>
+    <IconUrl>https://imexcentral.org/icentral/img/IMEx120x30a.png</IconUrl>
+    <ObjectSelector>
+      <Database>PubMed</Database>
+      <ObjectList>
+        <ObjId>18055229</ObjId>
+      </ObjectList>
+    </ObjectSelector>
+    <ObjectUrl>
+      <Base>https://imexcentral.org/icentral/imex/rec/</Base>
+      <Rule>%%RULE%%</Rule>
+      <UrlName>%%RULE%% IMEx interaction dataset</UrlName>
+      <SubjectType>protein interactions/pathways</SubjectType>
+    </ObjectUrl>
+  </Link>

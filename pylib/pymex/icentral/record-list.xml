@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<!DOCTYPE LinkSet PUBLIC "-//NLM//DTD LinkOut 1.0//EN" "https://www.ncbi.nlm.nih.gov/projects/linkout/doc/LinkOut.dtd" [
+<!ENTITY base.url "https://imexcentral.org/icentral/imex/rec/">
+]>
+<LinkSet>
+%%LINK-LIST%%
+</LinkSet>
